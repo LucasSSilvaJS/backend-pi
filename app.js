@@ -36,8 +36,12 @@ app.get('/', (req, res) => {
             '/pacientes',
             '/laudos',
         ]
-    })
-})
+    });
+});
+
+app.use((req, res) => {
+    res.status(404).json({message: 'Essa rota não existe'});
+});
 
 //conectando ao mongoose
 mongoose.connect(DB_URL)
