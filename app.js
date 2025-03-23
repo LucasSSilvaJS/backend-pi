@@ -28,6 +28,17 @@ app.use('/odontos', odontoRoutes);
 app.use('/pacientes', pacienteRoutes);
 app.use('/laudos', laudoRoutes);
 
+app.get('/', (req, res) => {
+    res.json({
+        objetivo: 'Backend para o projeto de PI Odonto-legal',
+        rotas: [
+            '/odontos',
+            '/pacientes',
+            '/laudos',
+        ]
+    })
+})
+
 //conectando ao mongoose
 mongoose.connect(DB_URL)
 .then(() => console.log('Conectado ao MongoDB!'))
