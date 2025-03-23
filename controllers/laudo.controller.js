@@ -1,6 +1,5 @@
-import Laudo from "../models/laudo.model.js"
-
-import cloudinary from "../services/cloudinary.js";
+import Laudo from "../models/laudo.model.js";
+import {uploadToCloudinary} from "../utils/upload.cloudinary.js";
 
 export const createLaudo = async (req, res) => {
     try {
@@ -21,7 +20,7 @@ export const createLaudo = async (req, res) => {
             historico_clinico,
             exame_clinico: {
                 descricao: exame_clinico?.descricao,
-                imagens_url: exame_clinico?.imagens_url || []
+                imagens_url: []
             },
             descricao_lesoes: {
                 detalhamento: descricao_lesoes?.detalhamento,
@@ -31,16 +30,15 @@ export const createLaudo = async (req, res) => {
             conclusao
         });
 
-        if (req.files) {
-            const fileUrls = [];
-            for (let i = 0; i < req.files.length; i++) {
-                const result = await cloudinary.uploader.upload(req.files[i].path, { resource_type: "auto" });
-                fileUrls.push(result.secure_url);
-            }
+        if (req.files && req.files.length > 0) {
+            const uploadPromises = req.files.map((file) =>
+                uploadToCloudinary(file)
+            );
 
-            novoLaudo.exame_clinico.imagens_url = fileUrls;
+            const imagensUrls = await Promise.all(uploadPromises);
+            novoLaudo.exame_clinico.imagens_url = imagensUrls;
         }
-        
+
         await novoLaudo.save();
 
         res.status(201).json({
