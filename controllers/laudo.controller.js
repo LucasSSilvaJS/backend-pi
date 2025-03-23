@@ -31,8 +31,6 @@ export const createLaudo = async (req, res) => {
             conclusao
         });
 
-        await novoLaudo.save();
-
         if (req.files) {
             const fileUrls = [];
             for (let i = 0; i < req.files.length; i++) {
@@ -41,8 +39,9 @@ export const createLaudo = async (req, res) => {
             }
 
             novoLaudo.exame_clinico.imagens_url = fileUrls;
-            await novoLaudo.save();
         }
+        
+        await novoLaudo.save();
 
         res.status(201).json({
             message: 'Laudo criado com sucesso!',
