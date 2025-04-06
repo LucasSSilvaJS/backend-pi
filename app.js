@@ -8,7 +8,8 @@ import morgan from "morgan";
 
 import laudoRoutes from "./router/laudo.router.js";
 import pacienteRoutes from "./router/paciente.router.js";
-import odontoRoutes from "./router/odonto.router.js";
+import evidenciaRoutes from "./router/evidencia.router.js";
+import casoRoutes from "./router/caso.router.js";
 
 config();
 
@@ -24,7 +25,8 @@ app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 
 //consumindo rotas
-app.use('/odontos', odontoRoutes);
+app.use('/evidencias', evidenciaRoutes);
+app.use('/casos', casoRoutes);
 app.use('/pacientes', pacienteRoutes);
 app.use('/laudos', laudoRoutes);
 
@@ -32,7 +34,8 @@ app.get('/', (req, res) => {
     res.json({
         objetivo: 'Backend para o projeto de PI Odonto-legal',
         rotas: [
-            '/odontos',
+            '/evidencias',
+            '/casos',
             '/pacientes',
             '/laudos',
         ]

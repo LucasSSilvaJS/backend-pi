@@ -1,8 +1,8 @@
 import express from "express";
 import {
-    createPaciente, 
-    getAllPacientes, 
-    getPacienteById, 
+    createPaciente,
+    getAllPacientes,
+    getPacienteById,
     updatePaciente,
     deletePaciente
 } from '../controllers/paciente.controller.js';

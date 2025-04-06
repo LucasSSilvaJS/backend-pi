@@ -1,12 +1,10 @@
-import Paciente from "../models/paciente.model.js"
+import Paciente from "../models/paciente.model.js";
 
 export const createPaciente = async (req, res) => {
     try {
-        const { nome, cpf, rg } = req.body;
-
-        const novoPaciente = new Paciente({ nome, cpf, rg });
+        const { nome, cpf, rg, status, caso } = req.body;
+        const novoPaciente = new Paciente({ nome, cpf, rg, status, caso });
         await novoPaciente.save();
-
         res.status(201).json({
             message: 'Paciente criado com sucesso!',
             paciente: novoPaciente
@@ -15,12 +13,12 @@ export const createPaciente = async (req, res) => {
         console.error(err);
         res.status(500).json({ error: 'Erro ao criar paciente' });
     }
-}
+};
 
 export const getAllPacientes = async (req, res) => {
     try {
-        const paciente = await Paciente.find();
-        res.status(200).json(paciente);
+        const pacientes = await Paciente.find().populate('caso');
+        res.status(200).json(pacientes);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao listar pacientes' });
@@ -29,7 +27,7 @@ export const getAllPacientes = async (req, res) => {
 
 export const getPacienteById = async (req, res) => {
     try {
-        const paciente = await Paciente.findById(req.params.id);
+        const paciente = await Paciente.findById(req.params.id).populate('caso');
         if (!paciente) {
             return res.status(404).json({ error: 'Paciente não encontrado' });
         }
@@ -68,3 +66,4 @@ export const deletePaciente = async (req, res) => {
         res.status(500).json({ error: 'Erro ao deletar paciente' });
     }
 };
+

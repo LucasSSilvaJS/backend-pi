@@ -1,119 +1,82 @@
 import Laudo from "../models/laudo.model.js";
-import {uploadToCloudinary} from "../utils/upload.cloudinary.js";
 
+// Controller to create a new Laudo
 export const createLaudo = async (req, res) => {
     try {
         const {
-            odonto_id,
-            paciente_id,
-            motivo,
-            historico_clinico,
-            exame_clinico,
-            descricao_lesoes,
+            titulo,
+            peritoResponsavel,
+            parecer,
+            detalhamento,
             conclusao
         } = req.body;
 
         const novoLaudo = new Laudo({
-            odonto_id,
-            paciente_id,
-            motivo,
-            historico_clinico,
-            exame_clinico: {
-                descricao: exame_clinico?.descricao,
-                imagens_url: []
-            },
-            descricao_lesoes: {
-                detalhamento: descricao_lesoes?.detalhamento,
-                grau_de_gravidade: descricao_lesoes?.grau_de_gravidade,
-                sequelas_permanentes: descricao_lesoes?.sequelas_permanentes
-            },
+            titulo,
+            peritoResponsavel,
+            parecer,
+            detalhamento,
             conclusao
         });
 
-        if (req.files && req.files.length > 0) {
-            const uploadPromises = req.files.map((file) =>
-                uploadToCloudinary(file)
-            );
-
-            const imagensUrls = await Promise.all(uploadPromises);
-            novoLaudo.exame_clinico.imagens_url = imagensUrls;
-        }
-
         await novoLaudo.save();
-
-        res.status(201).json({
-            message: 'Laudo criado com sucesso!',
-            laudo: novoLaudo
-        });
+        res.status(201).json({ message: 'Laudo criado com sucesso!', laudo: novoLaudo });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao criar laudo' });
     }
 };
 
+// Controller to get all Laudos
 export const getAllLaudos = async (req, res) => {
     try {
-        const laudos = await Laudo.find();
+        const laudos = await Laudo.find().populate('parecer.caso parecer.evidencia parecer.paciente');
         res.status(200).json(laudos);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar laudos' });
+        res.status(500).json({ error: 'Erro ao listar laudos' });
     }
 };
 
+// Controller to get a Laudo by ID
 export const getLaudoById = async (req, res) => {
     try {
-        const { id } = req.params;
-        const laudo = await Laudo.findById(id);
-
+        const laudo = await Laudo.findById(req.params.id).populate('parecer.caso parecer.evidencia parecer.paciente');
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
-
         res.status(200).json(laudo);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar laudo' });
+        res.status(500).json({ error: 'Erro ao obter laudo' });
     }
 };
 
+// Controller to update a Laudo
 export const updateLaudo = async (req, res) => {
     try {
-        const { id } = req.params;
-        const updateData = req.body;
-
-        const laudoAtualizado = await Laudo.findByIdAndUpdate(id, updateData, {
-            new: true,
-            runValidators: true
-        });
-
-        if (!laudoAtualizado) {
+        const laudo = await Laudo.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
-
-        res.status(200).json({
-            message: 'Laudo atualizado com sucesso!',
-            laudo: laudoAtualizado
-        });
+        res.status(200).json({ message: 'Laudo atualizado com sucesso!', laudo });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao atualizar laudo' });
     }
 };
 
+// Controller to delete a Laudo
 export const deleteLaudo = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        const laudoDeletado = await Laudo.findByIdAndDelete(id);
-
-        if (!laudoDeletado) {
+        const laudo = await Laudo.findByIdAndDelete(req.params.id);
+        if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
-
         res.status(200).json({ message: 'Laudo deletado com sucesso!' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao deletar laudo' });
     }
 };
+
