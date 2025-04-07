@@ -10,6 +10,7 @@ import laudoRoutes from "./router/laudo.router.js";
 import pacienteRoutes from "./router/paciente.router.js";
 import evidenciaRoutes from "./router/evidencia.router.js";
 import casoRoutes from "./router/caso.router.js";
+import authRoutes from "./router/auth.router.js";
 
 config();
 
@@ -29,6 +30,7 @@ app.use('/evidencias', evidenciaRoutes);
 app.use('/casos', casoRoutes);
 app.use('/pacientes', pacienteRoutes);
 app.use('/laudos', laudoRoutes);
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
     res.json({

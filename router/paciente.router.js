@@ -7,10 +7,14 @@ import {
     deletePaciente
 } from '../controllers/paciente.controller.js';
 
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 const router = express.Router();
 
+//teste de middleware
+
 router.route('/')
-    .get(getAllPacientes)
+    .get(authMiddleware, getAllPacientes)
     .post(createPaciente);
 
 router.route('/:id')
