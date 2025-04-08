@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import { config } from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
 
 import laudoRoutes from "./router/laudo.router.js";
 import pacienteRoutes from "./router/paciente.router.js";
@@ -22,6 +23,7 @@ const app = express();
 //middlewares
 app.use(morgan('dev'));
 app.use(cors());
+app.use(helmet());
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 
@@ -40,6 +42,7 @@ app.get('/', (req, res) => {
             '/casos',
             '/pacientes',
             '/laudos',
+            '/auth'
         ]
     });
 });

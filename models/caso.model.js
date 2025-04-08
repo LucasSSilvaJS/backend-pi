@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const CasoSchema = mongoose.Schema({
     titulo: { type: String, required: true },
     descricao: { type: String, required: true },
-    status: { type: String, required: true, enum: ['Em análise', 'Concluído', 'Em espera'], default: 'Em espera' },
+    status: { type: String, required: true, enum: ['Em andamento', 'Finalizado', 'Arquivado'], default: 'Em andamento' },
     dataAbertura: { type: Date, required: true, default: Date.now },
     dataFechamento: { type: Date, required: false },
     dataOcorrencia: {type: Date, required: true},

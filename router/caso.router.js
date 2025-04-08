@@ -7,15 +7,17 @@ import {
     deleteCaso
 } from '../controllers/caso.controller.js';
 
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 const router = express.Router();
 
 router.route('/')
-    .get(getAllCasos)
-    .post(createCaso);
+    .get(authMiddleware("admin", "perito"), getAllCasos)
+    .post(authMiddleware("admin", "perito"), createCaso);
 
 router.route('/:id')
-    .get(getCasoById)
-    .put(updateCaso)
-    .delete(deleteCaso);
+    .get(authMiddleware("admin", "perito"), getCasoById)
+    .put(authMiddleware("admin", "perito"), updateCaso)
+    .delete(authMiddleware("admin", "perito"), deleteCaso);
 
 export default router;

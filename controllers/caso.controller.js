@@ -33,14 +33,24 @@ export const createCaso = async (req, res) => {
         res.status(500).json({ error: 'Erro ao criar caso' });
     }
 };
-
 export const getAllCasos = async (req, res) => {
+    const { status, dataAbertura } = req.query;
+    const query = {};
+
+    if (status) {
+        query.status = status;
+    }
+
+    if (dataAbertura) {
+        query.dataAbertura = dataAbertura;
+    }
+
     try {
-        const casos = await Caso.find().populate('paciente');
+        const casos = await Caso.find(query).populate('paciente');
         res.status(200).json(casos);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Erro ao listar casos' });
+        res.status(500).json({ error: 'Erro ao filtrar casos' });
     }
 };
 

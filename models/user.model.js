@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
     cargo: { 
         type: String, 
         required: true, 
-        enum: ['perito', 'assistente de perito', 'admin'] 
+        enum: ['perito', 'assistente', 'admin'] 
     },
 }, { timestamps: true });
 
