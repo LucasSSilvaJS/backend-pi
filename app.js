@@ -13,6 +13,9 @@ import evidenciaRoutes from "./router/evidencia.router.js";
 import casoRoutes from "./router/caso.router.js";
 import authRoutes from "./router/auth.router.js";
 
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger.js";
+
 config();
 
 const PORT = process.env.PORT || 8080;
@@ -26,6 +29,9 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
+
+//swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //consumindo rotas
 app.use('/evidencias', evidenciaRoutes);
@@ -58,4 +64,5 @@ mongoose.connect(DB_URL)
 
 app.listen(PORT, () => {
     console.log(`Servidor conectado na porta ${PORT}`);
+    console.log(`Documentação: https://odontolegal-api.onrender.com/api-docs`);
 });
