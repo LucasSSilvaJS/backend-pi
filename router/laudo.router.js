@@ -6,7 +6,7 @@ import {
     updateLaudo,
     deleteLaudo,
     addPeritoToLaudo,
-    addRelatorioToLaudo,
+    addEvidenciaToLaudo,
     addCasoToLaudo,
     addPacienteToLaudo
 } from '../controllers/laudo.controller.js';
@@ -25,8 +25,8 @@ router.route('/:id')
 router.route('/add-perito')
     .patch(authMiddleware("admin", "perito"), addPeritoToLaudo);
 
-router.route('/add-relatorio')
-    .patch(authMiddleware("admin", "perito"), addRelatorioToLaudo);
+router.route('/add-evidencia')
+    .patch(authMiddleware("admin", "perito"), addEvidenciaToLaudo);
 
 router.route('/add-caso')
     .patch(authMiddleware("admin", "perito"), addCasoToLaudo);
