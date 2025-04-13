@@ -8,6 +8,8 @@ import {
     addCasoToPaciente
 } from '../controllers/paciente.controller.js';
 
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 const router = express.Router();
 
 //teste de middleware

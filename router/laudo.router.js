@@ -11,6 +11,8 @@ import {
     addPacienteToLaudo
 } from '../controllers/laudo.controller.js';
 
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 const router = express.Router();
 
 router.route('/')
