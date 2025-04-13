@@ -1,4 +1,4 @@
-import Caso from "../models/caso.model.js"
+import Caso from "../models/caso.model.js";
 
 export const createCaso = async (req, res) => {
     const {
@@ -93,5 +93,33 @@ export const deleteCaso = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao deletar caso' });
+    }
+};
+
+export const addPacienteToCaso = async (req, res) => {
+    try {
+        const { idCaso, idPaciente } = req.body;
+
+        if (!idCaso || !idPaciente) {
+            return res.status(400).json({ error: 'idCaso e idPaciente são obrigatórios' });
+        }
+
+        const casoAtualizado = await Caso.findByIdAndUpdate(
+            idCaso,
+            { paciente: idPaciente },
+            { new: true }
+        );
+
+        if (!casoAtualizado) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+
+        res.status(200).json({
+            message: 'Paciente adicionado ao caso com sucesso!',
+            caso: casoAtualizado
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao adicionar paciente ao caso' });
     }
 };

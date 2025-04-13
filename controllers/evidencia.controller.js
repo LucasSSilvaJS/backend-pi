@@ -112,3 +112,31 @@ export const deleteEvidencia = async (req, res) => {
         res.status(500).json({ error: 'Erro ao deletar evidência' });
     }
 };
+
+export const addLaudoToEvidencia = async (req, res) => {
+    try {
+        const { idEvidencia, idLaudo } = req.body;
+
+        if (!idLaudo || !idEvidencia) {
+            return res.status(400).json({ error: 'idLaudo e idEvidencia são obrigatórios' });
+        }
+
+        const evidencia = await Evidencia.findByIdAndUpdate(
+            idEvidencia,
+            { laudo: idLaudo },
+            { new: true }
+        );
+
+        if (!evidencia) {
+            return res.status(404).json({ error: 'Evidência não encontrada' });
+        }
+
+        res.status(200).json({
+            message: 'Evidência atualizada com sucesso!',
+            evidencia
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao preencher laudoId da evidência' });
+    }
+};

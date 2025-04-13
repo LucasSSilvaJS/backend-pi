@@ -1,10 +1,11 @@
 import express from "express";
 import {
-    createCaso, 
-    getAllCasos, 
-    getCasoById, 
+    createCaso,
+    getAllCasos,
+    getCasoById,
     updateCaso,
-    deleteCaso
+    deleteCaso,
+    addPacienteToCaso
 } from '../controllers/caso.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -19,5 +20,8 @@ router.route('/:id')
     .get(authMiddleware("admin", "perito"), getCasoById)
     .put(authMiddleware("admin", "perito"), updateCaso)
     .delete(authMiddleware("admin", "perito"), deleteCaso);
+
+router.route('/add-paciente')
+    .patch(authMiddleware("admin", "perito"), addPacienteToCaso);
 
 export default router;

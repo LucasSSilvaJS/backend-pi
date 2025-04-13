@@ -67,3 +67,30 @@ export const deletePaciente = async (req, res) => {
     }
 };
 
+export const addCasoToPaciente = async (req, res) => {
+    try {
+        const { idCaso, idPaciente } = req.body;
+
+        if (!idCaso || !idPaciente) {
+            return res.status(400).json({ error: 'idCaso e idPaciente são obrigatórios' });
+        };
+
+        const paciente = await Paciente.findByIdAndUpdate(
+            idPaciente,
+            { caso: idCaso },
+            { new: true }
+        );
+
+        if (!paciente) {
+            return res.status(404).json({ error: 'Paciente não encontrado' });
+        }
+        
+        res.status(200).json({
+            message: 'Caso adicionado ao paciente com sucesso!',
+            paciente
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao adicionar caso ao paciente' });
+    }
+};

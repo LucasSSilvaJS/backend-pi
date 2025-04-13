@@ -4,7 +4,8 @@ import {
     getAllEvidencias,
     getEvidenciaById,
     updateEvidencia,
-    deleteEvidencia
+    deleteEvidencia,
+    addLaudoToEvidencia
 } from '../controllers/evidencia.controller.js';
 
 import { upload } from "../middlewares/upload.js";
@@ -12,12 +13,15 @@ import { upload } from "../middlewares/upload.js";
 const router = express.Router();
 
 router.route('/')
-    .get(getAllEvidencias)
-    .post( upload.array('files', 10), createEvidencia);
+    .get(authMiddleware("admin", "perito", "assistente"), getAllEvidencias)
+    .post(authMiddleware("admin", "perito", "assistente"), upload.array('files', 10), createEvidencia);
 
 router.route('/:id')
-    .get(getEvidenciaById)
-    .put(upload.array('files', 10), updateEvidencia)
-    .delete(deleteEvidencia);
+    .get(authMiddleware("admin", "perito", "assistente"), getEvidenciaById)
+    .put(authMiddleware("admin", "perito", "assistente"), upload.array('files', 10), updateEvidencia)
+    .delete(authMiddleware("admin", "perito", "assistente"), deleteEvidencia);
+
+router.route('/add-laudo')
+    .patch(authMiddleware("admin", "perito", "assistente"), addLaudoToEvidencia);
 
 export default router;
