@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /register:
+ * /auth/register:
  *   post:
  *     summary: Cria um novo usuário
  *     description: Cria um novo usuário com os dados fornecidos
@@ -97,7 +97,7 @@ router.route("/register").post(authMiddleware("admin"), register);
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *   post:
  *     summary: Realiza login
  *     description: Realiza login com as credenciais fornecidas
