@@ -14,6 +14,13 @@ const options = {
             },
         ],
         components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
             schemas: {
                 User: {
                     type: "object",
@@ -197,7 +204,12 @@ const options = {
                     },
                 },
             }
-        }
+        },
+        security: [
+            {
+                BearerAuth: [],
+            },
+        ],
     },
     apis: ["./router/*.js"],
 };
