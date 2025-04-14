@@ -14,6 +14,53 @@ import {
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Laudo:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         titulo:
+ *           type: string
+ *         peritoResponsavel:
+ *           $ref: '#/components/schemas/User'
+ *         dataCriacao:
+ *           type: string
+ *           format: date-time
+ *         parecer:
+ *           type: object
+ *           properties:
+ *             caso:
+ *               $ref: '#/components/schemas/Caso'
+ *             evidencia:
+ *               $ref: '#/components/schemas/Evidencia'
+ *             paciente:
+ *               $ref: '#/components/schemas/Paciente'
+ *         detalhamento:
+ *           type: string
+ *         conclusao:
+ *           type: string
+ *       required:
+ *         - titulo
+ *         - peritoResponsavel
+ *         - dataCriacao
+ *         - parecer
+ *         - detalhamento
+ *         - conclusao
+ *       example:
+ *         titulo: Laudo de exemplo
+ *         peritoResponsavel: 61e3d8b1f2a6c2f5d64e5f5b
+ *         dataCriacao: 2022-01-25T17:11:11.000Z
+ *         parecer:
+ *           caso: 61e3d8b1f2a6c2f5d64e5f5a
+ *           evidencia: 61e3d8b1f2a6c2f5d64e5f5c
+ *           paciente: 61e3d8b1f2a6c2f5d64e5f5d
+ *         detalhamento: Detalhamento do laudo
+ *         conclusao: Conclus o do laudo
+ */
 
 /**
  * @swagger
