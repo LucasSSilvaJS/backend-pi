@@ -150,6 +150,52 @@ const options = {
                         },
                     },
                 },
+                // Laudo Schema
+                Laudo: {
+                    type: "object",
+                    required: ["titulo", "peritoResponsavel", "dataCriacao", "parecer", "detalhamento", "conclusao"],
+                    properties: {
+                        titulo: {
+                            type: "string",
+                            description: "Título do laudo",
+                        },
+                        peritoResponsavel: {
+                            type: "string",
+                            description: "ID do perito responsável",
+                        },
+                        dataCriacao: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data de criação do laudo",
+                        },
+                        parecer: {
+                            type: "object",
+                            required: ["caso", "evidencia", "paciente"],
+                            properties: {
+                                caso: {
+                                    type: "string",
+                                    description: "ID do caso relacionado",
+                                },
+                                evidencia: {
+                                    type: "string",
+                                    description: "ID da evidência relacionada",
+                                },
+                                paciente: {
+                                    type: "string",
+                                    description: "ID do paciente relacionado",
+                                },
+                            },
+                        },
+                        detalhamento: {
+                            type: "string",
+                            description: "Detalhamento do laudo",
+                        },
+                        conclusao: {
+                            type: "string",
+                            description: "Conclusão do laudo",
+                        },
+                    },
+                },
             }
         }
     },
