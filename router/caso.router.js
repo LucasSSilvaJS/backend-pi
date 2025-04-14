@@ -17,6 +17,8 @@ const router = express.Router();
  * /casos:
  *   post:
  *     summary: Cria um novo caso
+ *     security:
+ *       - BearerAuth: [] 
  *     tags:
  *       - Casos
  *     requestBody:
@@ -122,6 +124,8 @@ const router = express.Router();
  *
  *   get:
  *     summary: Retorna todos os casos
+ *     security:
+ *       - BearerAuth: [] 
  *     tags:
  *       - Casos
  *     parameters:
@@ -204,6 +208,8 @@ router.route('/')
  * /casos/{id}:
  *   get:
  *     summary: Retorna um caso pelo id
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Casos
  *     parameters:
@@ -279,6 +285,8 @@ router.route('/')
  *                   example: Erro ao obter caso
  *   put:
  *     summary: Atualiza um caso
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Casos
  *     parameters:
@@ -400,6 +408,8 @@ router.route('/')
  *                   example: Erro ao atualizar caso
  *   delete:
  *     summary: Deleta um caso
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Casos
  *     parameters:
@@ -451,6 +461,8 @@ router.route('/:id')
  * /casos/add-paciente:
  *   patch:
  *     summary: Adiciona um paciente a um caso
+ *     security:
+ *       - BearerAuth: []
  *     description: Adiciona um paciente a um caso
  *     tags:
  *       - Casos

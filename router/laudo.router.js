@@ -20,6 +20,8 @@ const router = express.Router();
  * /laudos:
  *   get:
  *     summary: Retorna todos os laudos
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     responses:
@@ -43,6 +45,8 @@ const router = express.Router();
  *                   example: Erro ao listar laudos
  *   post:
  *     summary: Cria um novo laudo
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -102,6 +106,8 @@ router.route('/')
  * /laudos/{id}:
  *   get:
  *     summary: Retorna um laudo por ID
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     parameters:
@@ -140,6 +146,8 @@ router.route('/')
  *                   example: Erro ao obter laudo
  *   put:
  *     summary: Atualiza um laudo por ID
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     parameters:
@@ -190,6 +198,8 @@ router.route('/')
  *                   example: Erro ao atualizar laudo
  *   delete:
  *     summary: Deleta um laudo por ID
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     parameters:
@@ -241,6 +251,8 @@ router.route('/:id')
  * /laudos/add-perito:
  *   patch:
  *     summary: Adiciona um perito a um laudo
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -309,6 +321,8 @@ router.route('/add-perito')
  * /laudos/add-evidencia:
  *   patch:
  *     summary: Adiciona uma evidência a um laudo
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -377,6 +391,8 @@ router.route('/add-evidencia')
  * /laudos/add-caso:
  *   patch:
  *     summary: Adiciona um caso a um laudo
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -445,6 +461,8 @@ router.route('/add-caso')
  * /laudos/add-paciente:
  *   patch:
  *     summary: Adiciona um paciente a um laudo
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:

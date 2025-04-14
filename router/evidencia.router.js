@@ -19,6 +19,8 @@ const router = express.Router();
  * /evidencias:
  *   get:
  *     summary: Retorna todas as evidências
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Evidências
  *     responses:
@@ -58,6 +60,8 @@ const router = express.Router();
  *                   example: Erro ao buscar evidências
  *   post:
  *     summary: Cria uma nova evidência
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Evidências
  *     requestBody:
@@ -136,6 +140,8 @@ router.route('/')
  * /evidencias/{id}:
  *   get:
  *     summary: Busca uma evidência por ID
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Evidências
  *     parameters:
@@ -192,6 +198,8 @@ router.route('/')
  *                   example: Erro ao buscar evidência
  *   put:
  *     summary: Atualiza uma evidência
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Evidências
  *     parameters:
@@ -276,6 +284,8 @@ router.route('/')
  *                   example: Erro ao atualizar evidência
  *   delete:
  *     summary: Deleta uma evidência
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Evidências
  *     parameters:
@@ -327,6 +337,8 @@ router.route('/:id')
  * /evidencias/add-laudo:
  *   patch:
  *     summary: Adiciona um laudo a uma evidência
+ *     security:
+ *       - BearerAuth: []
  *     tags:
  *       - Evidências
  *     requestBody:

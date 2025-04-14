@@ -49,7 +49,8 @@ app.get('/', (req, res) => {
             '/pacientes',
             '/laudos',
             '/auth'
-        ]
+        ],
+        documentacao: 'https://odontolegal-api.onrender.com/api-docs'
     });
 });
 

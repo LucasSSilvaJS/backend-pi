@@ -11,6 +11,8 @@ const router = express.Router();
  *     tags:
  *       - Autenticação
  *     summary: Cria um novo usuário
+ *     security:
+ *       - bearerAuth: []
  *     description: Cria um novo usuário com os dados fornecidos
  *     requestBody:
  *       required: true
