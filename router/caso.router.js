@@ -201,11 +201,11 @@ router.route('/')
 
 /**
  * @swagger
- * /caso/{id}:
+ * /casos/{id}:
  *   get:
  *     summary: Retorna um caso pelo id
  *     tags:
- *       - Caso
+ *       - Casos
  *     parameters:
  *       - in: path
  *         name: id
@@ -280,7 +280,7 @@ router.route('/')
  *   put:
  *     summary: Atualiza um caso
  *     tags:
- *       - Caso
+ *       - Casos
  *     parameters:
  *       - in: path
  *         name: id
@@ -401,7 +401,7 @@ router.route('/')
  *   delete:
  *     summary: Deleta um caso
  *     tags:
- *       - Caso
+ *       - Casos
  *     parameters:
  *       - in: path
  *         name: id
@@ -448,12 +448,12 @@ router.route('/:id')
 
 /**
  * @swagger
- * /caso/add-paciente:
+ * /casos/add-paciente:
  *   patch:
  *     summary: Adiciona um paciente a um caso
  *     description: Adiciona um paciente a um caso
  *     tags:
- *       - Caso
+ *       - Casos
  *     requestBody:
  *       required: true
  *       content:
