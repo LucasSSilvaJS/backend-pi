@@ -15,39 +15,6 @@ const router = express.Router();
 /**
  * @swagger
  * /casos:
- *   get:
- *     summary: Retorna todos os casos
- *     tags:
- *       - Casos
- *     responses:
- *       200:
- *         description: Retorna todos os casos
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Caso'
- *       401:
- *         description: Usuário não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Usuário não autenticado
- *       500:
- *         description: Erro interno do servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Erro interno do servidor
  *   post:
  *     summary: Cria um novo caso
  *     tags:
@@ -67,23 +34,22 @@ const router = express.Router();
  *                 example: Este   um caso de teste
  *               status:
  *                 type: string
- *                 enum: ['Em andamento', 'Finalizado', 'Arquivado']
  *                 example: Em andamento
  *               dataAbertura:
  *                 type: string
- *                 format: date
- *                 example: 2022-01-01
+ *                 format: date-time
+ *                 example: 2022-01-01T00:00:00.000Z
  *               dataFechamento:
  *                 type: string
- *                 format: date
- *                 example: 2022-01-01
+ *                 format: date-time
+ *                 example: 2022-01-01T00:00:00.000Z
  *               dataOcorrencia:
  *                 type: string
- *                 format: date
- *                 example: 2022-01-01
+ *                 format: date-time
+ *                 example: 2022-01-01T00:00:00.000Z
  *               paciente:
  *                 type: string
- *                 example: 62577f659574d76626b2
+ *                 example: 620e0e2a6f0a4c3a1a5e2f3a
  *               localizacao:
  *                 type: object
  *                 properties:
@@ -109,7 +75,7 @@ const router = express.Router();
  *                   properties:
  *                     _id:
  *                       type: string
- *                       example: 62577f659574d76626b2
+ *                       example: 620e0e2a6f0a4c3a1a5e2f3a
  *                     titulo:
  *                       type: string
  *                       example: Caso de teste
@@ -118,23 +84,22 @@ const router = express.Router();
  *                       example: Este   um caso de teste
  *                     status:
  *                       type: string
- *                       enum: ['Em andamento', 'Finalizado', 'Arquivado']
  *                       example: Em andamento
  *                     dataAbertura:
  *                       type: string
- *                       format: date
- *                       example: 2022-01-01
+ *                       format: date-time
+ *                       example: 2022-01-01T00:00:00.000Z
  *                     dataFechamento:
  *                       type: string
- *                       format: date
- *                       example: 2022-01-01
+ *                       format: date-time
+ *                       example: 2022-01-01T00:00:00.000Z
  *                     dataOcorrencia:
  *                       type: string
- *                       format: date
- *                       example: 2022-01-01
+ *                       format: date-time
+ *                       example: 2022-01-01T00:00:00.000Z
  *                     paciente:
  *                       type: string
- *                       example: 62577f659574d76626b2
+ *                       example: 620e0e2a6f0a4c3a1a5e2f3a
  *                     localizacao:
  *                       type: object
  *                       properties:
@@ -144,28 +109,8 @@ const router = express.Router();
  *                         longitude:
  *                           type: string
  *                           example: -46.6333094
- *       400:
- *         description: Dados inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Dados inválidos
- *       401:
- *         description: Usuário não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Usuário não autenticado
  *       500:
- *         description: Erro interno do servidor
+ *         description: Erro ao criar caso
  *         content:
  *           application/json:
  *             schema:
@@ -173,7 +118,82 @@ const router = express.Router();
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Erro interno do servidor
+ *                   example: Erro ao criar caso
+ *
+ *   get:
+ *     summary: Retorna todos os casos
+ *     tags:
+ *       - Casos
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           example: Em andamento
+ *         description: Filtra os casos pelo status
+ *       - in: query
+ *         name: dataAbertura
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *           example: 2022-01-01T00:00:00.000Z
+ *         description: Filtra os casos pela data de abertura
+ *     responses:
+ *       200:
+ *         description: Retorna todos os casos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 620e0e2a6f0a4c3a1a5e2f3a
+ *                   titulo:
+ *                     type: string
+ *                     example: Caso de teste
+ *                   descricao:
+ *                     type: string
+ *                     example: Este   um caso de teste
+ *                   status:
+ *                     type: string
+ *                     example: Em andamento
+ *                   dataAbertura:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2022-01-01T00:00:00.000Z
+ *                   dataFechamento:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2022-01-01T00:00:00.000Z
+ *                   dataOcorrencia:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2022-01-01T00:00:00.000Z
+ *                   paciente:
+ *                     type: string
+ *                     example: 620e0e2a6f0a4c3a1a5e2f3a
+ *                   localizacao:
+ *                     type: object
+ *                     properties:
+ *                       latitude:
+ *                         type: string
+ *                         example: -23.5505191
+ *                       longitude:
+ *                         type: string
+ *                         example: -46.6333094
+ *       500:
+ *         description: Erro ao filtrar casos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao filtrar casos
  */
 router.route('/')
     .get(authMiddleware("admin", "perito"), getAllCasos)
@@ -181,21 +201,21 @@ router.route('/')
 
 /**
  * @swagger
- * /casos/{id}:
+ * /caso/{id}:
  *   get:
  *     summary: Retorna um caso pelo id
  *     tags:
- *       - Casos
+ *       - Caso
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Id do caso
+ *         description: O id do caso
  *     responses:
  *       200:
- *         description: Retorna um caso pelo id
+ *         description: Retorna um caso
  *         content:
  *           application/json:
  *             schema:
@@ -203,29 +223,31 @@ router.route('/')
  *               properties:
  *                 _id:
  *                   type: string
- *                   example: 62577f659574d76626b2
+ *                   example: 620e0e2a6f0a4c3a1a5e2f3a
  *                 titulo:
  *                   type: string
  *                   example: Caso de teste
+ *                 descricao:
+ *                   type: string
+ *                   example: Este   um caso de teste
  *                 status:
  *                   type: string
- *                   enum: ['Em andamento', 'Finalizado', 'Arquivado']
  *                   example: Em andamento
  *                 dataAbertura:
  *                   type: string
- *                   format: date
- *                   example: 2022-01-01
+ *                   format: date-time
+ *                   example: 2022-01-01T00:00:00.000Z
  *                 dataFechamento:
  *                   type: string
- *                   format: date
- *                   example: 2022-01-01
+ *                   format: date-time
+ *                   example: 2022-01-01T00:00:00.000Z
  *                 dataOcorrencia:
  *                   type: string
- *                   format: date
- *                   example: 2022-01-01
+ *                   format: date-time
+ *                   example: 2022-01-01T00:00:00.000Z
  *                 paciente:
  *                   type: string
- *                   example: 62577f659574d76626b2
+ *                   example: 620e0e2a6f0a4c3a1a5e2f3a
  *                 localizacao:
  *                   type: object
  *                   properties:
@@ -235,26 +257,6 @@ router.route('/')
  *                     longitude:
  *                       type: string
  *                       example: -46.6333094
- *       400:
- *         description: Dados inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Dados inválidos
- *       401:
- *         description: Usuário não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Usuário não autenticado
  *       404:
  *         description: Caso não encontrado
  *         content:
@@ -266,7 +268,7 @@ router.route('/')
  *                   type: string
  *                   example: Caso não encontrado
  *       500:
- *         description: Erro interno do servidor
+ *         description: Erro ao obter caso
  *         content:
  *           application/json:
  *             schema:
@@ -274,19 +276,18 @@ router.route('/')
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Erro interno do servidor
- * /casos/{id}:
+ *                   example: Erro ao obter caso
  *   put:
- *     summary: Atualiza um caso pelo id
+ *     summary: Atualiza um caso
  *     tags:
- *       - Casos
+ *       - Caso
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Id do caso
+ *         description: O id do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -296,26 +297,28 @@ router.route('/')
  *             properties:
  *               titulo:
  *                 type: string
- *                 example: Caso de teste
+ *                 example: Caso de teste atualizado
+ *               descricao:
+ *                 type: string
+ *                 example: Este   um caso de teste atualizado
  *               status:
  *                 type: string
- *                 enum: ['Em andamento', 'Finalizado', 'Arquivado']
- *                 example: Em andamento
+ *                 example: Finalizado
  *               dataAbertura:
  *                 type: string
- *                 format: date
- *                 example: 2022-01-01
+ *                 format: date-time
+ *                 example: 2022-01-01T00:00:00.000Z
  *               dataFechamento:
  *                 type: string
- *                 format: date
- *                 example: 2022-01-01
+ *                 format: date-time
+ *                 example: 2022-01-01T00:00:00.000Z
  *               dataOcorrencia:
  *                 type: string
- *                 format: date
- *                 example: 2022-01-01
+ *                 format: date-time
+ *                 example: 2022-01-01T00:00:00.000Z
  *               paciente:
  *                 type: string
- *                 example: 62577f659574d76626b2
+ *                 example: 620e0e2a6f0a4c3a1a5e2f3a
  *               localizacao:
  *                 type: object
  *                 properties:
@@ -327,7 +330,7 @@ router.route('/')
  *                     example: -46.6333094
  *     responses:
  *       200:
- *         description: Atualiza um caso pelo id
+ *         description: Caso atualizado com sucesso!
  *         content:
  *           application/json:
  *             schema:
@@ -341,29 +344,31 @@ router.route('/')
  *                   properties:
  *                     _id:
  *                       type: string
- *                       example: 62577f659574d76626b2
+ *                       example: 620e0e2a6f0a4c3a1a5e2f3a
  *                     titulo:
  *                       type: string
- *                       example: Caso de teste
+ *                       example: Caso de teste atualizado
+ *                     descricao:
+ *                       type: string
+ *                       example: Este   um caso de teste atualizado
  *                     status:
  *                       type: string
- *                       enum: ['Em andamento', 'Finalizado', 'Arquivado']
- *                       example: Em andamento
+ *                       example: Finalizado
  *                     dataAbertura:
  *                       type: string
- *                       format: date
- *                       example: 2022-01-01
+ *                       format: date-time
+ *                       example: 2022-01-01T00:00:00.000Z
  *                     dataFechamento:
  *                       type: string
- *                       format: date
- *                       example: 2022-01-01
+ *                       format: date-time
+ *                       example: 2022-01-01T00:00:00.000Z
  *                     dataOcorrencia:
  *                       type: string
- *                       format: date
- *                       example: 2022-01-01
+ *                       format: date-time
+ *                       example: 2022-01-01T00:00:00.000Z
  *                     paciente:
  *                       type: string
- *                       example: 62577f659574d76626b2
+ *                       example: 620e0e2a6f0a4c3a1a5e2f3a
  *                     localizacao:
  *                       type: object
  *                       properties:
@@ -373,26 +378,6 @@ router.route('/')
  *                         longitude:
  *                           type: string
  *                           example: -46.6333094
- *       400:
- *         description: Dados inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Dados inválidos
- *       401:
- *         description: Usuário não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Usuário não autenticado
  *       404:
  *         description: Caso não encontrado
  *         content:
@@ -404,7 +389,7 @@ router.route('/')
  *                   type: string
  *                   example: Caso não encontrado
  *       500:
- *         description: Erro interno do servidor
+ *         description: Erro ao atualizar caso
  *         content:
  *           application/json:
  *             schema:
@@ -412,22 +397,21 @@ router.route('/')
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Erro interno do servidor
- * /casos/{id}:
+ *                   example: Erro ao atualizar caso
  *   delete:
- *     summary: Deleta um caso pelo id
+ *     summary: Deleta um caso
  *     tags:
- *       - Casos
+ *       - Caso
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Id do caso
+ *         description: O id do caso
  *     responses:
  *       200:
- *         description: Deleta um caso pelo id
+ *         description: Caso deletado com sucesso!
  *         content:
  *           application/json:
  *             schema:
@@ -436,6 +420,100 @@ router.route('/')
  *                 message:
  *                   type: string
  *                   example: Caso deletado com sucesso!
+ *       404:
+ *         description: Caso não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Caso não encontrado
+ *       500:
+ *         description: Erro ao deletar caso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao deletar caso
+ * */
+router.route('/:id')
+    .get(authMiddleware("admin", "perito"), getCasoById)
+    .put(authMiddleware("admin", "perito"), updateCaso)
+    .delete(authMiddleware("admin", "perito"), deleteCaso);
+
+/**
+ * @swagger
+ * /caso/add-paciente:
+ *   patch:
+ *     summary: Adiciona um paciente a um caso
+ *     description: Adiciona um paciente a um caso
+ *     tags:
+ *       - Caso
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idCaso:
+ *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *               idPaciente:
+ *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *     responses:
+ *       200:
+ *         description: Paciente adicionado ao caso com sucesso!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Paciente adicionado ao caso com sucesso!
+ *                 caso:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 62e0a54f7f5a4a0e5e7ec7e5
+ *                     titulo:
+ *                       type: string
+ *                       example: Titulo do caso
+ *                     descricao:
+ *                       type: string
+ *                       example: Descri o do caso
+ *                     status:
+ *                       type: string
+ *                       example: Em andamento
+ *                     dataAbertura:
+ *                       type: string
+ *                       example: 2022-07-22T14:30:00.000Z
+ *                     dataFechamento:
+ *                       type: string
+ *                       example: 2022-07-22T14:30:00.000Z
+ *                     paciente:
+ *                       type: object
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                           example: 62e0a54f7f5a4a0e5e7ec7e5
+ *                         nome:
+ *                           type: string
+ *                           example: Nome do paciente
+ *                         cpf:
+ *                           type: string
+ *                           example: 123.456.789-00
+ *                         dataNascimento:
+ *                           type: string
+ *                           example: 1990-01-01
  *       400:
  *         description: Dados inválidos
  *         content:
@@ -466,88 +544,6 @@ router.route('/')
  *                 error:
  *                   type: string
  *                   example: Caso não encontrado
- *       500:
- *         description: Erro interno do servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Erro interno do servidor
- * */
-router.route('/:id')
-    .get(authMiddleware("admin", "perito"), getCasoById)
-    .put(authMiddleware("admin", "perito"), updateCaso)
-    .delete(authMiddleware("admin", "perito"), deleteCaso);
-
-/**
- * @swagger
- * /casos/add-paciente:
- *   patch:
- *     summary: Adiciona um paciente a um caso
- *     tags:
- *       - Casos
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID do caso
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               pacienteId:
- *                 type: string
- *                 required: true
- *                 description: ID do paciente
- *     responses:
- *       200:
- *         description: Paciente adicionado ao caso com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Paciente adicionado ao caso com sucesso
- *       400:
- *         description: Dados inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Dados inválidos
- *       401:
- *         description: Usuário não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Usuário não autenticado
- *       404:
- *         description: Caso ou paciente não encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Caso ou paciente não encontrado
  *       500:
  *         description: Erro interno do servidor
  *         content:
