@@ -3,7 +3,7 @@ import Evidencia from '../models/evidencia.model.js';
 
 export const getDashboardCaso = async (req, res) => {
     try {
-        const casos = await Caso.find().populate('status');
+        const casos = await Caso.find();
 
         if (!casos) {
             return res.status(404).json({ error: 'Nenhum caso encontrado' });
@@ -48,7 +48,7 @@ export const getDashboardCaso = async (req, res) => {
 
 export const getDashboardEvidencia = async (req, res) => {
     try {
-        const evidencias = await Evidencia.find().populate('status');
+        const evidencias = await Evidencia.find();
         if (!evidencias) {
             return res.status(404).json({ error: 'Nenhuma evidência encontrada' });
         }
