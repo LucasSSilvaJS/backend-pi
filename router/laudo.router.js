@@ -21,7 +21,7 @@ const router = express.Router();
  *   get:
  *     summary: Retorna todos os laudos
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     responses:
@@ -46,7 +46,7 @@ const router = express.Router();
  *   post:
  *     summary: Cria um novo laudo
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -107,7 +107,7 @@ router.route('/')
  *   get:
  *     summary: Retorna um laudo por ID
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     parameters:
@@ -147,7 +147,7 @@ router.route('/')
  *   put:
  *     summary: Atualiza um laudo por ID
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     parameters:
@@ -199,7 +199,7 @@ router.route('/')
  *   delete:
  *     summary: Deleta um laudo por ID
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     parameters:
@@ -252,7 +252,7 @@ router.route('/:id')
  *   patch:
  *     summary: Adiciona um perito a um laudo
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -322,7 +322,7 @@ router.route('/add-perito')
  *   patch:
  *     summary: Adiciona uma evidência a um laudo
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -392,7 +392,7 @@ router.route('/add-evidencia')
  *   patch:
  *     summary: Adiciona um caso a um laudo
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:
@@ -462,7 +462,7 @@ router.route('/add-caso')
  *   patch:
  *     summary: Adiciona um paciente a um laudo
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     tags:
  *       - Laudos
  *     requestBody:

@@ -18,7 +18,7 @@ const router = express.Router();
  *   post:
  *     summary: Cria um novo paciente
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     description: Cria um novo paciente com base nos dados fornecidos
  *     tags:
  *       - Pacientes
@@ -71,7 +71,7 @@ const router = express.Router();
  *   get:
  *     summary: Retorna todos os pacientes
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     description: Lista todos os pacientes cadastrados
  *     tags:
  *       - Pacientes
@@ -105,7 +105,7 @@ router.route('/')
  *   get:
  *     summary: Retorna um paciente por ID
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     description: Retorna um paciente com base no ID fornecido
  *     tags:
  *       - Pacientes
@@ -147,7 +147,7 @@ router.route('/')
  *   put:
  *     summary: Atualiza um paciente
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     description: Atualiza um paciente com base nos dados fornecidos
  *     tags:
  *       - Pacientes
@@ -217,7 +217,7 @@ router.route('/')
  *   delete:
  *     summary: Deleta um paciente
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     description: Deleta um paciente com base no ID fornecido
  *     tags:
  *       - Pacientes
@@ -271,7 +271,7 @@ router.route('/:id')
  *   patch:
  *     summary: Adiciona um caso a um paciente
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     description: Associa um caso existente a um paciente existente.
  *     tags:
  *       - Pacientes
