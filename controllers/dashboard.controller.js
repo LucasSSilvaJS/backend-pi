@@ -24,7 +24,7 @@ export const getDashboardCaso = async (req, res) => {
         const inicioDoMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
         const fimDoMes = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
 
-        const quantidadeCasosNoMes = await Caso.countDocuments({
+        let quantidadeCasosNoMes = await Caso.countDocuments({
             dataAbertura: {
                 $gte: inicioDoMes,
                 $lte: fimDoMes
@@ -64,7 +64,7 @@ export const getDashboardEvidencia = async (req, res) => {
         const agora = new Date();
         const inicioDoMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
         const fimDoMes = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
-        const quantidadeEvidenciasNoMes = await Evidencia.countDocuments({
+        let quantidadeEvidenciasNoMes = await Evidencia.countDocuments({
             dataColeta: {
                 $gte: inicioDoMes,
                 $lte: fimDoMes
