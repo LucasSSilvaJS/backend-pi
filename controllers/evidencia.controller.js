@@ -8,18 +8,21 @@ export const createEvidencia = async (req, res) => {
             dataColeta,
             status,
             coletadaPor,
-            urlEvidencia,
             laudo
         } = req.body;
 
-        const novaEvidencia = new Evidencia({
+        const evidenciaData = {
             tipo,
             dataColeta,
             status,
             coletadaPor,
-            urlEvidencia,
-            laudo
-        });
+        };
+
+        if (laudo) {
+            evidenciaData.laudo = laudo;
+        }
+
+        const novaEvidencia = new Evidencia(evidenciaData);
 
         if (req.files && req.files.length > 0) {
             const uploadPromises = req.files.map((file) =>

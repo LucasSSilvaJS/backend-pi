@@ -60,14 +60,12 @@ const router = express.Router();
  *                   example: Erro ao buscar evidências
  *   post:
  *     summary: Cria uma nova evidência
- *     security:
- *       - bearerAuth: []
  *     tags:
  *       - Evidências
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -80,15 +78,40 @@ const router = express.Router();
  *                 type: string
  *               coletadaPor:
  *                 type: string
- *               urlEvidencia:
- *                 type: string
  *               laudo:
  *                 type: string
- *               files:
+ *               urlEvidencia:
  *                 type: array
  *                 items:
  *                   type: string
- *                   format: binary
+ *       responses:
+ *         201:
+ *           description: Evidência criada com sucesso
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                   evidencia:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       tipo:
+ *                         type: string
+ *                       dataColeta:
+ *                         type: string
+ *                         format: date-time
+ *                       status:
+ *                         type: string
+ *                       coletadaPor:
+ *                         type: string
+ *                       urlEvidencia:
+ *                         type: array
+ *                         items:
+ *                           type: string
  *     responses:
  *       201:
  *         description: Evidência criada com sucesso
