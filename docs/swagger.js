@@ -11,7 +11,12 @@ const options = {
         servers: [
             {
                 url: "https://odontolegal-api.onrender.com/",
+                description: "Produção"
             },
+            {
+                url: "http://localhost:88/",
+                description: "Desenvolvimento local"
+            }
         ],
         components: {
             securitySchemes: {

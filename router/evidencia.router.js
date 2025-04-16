@@ -65,7 +65,7 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -84,6 +84,11 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   type: string
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *       responses:
  *         201:
  *           description: Evidência criada com sucesso
