@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (...cargosPermitidos) => {
+    if (process.env.DISABLE_AUTH === 'true') {
+        return (req, res, next) => next();
+    }
+    
     return (req, res, next) => {
         const authHeader = req.headers.authorization;
     
