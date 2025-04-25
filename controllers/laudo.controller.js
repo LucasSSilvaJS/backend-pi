@@ -20,7 +20,8 @@ export const createLaudo = async (req, res) => {
         });
 
         await novoLaudo.save();
-        res.status(201).json({ message: 'Laudo criado com sucesso!', laudo: novoLaudo });
+        const laudoPopulado = await Laudo.findById(novoLaudo._id).populate('parecer.caso');
+        res.status(201).json({ message: 'Laudo criado com sucesso!', laudo: laudoPopulado });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao criar laudo' });
@@ -30,7 +31,7 @@ export const createLaudo = async (req, res) => {
 // Controller to get all Laudos
 export const getAllLaudos = async (req, res) => {
     try {
-        const laudos = await Laudo.find().populate('parecer.caso parecer.evidencia parecer.paciente');
+        const laudos = await Laudo.find().populate('parecer.caso');
         res.status(200).json(laudos);
     } catch (err) {
         console.error(err);
@@ -41,7 +42,7 @@ export const getAllLaudos = async (req, res) => {
 // Controller to get a Laudo by ID
 export const getLaudoById = async (req, res) => {
     try {
-        const laudo = await Laudo.findById(req.params.id).populate('parecer.caso parecer.evidencia parecer.paciente');
+        const laudo = await Laudo.findById(req.params.id).populate('parecer.caso');
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
@@ -55,7 +56,7 @@ export const getLaudoById = async (req, res) => {
 // Controller to update a Laudo
 export const updateLaudo = async (req, res) => {
     try {
-        const laudo = await Laudo.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const laudo = await Laudo.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('parecer.caso');
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
@@ -93,7 +94,7 @@ export const addPeritoToLaudo = async (req, res) => {
             idLaudo,
             { peritoResponsavel: idPerito },
             { new: true }
-        );
+        ).populate('parecer.caso');
 
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
@@ -143,7 +144,7 @@ export const addCasoToLaudo = async (req, res) => {
             idLaudo,
             { parecer: { caso: idCaso } },
             { new: true }
-        );
+        ).populate('parecer.caso');
 
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });

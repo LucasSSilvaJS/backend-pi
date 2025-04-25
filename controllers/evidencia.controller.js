@@ -8,7 +8,7 @@ export const createEvidencia = async (req, res) => {
             dataColeta,
             status,
             coletadaPor,
-            laudo
+            caso
         } = req.body;
 
         const evidenciaData = {
@@ -18,8 +18,8 @@ export const createEvidencia = async (req, res) => {
             coletadaPor,
         };
 
-        if (laudo) {
-            evidenciaData.laudo = laudo;
+        if (caso) {
+            evidenciaData.caso = caso;
         }
 
         const novaEvidencia = new Evidencia(evidenciaData);
@@ -46,7 +46,7 @@ export const createEvidencia = async (req, res) => {
 
 export const getAllEvidencias = async (req, res) => {
     try {
-        const evidencias = await Evidencia.find().populate('laudo');
+        const evidencias = await Evidencia.find().populate('caso');
         res.status(200).json(evidencias);
     } catch (err) {
         console.error(err);
@@ -56,7 +56,7 @@ export const getAllEvidencias = async (req, res) => {
 
 export const getEvidenciaById = async (req, res) => {
     try {
-        const evidencia = await Evidencia.findById(req.params.id).populate('laudo');
+        const evidencia = await Evidencia.findById(req.params.id).populate('caso');
         if (!evidencia) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
         }
@@ -83,7 +83,7 @@ export const updateEvidencia = async (req, res) => {
         const evidenciaAtualizada = await Evidencia.findByIdAndUpdate(id, updateData, {
             new: true,
             runValidators: true
-        });
+        }).populate('caso');
 
         if (!evidenciaAtualizada) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
@@ -116,19 +116,19 @@ export const deleteEvidencia = async (req, res) => {
     }
 };
 
-export const addLaudoToEvidencia = async (req, res) => {
+export const addCasoToEvidencia = async (req, res) => {
     try {
-        const { idEvidencia, idLaudo } = req.body;
+        const { idEvidencia, idCaso } = req.body;
 
-        if (!idLaudo || !idEvidencia) {
-            return res.status(400).json({ error: 'idLaudo e idEvidencia são obrigatórios' });
+        if (!idCaso || !idEvidencia) {
+            return res.status(400).json({ error: 'idCaso e idEvidencia são obrigatórios' });
         }
 
         const evidencia = await Evidencia.findByIdAndUpdate(
             idEvidencia,
-            { laudo: idLaudo },
+            { caso: idCaso },
             { new: true }
-        );
+        ).populate('caso');
 
         if (!evidencia) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
@@ -140,6 +140,6 @@ export const addLaudoToEvidencia = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Erro ao preencher laudoId da evidência' });
+        res.status(500).json({ error: 'Erro ao adicionar caso à evidência' });
     }
 };

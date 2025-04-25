@@ -5,7 +5,8 @@ import {
     getCasoById,
     updateCaso,
     deleteCaso,
-    addPacienteToCaso
+    addPacienteToCaso,
+    addEvidenciaToCaso
 } from '../controllers/caso.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -202,6 +203,95 @@ const router = express.Router();
 router.route('/')
     .get(authMiddleware("admin", "perito"), getAllCasos)
     .post(authMiddleware("admin", "perito"), createCaso);
+
+/**
+ * @swagger
+ * /casos/add-evidencia:
+ *   patch:
+ *     summary: Adiciona uma evidência a um caso
+ *     security:
+ *       - bearerAuth: []
+ *     description: Adiciona uma evidência a um caso
+ *     tags:
+ *       - Casos
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idCaso:
+ *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *               idEvidencia:
+ *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *     responses:
+ *       200:
+ *         description: Evidência adicionada ao caso com sucesso!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Evidência adicionada ao caso com sucesso!
+ *                 caso:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 62e0a54f7f5a4a0e5e7ec7e5
+ *                     titulo:
+ *                       type: string
+ *                       example: Titulo do caso
+ *                     descricao:
+ *                       type: string
+ *                       example: Descrição do caso
+ *                     status:
+ *                       type: string
+ *                       example: Em andamento
+ *                     evidencia:
+ *                       type: object
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                           example: 62e0a54f7f5a4a0e5e7ec7e5
+ *       400:
+ *         description: Dados inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Dados inválidos
+ *       404:
+ *         description: Caso não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Caso não encontrado
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro interno do servidor
+ */
+router.route('/add-evidencia')
+    .patch(authMiddleware("admin", "perito"), addEvidenciaToCaso);
 
 /**
  * @swagger

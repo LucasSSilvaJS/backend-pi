@@ -5,7 +5,7 @@ import {
     getEvidenciaById,
     updateEvidencia,
     deleteEvidencia,
-    addLaudoToEvidencia
+    addCasoToEvidencia
 } from '../controllers/evidencia.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -46,7 +46,7 @@ const router = express.Router();
  *                     type: string
  *                   urlEvidencia:
  *                     type: string
- *                   laudo:
+ *                   caso:
  *                     type: string
  *       500:
  *         description: Erro ao buscar evidências
@@ -78,7 +78,7 @@ const router = express.Router();
  *                 type: string
  *               coletadaPor:
  *                 type: string
- *               laudo:
+ *               caso:
  *                 type: string
  *               urlEvidencia:
  *                 type: array
@@ -146,7 +146,7 @@ const router = express.Router();
  *                       type: array
  *                       items:
  *                         type: string
- *                     laudo:
+ *                     caso:
  *                       type: string
  *       500:
  *         description: Erro ao criar evidência
@@ -202,7 +202,7 @@ router.route('/')
  *                   type: array
  *                   items:
  *                     type: string
- *                 laudo:
+ *                 caso:
  *                   type: string
  *       404:
  *         description: Evidência não encontrada
@@ -224,19 +224,22 @@ router.route('/')
  *                 error:
  *                   type: string
  *                   example: Erro ao buscar evidência
- *   put:
- *     summary: Atualiza uma evidência
+ */
+router.route('/:id')
+    .get(authMiddleware("admin", "perito", "assistente"), getEvidenciaById)
+    .put(authMiddleware("admin", "perito", "assistente"), updateEvidencia)
+    .delete(authMiddleware("admin", "perito", "assistente"), deleteEvidencia);
+
+/**
+ * @swagger
+ * /evidencias/add-caso:
+ *   patch:
+ *     summary: Adiciona um caso a uma evidência
  *     security:
  *       - bearerAuth: []
+ *     description: Adiciona um caso a uma evidência
  *     tags:
  *       - Evidências
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: O id da evidência
  *     requestBody:
  *       required: true
  *       content:
@@ -244,24 +247,15 @@ router.route('/')
  *           schema:
  *             type: object
  *             properties:
- *               tipo:
+ *               idEvidencia:
  *                 type: string
- *               dataColeta:
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *               idCaso:
  *                 type: string
- *                 format: date-time
- *               status:
- *                 type: string
- *               coletadaPor:
- *                 type: string
- *               urlEvidencia:
- *                 type: array
- *                 items:
- *                   type: string
- *               laudo:
- *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
  *     responses:
  *       200:
- *         description: Evidência atualizada com sucesso!
+ *         description: Caso adicionado à evidência com sucesso!
  *         content:
  *           application/json:
  *             schema:
@@ -269,7 +263,7 @@ router.route('/')
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Evidência atualizada com sucesso!
+ *                   example: Caso adicionado à evidência com sucesso!
  *                 evidencia:
  *                   type: object
  *                   properties:
@@ -288,116 +282,10 @@ router.route('/')
  *                       type: array
  *                       items:
  *                         type: string
- *                     laudo:
+ *                     caso:
  *                       type: string
- *       404:
- *         description: Evidência não encontrada
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Evidência não encontrada
- *       500:
- *         description: Erro ao atualizar evidência
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Erro ao atualizar evidência
- *   delete:
- *     summary: Deleta uma evidência
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Evidências
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: O id da evidência
- *     responses:
- *       200:
- *         description: Evidência deletada com sucesso!
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Evidência deletada com sucesso!
- *       404:
- *         description: Evidência não encontrada
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Evidência não encontrada
- *       500:
- *         description: Erro ao deletar evidência
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Erro ao deletar evidência
- */
-router.route('/:id')
-    .get(authMiddleware("admin", "perito", "assistente"), getEvidenciaById)
-    .put(authMiddleware("admin", "perito", "assistente"), upload.array('files', 10), updateEvidencia)
-    .delete(authMiddleware("admin", "perito", "assistente"), deleteEvidencia);
-
-/**
- * @swagger
- * /evidencias/add-laudo:
- *   patch:
- *     summary: Adiciona um laudo a uma evidência
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Evidências
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               idEvidencia:
- *                 type: string
- *                 description: O id da evidência
- *               idLaudo:
- *                 type: string
- *                 description: O id do laudo a ser adicionado
- *     responses:
- *       200:
- *         description: Evidência atualizada com sucesso!
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Evidência atualizada com sucesso!
- *                 evidencia:
- *                   type: object
- *                   $ref: '#/components/schemas/Evidencia'
  *       400:
- *         description: idLaudo e idEvidencia são obrigatórios
+ *         description: Dados inválidos
  *         content:
  *           application/json:
  *             schema:
@@ -405,7 +293,7 @@ router.route('/:id')
  *               properties:
  *                 error:
  *                   type: string
- *                   example: idLaudo e idEvidencia são obrigatórios
+ *                   example: Dados inválidos
  *       404:
  *         description: Evidência não encontrada
  *         content:
@@ -417,7 +305,7 @@ router.route('/:id')
  *                   type: string
  *                   example: Evidência não encontrada
  *       500:
- *         description: Erro ao preencher laudoId da evidência
+ *         description: Erro interno do servidor
  *         content:
  *           application/json:
  *             schema:
@@ -425,9 +313,9 @@ router.route('/:id')
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Erro ao preencher laudoId da evidência
+ *                   example: Erro interno do servidor
  */
-router.route('/add-laudo')
-    .patch(authMiddleware("admin", "perito", "assistente"), addLaudoToEvidencia);
+router.route('/add-caso')
+    .patch(authMiddleware("admin", "perito", "assistente"), addCasoToEvidencia);
 
 export default router;

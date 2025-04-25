@@ -9,6 +9,7 @@ export const createCaso = async (req, res) => {
         dataFechamento,
         dataOcorrencia,
         paciente,
+        evidencia,
         localizacao
     } = req.body;
 
@@ -20,6 +21,7 @@ export const createCaso = async (req, res) => {
         dataFechamento,
         dataOcorrencia,
         paciente,
+        evidencia,
         localizacao
     });
 
@@ -33,6 +35,7 @@ export const createCaso = async (req, res) => {
         res.status(500).json({ error: 'Erro ao criar caso' });
     }
 };
+
 export const getAllCasos = async (req, res) => {
     const { status, dataAbertura } = req.query;
     const query = {};
@@ -46,7 +49,9 @@ export const getAllCasos = async (req, res) => {
     }
 
     try {
-        const casos = await Caso.find(query).populate('paciente');
+        const casos = await Caso.find(query)
+            .populate('paciente')
+            .populate('evidencia');
         res.status(200).json(casos);
     } catch (err) {
         console.error(err);
@@ -56,7 +61,9 @@ export const getAllCasos = async (req, res) => {
 
 export const getCasoById = async (req, res) => {
     try {
-        const caso = await Caso.findById(req.params.id).populate('paciente');
+        const caso = await Caso.findById(req.params.id)
+            .populate('paciente')
+            .populate('evidencia');
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -69,7 +76,9 @@ export const getCasoById = async (req, res) => {
 
 export const updateCaso = async (req, res) => {
     try {
-        const caso = await Caso.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const caso = await Caso.findByIdAndUpdate(req.params.id, req.body, { new: true })
+            .populate('paciente')
+            .populate('evidencia');
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -108,7 +117,7 @@ export const addPacienteToCaso = async (req, res) => {
             idCaso,
             { paciente: idPaciente },
             { new: true }
-        );
+        ).populate('paciente').populate('evidencia');
 
         if (!casoAtualizado) {
             return res.status(404).json({ error: 'Caso não encontrado' });
@@ -121,5 +130,33 @@ export const addPacienteToCaso = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao adicionar paciente ao caso' });
+    }
+};
+
+export const addEvidenciaToCaso = async (req, res) => {
+    try {
+        const { idCaso, idEvidencia } = req.body;
+
+        if (!idCaso || !idEvidencia) {
+            return res.status(400).json({ error: 'idCaso e idEvidencia são obrigatórios' });
+        }
+
+        const casoAtualizado = await Caso.findByIdAndUpdate(
+            idCaso,
+            { evidencia: idEvidencia },
+            { new: true }
+        ).populate('paciente').populate('evidencia');
+
+        if (!casoAtualizado) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+
+        res.status(200).json({
+            message: 'Evidência adicionada ao caso com sucesso!',
+            caso: casoAtualizado
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao adicionar evidência ao caso' });
     }
 };

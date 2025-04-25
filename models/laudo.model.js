@@ -7,9 +7,7 @@ const LaudoSchema = new mongoose.Schema({
     },
     dataCriacao: { type: Date, required: true, default: Date.now},
     parecer: {
-        caso: {type: mongoose.Schema.Types.ObjectId, ref: 'Caso', required: true},
-        evidencia: {type: mongoose.Schema.Types.ObjectId, ref: 'Evidencia', required: true},
-        paciente: {type: mongoose.Schema.Types.ObjectId, ref: 'Paciente', required: true}
+        caso: {type: mongoose.Schema.Types.ObjectId, ref: 'Caso', required: true}
     },
     detalhamento: { type: String, required: true },
     conclusao: { type: String, required: true },
