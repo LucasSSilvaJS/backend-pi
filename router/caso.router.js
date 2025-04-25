@@ -7,7 +7,6 @@ import {
     deleteCaso,
     addPacienteToCaso
 } from '../controllers/caso.controller.js';
-import { listarCasos } from '../controllers/lista.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -203,64 +202,6 @@ const router = express.Router();
 router.route('/')
     .get(authMiddleware("admin", "perito"), getAllCasos)
     .post(authMiddleware("admin", "perito"), createCaso);
-
-/**
- * @swagger
- * /casos/lista:
- *   get:
- *     summary: Lista os títulos dos casos com seus IDs, IDs de evidências e IDs de pacientes
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Casos
- *     responses:
- *       200:
- *         description: Lista de casos com informações relacionadas
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                         example: "620e0e2a6f0a4c3a1a5e2f3a"
- *                       titulo:
- *                         type: string
- *                         example: "Caso de teste"
- *                       evidencias:
- *                         type: array
- *                         items:
- *                           type: string
- *                         example: ["620e0e2a6f0a4c3a1a5e2f3b", "620e0e2a6f0a4c3a1a5e2f3c"]
- *                       pacienteId:
- *                         type: string
- *                         example: "620e0e2a6f0a4c3a1a5e2f3d"
- *       500:
- *         description: Erro ao listar casos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erro ao listar casos"
- *                 error:
- *                   type: string
- *                   example: "Erro interno do servidor"
- */
-router.get('/lista', authMiddleware, listarCasos);
 
 /**
  * @swagger
