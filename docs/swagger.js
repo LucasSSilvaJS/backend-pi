@@ -132,7 +132,7 @@ const options = {
                 // Evidencia Schema
                 Evidencia: {
                     type: "object",
-                    required: ["tipo", "dataColeta", "status", "coletadaPor", "urlEvidencia"],
+                    required: ["tipo", "dataColeta", "status", "coletadaPor"],
                     properties: {
                         tipo: {
                             type: "string",
@@ -153,12 +153,15 @@ const options = {
                             description: "ID do usuário que coletou a evidência",
                         },
                         urlEvidencia: {
-                            type: "string",
-                            description: "URL para acessar a evidência",
+                            type: "array",
+                            items: {
+                                type: "string"
+                            },
+                            description: "URLs para acessar as evidências",
                         },
-                        laudo: {
+                        caso: {
                             type: "string",
-                            description: "ID do laudo relacionado",
+                            description: "ID do caso relacionado",
                         },
                     },
                 },

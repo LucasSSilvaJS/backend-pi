@@ -31,23 +31,7 @@ const router = express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   tipo:
- *                     type: string
- *                   dataColeta:
- *                     type: string
- *                     format: date-time
- *                   status:
- *                     type: string
- *                   coletadaPor:
- *                     type: string
- *                   urlEvidencia:
- *                     type: string
- *                   caso:
- *                     type: string
+ *                 $ref: '#/components/schemas/Evidencia'
  *       500:
  *         description: Erro ao buscar evidências
  *         content:
@@ -60,6 +44,8 @@ const router = express.Router();
  *                   example: Erro ao buscar evidências
  *   post:
  *     summary: Cria uma nova evidência
+ *     security:
+ *       - bearerAuth: []
  *     tags:
  *       - Evidências
  *     requestBody:
@@ -80,43 +66,11 @@ const router = express.Router();
  *                 type: string
  *               caso:
  *                 type: string
- *               urlEvidencia:
- *                 type: array
- *                 items:
- *                   type: string
  *               files:
  *                 type: array
  *                 items:
  *                   type: string
  *                   format: binary
- *       responses:
- *         201:
- *           description: Evidência criada com sucesso
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   message:
- *                     type: string
- *                   evidencia:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                       tipo:
- *                         type: string
- *                       dataColeta:
- *                         type: string
- *                         format: date-time
- *                       status:
- *                         type: string
- *                       coletadaPor:
- *                         type: string
- *                       urlEvidencia:
- *                         type: array
- *                         items:
- *                           type: string
  *     responses:
  *       201:
  *         description: Evidência criada com sucesso
@@ -129,25 +83,7 @@ const router = express.Router();
  *                   type: string
  *                   example: Evidência criada com sucesso!
  *                 evidencia:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     tipo:
- *                       type: string
- *                     dataColeta:
- *                       type: string
- *                       format: date-time
- *                     status:
- *                       type: string
- *                     coletadaPor:
- *                       type: string
- *                     urlEvidencia:
- *                       type: array
- *                       items:
- *                         type: string
- *                     caso:
- *                       type: string
+ *                   $ref: '#/components/schemas/Evidencia'
  *       500:
  *         description: Erro ao criar evidência
  *         content:
@@ -181,29 +117,11 @@ router.route('/')
  *         description: O id da evidência
  *     responses:
  *       200:
- *         description: Evidência encontrada com sucesso!
+ *         description: Evidência encontrada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 tipo:
- *                   type: string
- *                 dataColeta:
- *                   type: string
- *                   format: date-time
- *                 status:
- *                   type: string
- *                 coletadaPor:
- *                   type: string
- *                 urlEvidencia:
- *                   type: array
- *                   items:
- *                     type: string
- *                 caso:
- *                   type: string
+ *               $ref: '#/components/schemas/Evidencia'
  *       404:
  *         description: Evidência não encontrada
  *         content:
@@ -224,8 +142,60 @@ router.route('/')
  *                 error:
  *                   type: string
  *                   example: Erro ao buscar evidência
+ *   put:
+ *     summary: Atualiza uma evidência
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Evidências
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: O id da evidência
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Evidencia'
+ *     responses:
+ *       200:
+ *         description: Evidência atualizada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Evidência atualizada com sucesso!
+ *                 evidencia:
+ *                   $ref: '#/components/schemas/Evidencia'
+ *       404:
+ *         description: Evidência não encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Evidência não encontrada
+ *       500:
+ *         description: Erro ao atualizar evidência
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao atualizar evidência
  *   delete:
- *     summary: Deleta uma evidência por ID
+ *     summary: Deleta uma evidência
  *     security:
  *       - bearerAuth: []
  *     tags:
@@ -239,7 +209,7 @@ router.route('/')
  *         description: O id da evidência
  *     responses:
  *       200:
- *         description: Evidência deletada com sucesso!
+ *         description: Evidência deletada com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -281,7 +251,6 @@ router.route('/:id')
  *     summary: Adiciona um caso a uma evidência
  *     security:
  *       - bearerAuth: []
- *     description: Adiciona um caso a uma evidência
  *     tags:
  *       - Evidências
  *     requestBody:
@@ -290,16 +259,19 @@ router.route('/:id')
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - idEvidencia
+ *               - idCaso
  *             properties:
  *               idEvidencia:
  *                 type: string
- *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *                 description: ID da evidência
  *               idCaso:
  *                 type: string
- *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *                 description: ID do caso
  *     responses:
  *       200:
- *         description: Caso adicionado à evidência com sucesso!
+ *         description: Caso adicionado à evidência com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -309,25 +281,7 @@ router.route('/:id')
  *                   type: string
  *                   example: Caso adicionado à evidência com sucesso!
  *                 evidencia:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     tipo:
- *                       type: string
- *                     dataColeta:
- *                       type: string
- *                       format: date-time
- *                     status:
- *                       type: string
- *                     coletadaPor:
- *                       type: string
- *                     urlEvidencia:
- *                       type: array
- *                       items:
- *                         type: string
- *                     caso:
- *                       type: string
+ *                   $ref: '#/components/schemas/Evidencia'
  *       400:
  *         description: Dados inválidos
  *         content:
@@ -349,7 +303,7 @@ router.route('/:id')
  *                   type: string
  *                   example: Evidência não encontrada
  *       500:
- *         description: Erro interno do servidor
+ *         description: Erro ao adicionar caso à evidência
  *         content:
  *           application/json:
  *             schema:
@@ -357,7 +311,7 @@ router.route('/:id')
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Erro interno do servidor
+ *                   example: Erro ao adicionar caso à evidência
  */
 router.route('/add-caso')
     .patch(authMiddleware("admin", "perito", "assistente"), addCasoToEvidencia);
