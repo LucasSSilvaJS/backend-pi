@@ -14,7 +14,7 @@ export const createEvidencia = async (req, res) => {
         const evidenciaData = {
             tipo,
             dataColeta,
-            status,
+            status: status || 'Em análise',
             coletadaPor,
         };
 
@@ -30,6 +30,8 @@ export const createEvidencia = async (req, res) => {
             );
             const imagensUrls = await Promise.all(uploadPromises);
             novaEvidencia.urlEvidencia = imagensUrls;
+        } else {
+            return res.status(400).json({ error: 'É necessário enviar pelo menos uma evidência' });
         }
 
         await novaEvidencia.save();
@@ -46,7 +48,9 @@ export const createEvidencia = async (req, res) => {
 
 export const getAllEvidencias = async (req, res) => {
     try {
-        const evidencias = await Evidencia.find().populate('caso');
+        const evidencias = await Evidencia.find()
+            .populate('caso')
+            .populate('coletadaPor', 'username cargo');
         res.status(200).json(evidencias);
     } catch (err) {
         console.error(err);
@@ -56,7 +60,10 @@ export const getAllEvidencias = async (req, res) => {
 
 export const getEvidenciaById = async (req, res) => {
     try {
-        const evidencia = await Evidencia.findById(req.params.id).populate('caso');
+        const evidencia = await Evidencia.findById(req.params.id)
+            .populate('caso')
+            .populate('coletadaPor', 'username cargo');
+            
         if (!evidencia) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
         }
@@ -72,18 +79,24 @@ export const updateEvidencia = async (req, res) => {
         const { id } = req.params;
         const updateData = req.body;
 
-        if (updateData.urlEvidencia) {
-            const uploadPromises = updateData.urlEvidencia.map((url) =>
-                uploadToCloudinary(url)
+        if (req.files && req.files.length > 0) {
+            const uploadPromises = req.files.map((file) =>
+                uploadToCloudinary(file)
             );
             const imagensUrls = await Promise.all(uploadPromises);
             updateData.urlEvidencia = imagensUrls;
         }
 
-        const evidenciaAtualizada = await Evidencia.findByIdAndUpdate(id, updateData, {
-            new: true,
-            runValidators: true
-        }).populate('caso');
+        const evidenciaAtualizada = await Evidencia.findByIdAndUpdate(
+            id, 
+            updateData, 
+            {
+                new: true,
+                runValidators: true
+            }
+        )
+        .populate('caso')
+        .populate('coletadaPor', 'username cargo');
 
         if (!evidenciaAtualizada) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
@@ -127,8 +140,13 @@ export const addCasoToEvidencia = async (req, res) => {
         const evidencia = await Evidencia.findByIdAndUpdate(
             idEvidencia,
             { caso: idCaso },
-            { new: true }
-        ).populate('caso');
+            { 
+                new: true,
+                runValidators: true
+            }
+        )
+        .populate('caso')
+        .populate('coletadaPor', 'username cargo');
 
         if (!evidencia) {
             return res.status(404).json({ error: 'Evidência não encontrada' });

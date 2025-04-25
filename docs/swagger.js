@@ -48,12 +48,21 @@ const options = {
                             enum: ["perito", "assistente", "admin"],
                             description: "Cargo do usuário",
                         },
+                        createdAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data de criação do usuário",
+                        },
+                        updatedAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data da última atualização do usuário",
+                        }
                     },
                 },
-                // Paciente Schema
                 Paciente: {
                     type: "object",
-                    required: ["nome", "cpf", "rg", "status", "caso"],
+                    required: ["status", "caso"],
                     properties: {
                         nome: {
                             type: "string",
@@ -61,11 +70,11 @@ const options = {
                         },
                         cpf: {
                             type: "string",
-                            description: "CPF do paciente",
+                            description: "CPF do paciente (único)",
                         },
                         rg: {
                             type: "string",
-                            description: "RG do paciente",
+                            description: "RG do paciente (único)",
                         },
                         status: {
                             type: "string",
@@ -75,9 +84,18 @@ const options = {
                             type: "string",
                             description: "ID do caso relacionado",
                         },
+                        createdAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data de criação do paciente",
+                        },
+                        updatedAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data da última atualização do paciente",
+                        }
                     },
                 },
-                // Caso Schema
                 Caso: {
                     type: "object",
                     required: ["titulo", "descricao", "status", "dataAbertura", "dataOcorrencia"],
@@ -94,6 +112,7 @@ const options = {
                             type: "string",
                             enum: ["Em andamento", "Finalizado", "Arquivado"],
                             description: "Status do caso",
+                            default: "Em andamento"
                         },
                         dataAbertura: {
                             type: "string",
@@ -114,6 +133,10 @@ const options = {
                             type: "string",
                             description: "ID do paciente relacionado",
                         },
+                        evidencia: {
+                            type: "string",
+                            description: "ID da evidência relacionada",
+                        },
                         localizacao: {
                             type: "object",
                             properties: {
@@ -127,12 +150,21 @@ const options = {
                                 },
                             },
                         },
+                        createdAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data de criação do caso",
+                        },
+                        updatedAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data da última atualização do caso",
+                        }
                     },
                 },
-                // Evidencia Schema
                 Evidencia: {
                     type: "object",
-                    required: ["tipo", "dataColeta", "status", "coletadaPor"],
+                    required: ["tipo", "dataColeta", "status", "coletadaPor", "urlEvidencia"],
                     properties: {
                         tipo: {
                             type: "string",
@@ -147,6 +179,7 @@ const options = {
                             type: "string",
                             enum: ["Em análise", "Concluído"],
                             description: "Status da evidência",
+                            default: "Em análise"
                         },
                         coletadaPor: {
                             type: "string",
@@ -163,9 +196,18 @@ const options = {
                             type: "string",
                             description: "ID do caso relacionado",
                         },
+                        createdAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data de criação da evidência",
+                        },
+                        updatedAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data da última atualização da evidência",
+                        }
                     },
                 },
-                // Laudo Schema
                 Laudo: {
                     type: "object",
                     required: ["titulo", "peritoResponsavel", "dataCriacao", "parecer", "detalhamento", "conclusao"],
@@ -185,19 +227,11 @@ const options = {
                         },
                         parecer: {
                             type: "object",
-                            required: ["caso", "evidencia", "paciente"],
+                            required: ["caso"],
                             properties: {
                                 caso: {
                                     type: "string",
                                     description: "ID do caso relacionado",
-                                },
-                                evidencia: {
-                                    type: "string",
-                                    description: "ID da evidência relacionada",
-                                },
-                                paciente: {
-                                    type: "string",
-                                    description: "ID do paciente relacionado",
                                 },
                             },
                         },
@@ -209,6 +243,16 @@ const options = {
                             type: "string",
                             description: "Conclusão do laudo",
                         },
+                        createdAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data de criação do laudo",
+                        },
+                        updatedAt: {
+                            type: "string",
+                            format: "date-time",
+                            description: "Data da última atualização do laudo",
+                        }
                     },
                 },
             }
