@@ -224,6 +224,50 @@ router.route('/')
  *                 error:
  *                   type: string
  *                   example: Erro ao buscar evidência
+ *   delete:
+ *     summary: Deleta uma evidência por ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Evidências
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: O id da evidência
+ *     responses:
+ *       200:
+ *         description: Evidência deletada com sucesso!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Evidência deletada com sucesso!
+ *       404:
+ *         description: Evidência não encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Evidência não encontrada
+ *       500:
+ *         description: Erro ao deletar evidência
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao deletar evidência
  */
 router.route('/:id')
     .get(authMiddleware("admin", "perito", "assistente"), getEvidenciaById)
