@@ -125,7 +125,7 @@ export const deleteEvidencia = async (req, res) => {
 
         await Caso.updateMany(
             { evidencia: id }, // Caso tenha a evidência no campo 'evidencia'
-            { $set: { evidencia: null } } // Limpar a referência da evidência
+            { $unset: { evidencia: '' } } // Remover o atributo evidencia
         );
 
         res.status(200).json({ message: 'Evidência deletada com sucesso!' });

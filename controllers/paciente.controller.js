@@ -133,7 +133,7 @@ export const deletePaciente = async (req, res) => {
 
         await Caso.updateMany(
             { paciente: id }, // Caso tenha a paciente no campo 'paciente'
-            { $set: { paciente: null } } // Limpar a referência da paciente
+            { $unset: { paciente: "" } } // Remover o atributo 'paciente'
         );
 
         res.status(200).json({ message: 'Paciente deletado com sucesso!' });
