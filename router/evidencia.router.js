@@ -313,7 +313,7 @@ router.route('/add-caso')
  */
 router.route('/:id')
     .get(authMiddleware("admin", "perito", "assistente"), getEvidenciaById)
-    .put(authMiddleware("admin", "perito", "assistente"), updateEvidencia)
+    .put(authMiddleware("admin", "perito", "assistente"), upload.array('files', 10), updateEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteEvidencia);
 
 
