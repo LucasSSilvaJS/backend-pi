@@ -101,6 +101,76 @@ router.route('/')
 
 /**
  * @swagger
+ * /pacientes/add-caso:
+ *   patch:
+ *     summary: Adiciona um caso a um paciente
+ *     security:
+ *       - bearerAuth: []
+ *     description: Associa um caso existente a um paciente existente.
+ *     tags:
+ *       - Pacientes
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idCaso:
+ *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *               idPaciente:
+ *                 type: string
+ *                 example: 62e0a54f7f5a4a0e5e7ec7e5
+ *     responses:
+ *       200:
+ *         description: Caso adicionado ao paciente com sucesso!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Caso adicionado ao paciente com sucesso!
+ *                 paciente:
+ *                   $ref: '#/components/schemas/Paciente'
+ *       400:
+ *         description: idCaso e idPaciente são obrigatórios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: idCaso e idPaciente são obrigatórios
+ *       404:
+ *         description: Paciente não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Paciente não encontrado
+ *       500:
+ *         description: Erro ao adicionar caso ao paciente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao adicionar caso ao paciente
+ */
+router.route('/add-caso')
+    .patch(authMiddleware("admin", "perito"), addCasoToPaciente);
+
+/**
+ * @swagger
  * /pacientes/{id}:
  *   get:
  *     summary: Retorna um paciente por ID
@@ -265,74 +335,6 @@ router.route('/:id')
     .put(authMiddleware("admin", "perito"), updatePaciente)
     .delete(authMiddleware("admin", "perito"), deletePaciente);
 
-/**
- * @swagger
- * /pacientes/add-caso:
- *   patch:
- *     summary: Adiciona um caso a um paciente
- *     security:
- *       - bearerAuth: []
- *     description: Associa um caso existente a um paciente existente.
- *     tags:
- *       - Pacientes
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               idCaso:
- *                 type: string
- *                 example: 62e0a54f7f5a4a0e5e7ec7e5
- *               idPaciente:
- *                 type: string
- *                 example: 62e0a54f7f5a4a0e5e7ec7e5
- *     responses:
- *       200:
- *         description: Caso adicionado ao paciente com sucesso!
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Caso adicionado ao paciente com sucesso!
- *                 paciente:
- *                   $ref: '#/components/schemas/Paciente'
- *       400:
- *         description: idCaso e idPaciente são obrigatórios
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: idCaso e idPaciente são obrigatórios
- *       404:
- *         description: Paciente não encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Paciente não encontrado
- *       500:
- *         description: Erro ao adicionar caso ao paciente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Erro ao adicionar caso ao paciente
- */
-router.route('/add-caso')
-    .patch(authMiddleware("admin", "perito"), addCasoToPaciente);
+
 
 export default router;

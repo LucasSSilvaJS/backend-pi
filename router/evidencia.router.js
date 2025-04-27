@@ -101,6 +101,78 @@ router.route('/')
 
 /**
  * @swagger
+ * /evidencias/add-caso:
+ *   patch:
+ *     summary: Adiciona um caso a uma evidência
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Evidências
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idEvidencia
+ *               - idCaso
+ *             properties:
+ *               idEvidencia:
+ *                 type: string
+ *                 description: ID da evidência
+ *               idCaso:
+ *                 type: string
+ *                 description: ID do caso
+ *     responses:
+ *       200:
+ *         description: Caso adicionado à evidência com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Caso adicionado à evidência com sucesso!
+ *                 evidencia:
+ *                   $ref: '#/components/schemas/Evidencia'
+ *       400:
+ *         description: Dados inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Dados inválidos
+ *       404:
+ *         description: Evidência não encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Evidência não encontrada
+ *       500:
+ *         description: Erro ao adicionar caso à evidência
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao adicionar caso à evidência
+ */
+router.route('/add-caso')
+    .patch(authMiddleware("admin", "perito", "assistente"), addCasoToEvidencia);
+
+/**
+ * @swagger
  * /evidencias/{id}:
  *   get:
  *     summary: Busca uma evidência por ID
@@ -244,76 +316,6 @@ router.route('/:id')
     .put(authMiddleware("admin", "perito", "assistente"), updateEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteEvidencia);
 
-/**
- * @swagger
- * /evidencias/add-caso:
- *   patch:
- *     summary: Adiciona um caso a uma evidência
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Evidências
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - idEvidencia
- *               - idCaso
- *             properties:
- *               idEvidencia:
- *                 type: string
- *                 description: ID da evidência
- *               idCaso:
- *                 type: string
- *                 description: ID do caso
- *     responses:
- *       200:
- *         description: Caso adicionado à evidência com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Caso adicionado à evidência com sucesso!
- *                 evidencia:
- *                   $ref: '#/components/schemas/Evidencia'
- *       400:
- *         description: Dados inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Dados inválidos
- *       404:
- *         description: Evidência não encontrada
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Evidência não encontrada
- *       500:
- *         description: Erro ao adicionar caso à evidência
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Erro ao adicionar caso à evidência
- */
-router.route('/add-caso')
-    .patch(authMiddleware("admin", "perito", "assistente"), addCasoToEvidencia);
+
 
 export default router;
