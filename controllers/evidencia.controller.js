@@ -1,5 +1,6 @@
 import { uploadToCloudinary } from "../utils/upload.cloudinary.js";
 import Evidencia from "../models/evidencia.model.js";
+import Caso from "../models/caso.model.js";
 
 export const createEvidencia = async (req, res) => {
     try {
@@ -121,6 +122,11 @@ export const deleteEvidencia = async (req, res) => {
         if (!evidenciaDeletada) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
         }
+
+        await Caso.updateMany(
+            { evidencia: id }, // Caso tenha a evidência no campo 'evidencia'
+            { $set: { evidencia: null } } // Limpar a referência da evidência
+        );
 
         res.status(200).json({ message: 'Evidência deletada com sucesso!' });
     } catch (err) {

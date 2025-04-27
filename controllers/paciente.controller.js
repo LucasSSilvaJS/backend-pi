@@ -1,4 +1,5 @@
 import Paciente from "../models/paciente.model.js";
+import Caso from "../models/caso.model.js";
 
 export const createPaciente = async (req, res) => {
     try {
@@ -129,6 +130,11 @@ export const deletePaciente = async (req, res) => {
         if (!paciente) {
             return res.status(404).json({ error: 'Paciente não encontrado' });
         }
+
+        await Caso.updateMany(
+            { paciente: id }, // Caso tenha a paciente no campo 'paciente'
+            { $set: { paciente: null } } // Limpar a referência da paciente
+        );
 
         res.status(200).json({ message: 'Paciente deletado com sucesso!' });
     } catch (err) {
