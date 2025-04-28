@@ -100,11 +100,6 @@ export const updateCaso = async (req, res) => {
         const { id } = req.params;
         const updateData = req.body;
 
-        // Se estiver atualizando o status para 'Finalizado', adiciona a data de fechamento
-        if (updateData.status === 'Finalizado' && !updateData.dataFechamento) {
-            updateData.dataFechamento = new Date();
-        }
-
         const caso = await Caso.findByIdAndUpdate(
             id, 
             updateData, 
