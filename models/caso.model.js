@@ -9,6 +9,7 @@ const CasoSchema = mongoose.Schema({
     dataOcorrencia: {type: Date, required: true},
     paciente: {type: mongoose.Schema.Types.ObjectId, ref: 'Paciente', required: false},
     evidencia: {type: mongoose.Schema.Types.ObjectId, ref: 'Evidencia', required: false},
+    laudo: {type: mongoose.Schema.Types.ObjectId, ref: 'Laudo', required: false},
     localizacao: {
         latitude: {type: String, require: false},
         longitude: {type: String, require: false},
