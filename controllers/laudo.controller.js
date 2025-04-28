@@ -128,65 +128,6 @@ export const deleteLaudo = async (req, res) => {
     }
 };
 
-// Controller to add relationship between Laudo and User
-export const addPeritoToLaudo = async (req, res) => {
-    try {
-        const { idLaudo, idPerito } = req.body;
-
-        if (!idLaudo || !idPerito) {
-            return res.status(400).json({ error: 'idLaudo e idPerito são obrigatórios' });
-        }
-
-        const laudo = await Laudo.findByIdAndUpdate(
-            idLaudo,
-            { peritoResponsavel: idPerito },
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('peritoResponsavel', 'username cargo')
-        .populate('parecer.caso');
-
-        if (!laudo) {
-            return res.status(404).json({ error: 'Laudo não encontrado' });
-        }
-
-        res.status(200).json({ 
-            message: 'Perito adicionado ao laudo com sucesso!', 
-            laudo 
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar perito ao laudo' });
-    }
-};
-
-// Controller to add relationship between Laudo and Relatorio
-export const addEvidenciaToLaudo = async (req, res) => {
-    try {
-        const { idLaudo, idEvidencia } = req.body;
-
-        if (!idLaudo || !idEvidencia) {
-            return res.status(400).json({ error: 'idLaudo e idRelatorio são obrigatórios' });
-        }
-
-        const laudo = await Laudo.findByIdAndUpdate(
-            idLaudo,
-            { parecer: { evidencia: idEvidencia} },
-            { new: true }
-        );
-
-        if (!laudo) {
-            return res.status(404).json({ error: 'Laudo não encontrado' });
-        }
-        res.status(200).json({ message: 'Evidencia adicionada ao laudo com sucesso!', laudo });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar evidencia ao laudo' });
-    }
-};
-
 // Controller to add relationship between Laudo and Caso
 export const addCasoToLaudo = async (req, res) => {
     try {
@@ -218,30 +159,5 @@ export const addCasoToLaudo = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao adicionar caso ao laudo' });
-    }
-};
-
-// Controller to add relationship between Laudo and Paciente
-export const addPacienteToLaudo = async (req, res) => {
-    try {
-        const { idLaudo, idPaciente } = req.body;
-
-        if (!idLaudo || !idPaciente) {
-            return res.status(400).json({ error: 'idLaudo e idPaciente são obrigatórios' });
-        }
-
-        const laudo = await Laudo.findByIdAndUpdate(
-            idLaudo,
-            { parecer: { paciente: idPaciente } },
-            { new: true }
-        );
-
-        if (!laudo) {
-            return res.status(404).json({ error: 'Laudo não encontrado' });
-        }
-        res.status(200).json({ message: 'Paciente adicionado ao laudo com sucesso!', laudo });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar paciente ao laudo' });
     }
 };
