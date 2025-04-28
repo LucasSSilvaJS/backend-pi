@@ -54,7 +54,7 @@ export const createCaso = async (req, res) => {
 
 export const getAllCasos = async (req, res) => {
     try {
-        const { status, dataAbertura } = req.query;
+        const { status, dataAbertura, titulo } = req.query;
         const query = {};
 
         if (status) {
@@ -63,6 +63,11 @@ export const getAllCasos = async (req, res) => {
 
         if (dataAbertura) {
             query.dataAbertura = dataAbertura;
+        }
+        
+        //busca por titulo sem precisar ser exata
+        if (titulo){
+            query.titulo = new RegExp(titulo, 'i');
         }
 
         const casos = await Caso.find(query)
