@@ -6,7 +6,8 @@ import {
     updateCaso,
     deleteCaso,
     addPacienteToCaso,
-    addEvidenciaToCaso
+    addEvidenciaToCaso,
+    addLaudoToCaso
 } from '../controllers/caso.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -406,6 +407,10 @@ router.route('/add-evidencia')
  * */
 router.route('/add-paciente')
     .patch(authMiddleware("admin", "perito"), addPacienteToCaso);
+
+
+router.route('/add-laudo')
+    .patch(authMiddleware("admin", "perito"), addLaudoToCaso);
 
 /**
  * @swagger
