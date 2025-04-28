@@ -25,7 +25,7 @@ const DB_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000']
+const allowedOrigins = ['http://localhost:3000', 'https://identify-sepia.vercel.app']
 
 //middlewares
 app.use(morgan('dev'));
