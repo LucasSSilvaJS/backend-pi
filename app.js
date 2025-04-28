@@ -25,21 +25,10 @@ const DB_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', 'https://identify-sepia.vercel.app']
 
 //middlewares
 app.use(morgan('dev'));
-app.use(cors({
-    origin: (origin, callback) => {
-        if(allowedOrigins.includes(origin) || !origin) {
-            callback(null, true);
-        }else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
-    credentials: true
-}));
+app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
