@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const LaudoSchema = new mongoose.Schema({
+const RelatorioSchema = new mongoose.Schema({
     titulo: { type: String, required: true },
     peritoResponsavel: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true
@@ -14,6 +14,6 @@ const LaudoSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const Laudo = mongoose.model('Laudo', LaudoSchema);
+const Relatorio = mongoose.model('Relatorio', RelatorioSchema);
 
-export default Laudo;
+export default Relatorio;

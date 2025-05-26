@@ -1,5 +1,5 @@
 import Caso from "../models/caso.model.js";
-import Laudo from "../models/laudo.model.js";
+import Laudo from "../models/relatorio.model.js";
 
 export const createCaso = async (req, res) => {
     try {

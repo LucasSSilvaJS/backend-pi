@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const PacienteSchema = mongoose.Schema({
+const VitimaSchema = mongoose.Schema({
     nome: { type: String, required: false },
     cpf: { type: String, unique: true, sparse: true },
     rg: { type: String, unique: true, sparse: true },
@@ -10,6 +10,6 @@ const PacienteSchema = mongoose.Schema({
     },
 }, { timestamps: true });
 
-const Paciente = mongoose.model('Paciente', PacienteSchema);
+const Vitima = mongoose.model('Vitima', VitimaSchema);
 
-export default Paciente;
+export default Vitima;

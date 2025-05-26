@@ -6,14 +6,8 @@ const CasoSchema = mongoose.Schema({
     status: { type: String, required: true, enum: ['Em andamento', 'Finalizado', 'Arquivado'], default: 'Em andamento' },
     dataAbertura: { type: Date, required: true, default: Date.now },
     dataFechamento: { type: Date, required: false },
-    dataOcorrencia: {type: Date, required: true},
-    paciente: {type: mongoose.Schema.Types.ObjectId, ref: 'Paciente', required: false},
-    evidencia: {type: mongoose.Schema.Types.ObjectId, ref: 'Evidencia', required: false},
-    laudo: {type: mongoose.Schema.Types.ObjectId, ref: 'Laudo', required: false},
-    localizacao: {
-        latitude: {type: String, require: false},
-        longitude: {type: String, require: false},
-    }
+    evidencias: [{type: mongoose.Schema.Types.ObjectId, ref: 'Evidencia', required: false}],
+    relatorios: [{type: mongoose.Schema.Types.ObjectId, ref: 'Relatorio', required: false}],
 }, { timestamps: true });
 
 const Caso = mongoose.model('Caso', CasoSchema);
