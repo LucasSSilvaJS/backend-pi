@@ -8,8 +8,8 @@
 - [x] Boas práticas (http, segurança, código)
 - [x] Swagger
 - [x] Entidades integradas e funcionais
-- [ ] Login/Autorização no app (Mesmos perfis e requisitos da aplicação web)
-- [ ] Cadastro e consulta de Casos (Mesmos requisitos da aplicação web)
+- [x] Login/Autorização no app (Mesmos perfis e requisitos da aplicação web)
+- [x] Cadastro e consulta de Casos (Mesmos requisitos da aplicação web)
 - [ ] Nova entidade: Vítima (NIC, Nome, Gênero, idade, Documento, Endereço, Cor/Etnia, Odontograma com anotação, anotação de regiões anatômicas )
 - [ ] Todo Caso tem uma ou mais vítimas
 - [ ] Cadastro de Evidências com Imagens e Geolocalização capturadas pelo aplicativo

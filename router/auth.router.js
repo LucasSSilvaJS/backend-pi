@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login } from "../controllers/auth.controller.js";
+import { register, login, getUsers } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -193,5 +193,7 @@ router.route("/register").post(authMiddleware("admin"), register);
  *                   example: Erro interno do servidor 
  */
 router.route("/login").post(login);
+
+router.route("/users").get(authMiddleware("admin"), getUsers);
 
 export default router;

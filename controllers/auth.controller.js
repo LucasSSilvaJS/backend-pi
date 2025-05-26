@@ -80,3 +80,13 @@ export const login = async (req, res) => {
         res.status(500).json({ error: "Erro ao logar" });
     }
 };
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find({}).select("-password");
+        res.status(200).json(users);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erro ao buscar usuários" });
+    }
+};
