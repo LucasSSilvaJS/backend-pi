@@ -7,6 +7,7 @@ const EvidenciaSchema = mongoose.Schema({
     coletadaPor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     imagens: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ImagemEvidencia', required: true }],
     textos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TextoEvidencia', required: true }],
+    geolocalizacoes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GeolocalizacaoEvidencia', required: true }],
 }, { timestamps: true });
 
 const Evidencia = mongoose.model('Evidencia', EvidenciaSchema);

@@ -8,13 +8,9 @@ const CasoSchema = mongoose.Schema({
     dataFechamento: { type: Date, required: false },
     evidencias: [{type: mongoose.Schema.Types.ObjectId, ref: 'Evidencia', required: false}],
     relatorios: [{type: mongoose.Schema.Types.ObjectId, ref: 'Relatorio', required: false}],
+    vitimas: [{type: mongoose.Schema.Types.ObjectId, ref: 'Vitima', required: true}],
 }, { timestamps: true });
 
 const Caso = mongoose.model('Caso', CasoSchema);
 
 export default Caso;
-
-//data da ocorrencia
-//localização
-//opcional
-//possivel entidade relatorio geral do caso
