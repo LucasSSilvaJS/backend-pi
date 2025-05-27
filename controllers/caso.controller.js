@@ -1,6 +1,6 @@
-import Caso from "../models/caso.model.js";
-import Laudo from "../models/relatorio.model.js";
+import Caso from '../models/caso.model.js';
 
+// Create a new caso
 export const createCaso = async (req, res) => {
     try {
         const {
@@ -8,250 +8,198 @@ export const createCaso = async (req, res) => {
             descricao,
             status,
             dataAbertura,
-            dataFechamento,
-            dataOcorrencia,
-            paciente,
-            evidencia,
-            localizacao,
-            laudo
+            dataFechamento
         } = req.body;
 
-        const novoCaso = new Caso({
+        const newCaso = new Caso({
             titulo,
             descricao,
-            status: status || 'Em andamento',
-            dataAbertura: dataAbertura || new Date(),
+            status,
+            dataAbertura,
             dataFechamento,
-            dataOcorrencia,
-            paciente,
-            evidencia,
-            localizacao,
-            laudo
+            evidencias: [],
+            relatorios: [],
+            vitimas: []
         });
-
-        await novoCaso.save();
-
-        const casoPopulado = await Caso.findById(novoCaso._id)
-            .populate('paciente')
-            .populate('evidencia')
-            .populate('laudo');
-
-        res.status(201).json({
-            message: 'Caso criado com sucesso!',
-            caso: casoPopulado
-        });
-    } catch (err) {
-        console.error(err);
-        if (err.name === 'ValidationError') {
-            return res.status(400).json({ 
-                error: 'Dados inválidos',
-                detalhes: Object.values(err.errors).map(e => e.message)
-            });
-        }
+        const savedCaso = await newCaso.save();
+        res.status(201).json(savedCaso);
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao criar caso' });
     }
 };
 
+// Get all casos
 export const getAllCasos = async (req, res) => {
     try {
-        const { status, dataAbertura, titulo } = req.query;
-        const query = {};
-
-        if (status) {
-            query.status = status;
-        }
-
-        if (dataAbertura) {
-            query.dataAbertura = dataAbertura;
-        }
-        
-        //busca por titulo sem precisar ser exata
-        if (titulo){
-            query.titulo = new RegExp(titulo, 'i');
-        }
-
-        const casos = await Caso.find(query)
-            .populate('paciente')
-            .populate('evidencia')
-            .populate('laudo')
-            .sort({ createdAt: -1 });
-
+        const casos = await Caso.find().populate('evidencias relatorios vitimas');
         res.status(200).json(casos);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar casos' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao obter casos' });
     }
 };
 
+// Get a caso by id
 export const getCasoById = async (req, res) => {
     try {
-        const caso = await Caso.findById(req.params.id)
-            .populate('paciente')
-            .populate('evidencia')
-            .populate('laudo');
-            
+        const caso = await Caso.findById(req.params.id).populate('evidencias relatorios vitimas');
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
         res.status(200).json(caso);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar caso' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao obter caso' });
     }
 };
 
+// Update a caso
 export const updateCaso = async (req, res) => {
     try {
-        const { id } = req.params;
-        const updateData = req.body;
-
-        const caso = await Caso.findByIdAndUpdate(
-            id, 
-            updateData, 
+        const {
+            titulo,
+            descricao,
+            status,
+            dataAbertura,
+            dataFechamento
+        } = req.body;
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            req.params.id,
+            {
+                titulo,
+                descricao,
+                status,
+                dataAbertura,
+                dataFechamento
+            },
             { 
-                new: true,
-                runValidators: true
+                new: true 
             }
-        )
-        .populate('paciente')
-        .populate('evidencia')
-        .populate('laudo');
-
-        if (!caso) {
+        );
+        if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
-
-        res.status(200).json({
-            message: 'Caso atualizado com sucesso!',
-            caso
-        });
-    } catch (err) {
-        console.error(err);
-        if (err.name === 'ValidationError') {
-            return res.status(400).json({ 
-                error: 'Dados inválidos',
-                detalhes: Object.values(err.errors).map(e => e.message)
-            });
-        }
+        res.status(200).json(updatedCaso);
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar caso' });
     }
 };
 
+// Delete a caso
 export const deleteCaso = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        const caso = await Caso.findByIdAndDelete(id);
-
-        if (!caso) {
+        const deletedCaso = await Caso.findByIdAndDelete(req.params.id);
+        if (!deletedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
-
-        res.status(200).json({ message: 'Caso deletado com sucesso!' });
-    } catch (err) {
-        console.error(err);
+        res.status(200).json({ message: 'Caso deletado com sucesso' });
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar caso' });
     }
 };
 
-export const addPacienteToCaso = async (req, res) => {
-    try {
-        const { idCaso, idPaciente } = req.body;
-
-        if (!idCaso || !idPaciente) {
-            return res.status(400).json({ error: 'idCaso e idPaciente são obrigatórios' });
-        }
-
-        const casoAtualizado = await Caso.findByIdAndUpdate(
-            idCaso,
-            { paciente: idPaciente },
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('paciente')
-        .populate('evidencia')
-        .populate('laudo');
-
-        if (!casoAtualizado) {
-            return res.status(404).json({ error: 'Caso não encontrado' });
-        }
-
-        res.status(200).json({
-            message: 'Paciente adicionado ao caso com sucesso!',
-            caso: casoAtualizado
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar paciente ao caso' });
-    }
-};
-
+// Add an evidence ID to a caso
 export const addEvidenciaToCaso = async (req, res) => {
     try {
         const { idCaso, idEvidencia } = req.body;
-
-        if (!idCaso || !idEvidencia) {
-            return res.status(400).json({ error: 'idCaso e idEvidencia são obrigatórios' });
-        }
-
-        const casoAtualizado = await Caso.findByIdAndUpdate(
+        const updatedCaso = await Caso.findByIdAndUpdate(
             idCaso,
-            { evidencia: idEvidencia },
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('paciente')
-        .populate('evidencia')
-        .populate('laudo');
-
-        if (!casoAtualizado) {
+            { $addToSet: { evidencias: idEvidencia } }, // Add to evidencias array if not already present
+            { new: true }
+        );
+        if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
-
-        res.status(200).json({
-            message: 'Evidência adicionada ao caso com sucesso!',
-            caso: casoAtualizado
-        });
-    } catch (err) {
-        console.error(err);
+        res.status(200).json(updatedCaso);
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao adicionar evidência ao caso' });
     }
 };
 
-export const addLaudoToCaso = async (req, res) => {
+// Remove an evidence ID from a caso
+export const removeEvidenciaFromCaso = async (req, res) => {
     try {
-        const { idCaso, idLaudo } = req.body;
-
-        if (!idCaso || !idLaudo) {
-            return res.status(400).json({ error: 'idCaso e idLaudo são obrigatórios' });
-        }
-
-        const casoAtualizado = await Caso.findByIdAndUpdate(
+        const { idCaso, idEvidencia } = req.body;
+        const updatedCaso = await Caso.findByIdAndUpdate(
             idCaso,
-            { laudo: idLaudo },
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('paciente')
-        .populate('evidencia')
-        .populate('laudo');
-
-        if (!casoAtualizado) {
+            { $pull: { evidencias: idEvidencia } }, // Remove from evidencias array
+            { new: true }
+        );
+        if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
+        res.status(200).json(updatedCaso);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao remover evidência do caso' });
+    }
+};
 
-        res.status(200).json({
-            message: 'Laudo adicionado ao caso com sucesso!',
-            caso: casoAtualizado
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar laudo ao caso' });
+// Add a report ID to a caso
+export const addRelatorioToCaso = async (req, res) => {
+    try {
+        const { idCaso, idRelatorio } = req.body;
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            idCaso,
+            { $addToSet: { relatorios: idRelatorio } }, // Add to relatorios array if not already present
+            { new: true }
+        );
+        if (!updatedCaso) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+        res.status(200).json(updatedCaso);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao adicionar relatório ao caso' });
+    }
+};
+
+// Remove a report ID from a caso
+export const removeRelatorioFromCaso = async (req, res) => {
+    try {
+        const { idCaso, idRelatorio } = req.body;
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            idCaso,
+            { $pull: { relatorios: idRelatorio } }, // Remove from relatorios array
+            { new: true }
+        );
+        if (!updatedCaso) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+        res.status(200).json(updatedCaso);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao remover relatório do caso' });
+    }
+};
+
+// Add a vitima ID to a caso
+export const addVitimaToCaso = async (req, res) => {
+    try {
+        const { idCaso, idVitima } = req.body;
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            idCaso,
+            { $addToSet: { vitimas: idVitima } }, // Add to vitimas array if not already present
+            { new: true }
+        );
+        if (!updatedCaso) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+        res.status(200).json(updatedCaso);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao adicionar vitima ao caso' });
+    }
+};
+
+// Remove a vitima ID from a caso
+export const removeVitimaFromCaso = async (req, res) => {
+    try {
+        const { idCaso, idVitima } = req.body;
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            idCaso,
+            { $pull: { vitimas: idVitima } }, // Remove from vitimas array
+            { new: true }
+        );
+        if (!updatedCaso) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+        res.status(200).json(updatedCaso);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao remover vitima do caso' });
     }
 };
