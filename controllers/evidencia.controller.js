@@ -1,169 +1,202 @@
-import { uploadToCloudinary } from "../utils/upload.cloudinary.js";
 import Evidencia from "../models/evidencia.model.js";
-import Caso from "../models/caso.model.js";
 
 export const createEvidencia = async (req, res) => {
+    const { tipo, dataColeta, status, coletadaPor } = req.body;
+
     try {
-        const {
+        const newEvidencia = new Evidencia({
             tipo,
             dataColeta,
             status,
             coletadaPor,
-            caso
-        } = req.body;
-
-        const evidenciaData = {
-            tipo,
-            dataColeta,
-            status: status || 'Em análise',
-            coletadaPor,
-        };
-
-        if (caso) {
-            evidenciaData.caso = caso;
-        }
-
-        const novaEvidencia = new Evidencia(evidenciaData);
-
-        if (req.files && req.files.length > 0) {
-            const uploadPromises = req.files.map((file) =>
-                uploadToCloudinary(file)
-            );
-            const imagensUrls = await Promise.all(uploadPromises);
-            novaEvidencia.urlEvidencia = imagensUrls;
-        } else {
-            return res.status(400).json({ error: 'É necessário enviar pelo menos uma evidência' });
-        }
-
-        await novaEvidencia.save();
-
-        res.status(201).json({
-            message: 'Evidência criada com sucesso!',
-            evidencia: novaEvidencia
+            imagens: [],
+            textos: [],
+            geolocalizacoes: [],
+            laudo: null
         });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao criar evidência' });
+
+        const savedEvidencia = await newEvidencia.save();
+
+        res.status(201).json({ message: "Evidência criada com sucesso!", evidencia: savedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao criar evidência" });
     }
 };
 
 export const getAllEvidencias = async (req, res) => {
     try {
-        const evidencias = await Evidencia.find()
-            .populate('caso')
-            .populate('coletadaPor', 'username cargo');
+        const evidencias = await Evidencia.find().populate('coletadaPor').populate('imagens').populate('textos').populate('geolocalizacoes').populate('laudo');
+
         res.status(200).json(evidencias);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar evidências' });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar evidências" });
     }
 };
 
 export const getEvidenciaById = async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const evidencia = await Evidencia.findById(req.params.id)
-            .populate('caso')
-            .populate('coletadaPor', 'username cargo');
-            
+        const evidencia = await Evidencia.findById(id).populate('coletadaPor').populate('imagens').populate('textos').populate('geolocalizacoes').populate('laudo');
+
         if (!evidencia) {
-            return res.status(404).json({ error: 'Evidência não encontrada' });
+            return res.status(404).json({ error: "Evidência não encontrada" });
         }
+
         res.status(200).json(evidencia);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar evidência' });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar evidência" });
     }
 };
 
 export const updateEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { tipo, dataColeta, status, coletadaPor } = req.body;
+
     try {
-        const { id } = req.params;
-        const updateData = req.body;
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            tipo,
+            dataColeta,
+            status,
+            coletadaPor
+        }, { new: true });
 
-        if (req.files && req.files.length > 0) {
-            const uploadPromises = req.files.map((file) =>
-                uploadToCloudinary(file)
-            );
-            const imagensUrls = await Promise.all(uploadPromises);
-            updateData.urlEvidencia = imagensUrls;
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
         }
 
-        const evidenciaAtualizada = await Evidencia.findByIdAndUpdate(
-            id, 
-            updateData, 
-            {
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('caso')
-        .populate('coletadaPor', 'username cargo');
-
-        if (!evidenciaAtualizada) {
-            return res.status(404).json({ error: 'Evidência não encontrada' });
-        }
-
-        res.status(200).json({
-            message: 'Evidência atualizada com sucesso!',
-            evidencia: evidenciaAtualizada
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao atualizar evidência' });
+        res.status(200).json({ message: "Evidência atualizada com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao atualizar evidência" });
     }
 };
 
 export const deleteEvidencia = async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const { id } = req.params;
+        const deletedEvidencia = await Evidencia.findByIdAndDelete(id);
 
-        const evidenciaDeletada = await Evidencia.findByIdAndDelete(id);
-
-        if (!evidenciaDeletada) {
-            return res.status(404).json({ error: 'Evidência não encontrada' });
+        if (!deletedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
         }
 
-        await Caso.updateMany(
-            { evidencia: id }, // Caso tenha a evidência no campo 'evidencia'
-            { $unset: { evidencia: '' } } // Remover o atributo evidencia
-        );
-
-        res.status(200).json({ message: 'Evidência deletada com sucesso!' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao deletar evidência' });
+        res.status(200).json({ message: "Evidência deletada com sucesso!" });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao deletar evidência" });
     }
 };
 
-export const addCasoToEvidencia = async (req, res) => {
+export const addImagemToEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idImagem } = req.body;
+
     try {
-        const { idEvidencia, idCaso } = req.body;
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $addToSet: { imagens: idImagem }
+        }, { new: true });
 
-        if (!idCaso || !idEvidencia) {
-            return res.status(400).json({ error: 'idCaso e idEvidencia são obrigatórios' });
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
         }
 
-        const evidencia = await Evidencia.findByIdAndUpdate(
-            idEvidencia,
-            { caso: idCaso },
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('caso')
-        .populate('coletadaPor', 'username cargo');
+        res.status(200).json({ message: "Imagem adicionada à evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao adicionar imagem à evidência" });
+    }
+};
 
-        if (!evidencia) {
-            return res.status(404).json({ error: 'Evidência não encontrada' });
+export const removeImagemFromEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idImagem } = req.body;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $pull: { imagens: idImagem }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
         }
 
-        res.status(200).json({
-            message: 'Evidência atualizada com sucesso!',
-            evidencia
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar caso à evidência' });
+        res.status(200).json({ message: "Imagem removida da evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao remover imagem da evidência" });
+    }
+};
+
+export const addTextoToEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idTexto } = req.body;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $addToSet: { textos: idTexto }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        res.status(200).json({ message: "Texto adicionado à evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao adicionar texto à evidência" });
+    }
+};
+
+export const removeTextoFromEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idTexto } = req.body;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $pull: { textos: idTexto }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        res.status(200).json({ message: "Texto removido da evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao remover texto da evidência" });
+    }
+};
+
+export const addGeolocalizacaoToEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idGeolocalizacao } = req.body;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $addToSet: { geolocalizacoes: idGeolocalizacao }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        res.status(200).json({ message: "Geolocalização adicionada à evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao adicionar geolocalização à evidência" });
+    }
+};
+
+export const removeGeolocalizacaoFromEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idGeolocalizacao } = req.body;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $pull: { geolocalizacoes: idGeolocalizacao }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        res.status(200).json({ message: "Geolocalização removida da evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao remover geolocalização da evidência" });
     }
 };
