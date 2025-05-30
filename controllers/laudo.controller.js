@@ -1,163 +1,63 @@
-import Laudo from "../models/laudo.model.js";
+import mongoose from 'mongoose';
+import Laudo from '../models/laudo.model.js';
 
-// Controller to create a new Laudo
 export const createLaudo = async (req, res) => {
+    const { descricao, conclusao, peritoResponsavel } = req.body;
+    const laudo = new Laudo({ descricao, conclusao, peritoResponsavel });
     try {
-        const {
-            titulo,
-            peritoResponsavel,
-            parecer,
-            detalhamento,
-            conclusao
-        } = req.body;
-
-        const novoLaudo = new Laudo({
-            titulo,
-            peritoResponsavel,
-            parecer,
-            detalhamento,
-            conclusao,
-            dataCriacao: new Date()
-        });
-
-        await novoLaudo.save();
-
-        const laudoPopulado = await Laudo.findById(novoLaudo._id)
-            .populate('peritoResponsavel', 'username cargo')
-            .populate('parecer.caso');
-
-        res.status(201).json({ 
-            message: 'Laudo criado com sucesso!', 
-            laudo: laudoPopulado 
-        });
-    } catch (err) {
-        console.error(err);
-        if (err.name === 'ValidationError') {
-            return res.status(400).json({ 
-                error: 'Dados inválidos',
-                detalhes: Object.values(err.errors).map(e => e.message)
-            });
-        }
+        await laudo.save();
+        res.status(201).json({ message: 'Laudo criado com sucesso!', laudo });
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao criar laudo' });
     }
 };
 
-// Controller to get all Laudos
 export const getAllLaudos = async (req, res) => {
     try {
-        const laudos = await Laudo.find()
-            .populate('peritoResponsavel', 'username cargo')
-            .populate('parecer.caso')
-            .sort({ createdAt: -1 });
+        const laudos = await Laudo.find().populate('peritoResponsavel');
         res.status(200).json(laudos);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao listar laudos' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao obter laudos' });
     }
 };
 
-// Controller to get a Laudo by ID
 export const getLaudoById = async (req, res) => {
+    const { id } = req.params;
     try {
-        const laudo = await Laudo.findById(req.params.id)
-            .populate('peritoResponsavel', 'username cargo')
-            .populate('parecer.caso');
-            
+        const laudo = await Laudo.findById(id).populate('peritoResponsavel');
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
         res.status(200).json(laudo);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar laudo' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao obter laudo' });
     }
 };
 
-// Controller to update a Laudo
 export const updateLaudo = async (req, res) => {
+    const { id } = req.params;
+    const { descricao, conclusao, peritoResponsavel } = req.body;
+
     try {
-        const { id } = req.params;
-        const updateData = req.body;
-
-        const laudo = await Laudo.findByIdAndUpdate(
-            id, 
-            updateData, 
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('peritoResponsavel', 'username cargo')
-        .populate('parecer.caso');
-
+        const laudo = await Laudo.findByIdAndUpdate(id, { descricao, conclusao, peritoResponsavel }, { new: true });
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
-
-        res.status(200).json({ 
-            message: 'Laudo atualizado com sucesso!', 
-            laudo 
-        });
-    } catch (err) {
-        console.error(err);
-        if (err.name === 'ValidationError') {
-            return res.status(400).json({ 
-                error: 'Dados inválidos',
-                detalhes: Object.values(err.errors).map(e => e.message)
-            });
-        }
+        res.status(200).json({ message: 'Laudo atualizado com sucesso!', laudo });
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar laudo' });
     }
 };
 
-// Controller to delete a Laudo
 export const deleteLaudo = async (req, res) => {
+    const { id } = req.params;
     try {
-        const { id } = req.params;
-
-        const laudo = await Laudo.findByIdAndDelete(id);
-
+        const laudo = await Laudo.findByIdAndRemove(id);
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
-
         res.status(200).json({ message: 'Laudo deletado com sucesso!' });
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar laudo' });
-    }
-};
-
-// Controller to add relationship between Laudo and Caso
-export const addCasoToLaudo = async (req, res) => {
-    try {
-        const { idLaudo, idCaso } = req.body;
-
-        if (!idLaudo || !idCaso) {
-            return res.status(400).json({ error: 'idLaudo e idCaso são obrigatórios' });
-        }
-
-        const laudo = await Laudo.findByIdAndUpdate(
-            idLaudo,
-            { parecer: { caso: idCaso } },
-            { 
-                new: true,
-                runValidators: true
-            }
-        )
-        .populate('peritoResponsavel', 'username cargo')
-        .populate('parecer.caso');
-
-        if (!laudo) {
-            return res.status(404).json({ error: 'Laudo não encontrado' });
-        }
-
-        res.status(200).json({ 
-            message: 'Caso adicionado ao laudo com sucesso!', 
-            laudo 
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao adicionar caso ao laudo' });
     }
 };

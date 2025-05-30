@@ -26,6 +26,10 @@ exports.getImagemEvidenciaById = async (req, res) => {
 
 exports.createImagemEvidencia = async (req, res) => {
     try {
+        if (req.file) {
+            const imagemUrl = await uploadToCloudinary(req.file);
+            req.body.imagemUrl = imagemUrl;
+        }
         const imagem = new ImagemEvidencia(req.body);
         await imagem.save();
         res.status(201).json(imagem);
@@ -36,6 +40,10 @@ exports.createImagemEvidencia = async (req, res) => {
 
 exports.updateImagemEvidencia = async (req, res) => {
     try {
+        if (req.file) {
+            const imagemUrl = await uploadToCloudinary(req.file);
+            req.body.imagemUrl = imagemUrl;
+        }
         const imagem = await ImagemEvidencia.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!imagem) {
             return res.status(404).json({ error: 'Imagem de evidência não encontrada' });
