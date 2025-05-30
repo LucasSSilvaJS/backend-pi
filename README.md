@@ -10,12 +10,12 @@
 - [x] Entidades integradas e funcionais
 - [x] Login/Autorização no app (Mesmos perfis e requisitos da aplicação web)
 - [x] Cadastro e consulta de Casos (Mesmos requisitos da aplicação web)
-- [ ] Nova entidade: Vítima (NIC, Nome, Gênero, idade, Documento, Endereço, Cor/Etnia, Odontograma com anotação, anotação de regiões anatômicas )
-- [ ] Todo Caso tem uma ou mais vítimas
-- [ ] Cadastro de Evidências com Imagens e Geolocalização capturadas pelo aplicativo
-- [ ] Geração de Laudos de Evidências e Relatórios de casos
+- [x] Nova entidade: Vítima (NIC, Nome, Gênero, idade, Documento, Endereço, Cor/Etnia, Odontograma com anotação, anotação de regiões anatômicas )
+- [x] Todo Caso tem uma ou mais vítimas
+- [x] Cadastro de Evidências com Imagens e Geolocalização capturadas pelo aplicativo
+- [x] Geração de Laudos de Evidências e Relatórios de casos
 - [ ] Dashboard / Banco de dados Odonto-Legal
-- [ ] Nova entidade vítima
+- [x] Nova entidade vítima
 - [ ] Geração de Laudos e Relatórios com IA
 
 ### Gerenciamento de Casos Periciais
@@ -81,15 +81,15 @@
 # Requisitos Mínimos
 
 ## Autenticação e Gestão de Usuários
-- [ ] Login e logout com autenticação segura
-- [ ] Cadastro de novos usuários com diferentes perfis (Admin, Perito, Assistente)
-- [ ] Gerenciamento de permissões (definir quem pode visualizar, editar ou excluir casos)
+- [x] Login e logout com autenticação segura
+- [x] Cadastro de novos usuários com diferentes perfis (Admin, Perito, Assistente)
+- [x] Gerenciamento de permissões (definir quem pode visualizar, editar ou excluir casos)
 
 ## Gerenciamento de Casos Periciais
-- [ ] Cadastro de novos casos periciais, incluindo título, descrição e status
-- [ ] Atualização do status do caso (Em andamento, Finalizado, Arquivado)
+- [x] Cadastro de novos casos periciais, incluindo título, descrição e status
+- [x] Atualização do status do caso (Em andamento, Finalizado, Arquivado)
 - [ ] Listagem e pesquisa de casos com filtros por data, status e responsável
-- [ ] Visualização detalhada dos casos com informações completas
+- [x] Visualização detalhada dos casos com informações completas
 
 ## Upload e Gestão de Evidências
 - [ ] Upload de imagens odontológicas (radiografias, fotografias intraorais)
@@ -106,8 +106,8 @@
 - [ ] Busca e comparação de registros dentários para identificação forense
 
 ## Autenticação e Acesso
-- [ ] Login e logout com autenticação segura
-- [ ] Controle de permissões para diferentes tipos de usuários
+- [x] Login e logout com autenticação segura
+- [x] Controle de permissões para diferentes tipos de usuários
 
 ## Cadastro e Consulta de Casos Periciais
 - [ ] Listagem de casos ativos e finalizados
