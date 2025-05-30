@@ -20,6 +20,13 @@ export const createEvidencia = async (req, res) => {
 
         const savedEvidencia = await newEvidencia.save();
 
+        // Update the user with the new caso ID
+        await User.findByIdAndUpdate(
+            coletadaPor,
+            { $addToSet: { evidencias: savedEvidencia._id } }, // Add caso ID to user's casos array if not already present
+            { new: true }
+        );
+
         res.status(201).json({ message: "Evidência criada com sucesso!", evidencia: savedEvidencia });
     } catch (error) {
         res.status(500).json({ error: "Erro ao criar evidência" });
@@ -79,14 +86,21 @@ export const updateEvidencia = async (req, res) => {
 };
 
 export const deleteEvidencia = async (req, res) => {
-    const { id } = req.params;
+    const { userId } = req.body;
 
     try {
-        const deletedEvidencia = await Evidencia.findByIdAndDelete(id);
+
+        const deletedEvidencia = await Evidencia.findByIdAndDelete(req.params.id);
 
         if (!deletedEvidencia) {
             return res.status(404).json({ error: "Evidência não encontrada" });
         }
+
+        await User.findByIdAndUpdate(
+            userId,
+            { $pull: { evidencias: deleteEvidencia._id } },
+            { new: true }
+        );
 
         res.status(200).json({ message: "Evidência deletada com sucesso!" });
     } catch (error) {
