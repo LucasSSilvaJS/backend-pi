@@ -1,7 +1,7 @@
 import Evidencia from "../models/evidencia.model.js";
 
 export const createEvidencia = async (req, res) => {
-    const { tipo, dataColeta, status, coletadaPor } = req.body;
+    const { tipo, dataColeta, status, coletadaPor, latitude, longitude } = req.body;
 
     try {
         const newEvidencia = new Evidencia({
@@ -11,7 +11,10 @@ export const createEvidencia = async (req, res) => {
             coletadaPor,
             imagens: [],
             textos: [],
-            geolocalizacoes: [],
+            geolocalizacao:{
+                latitude,
+                longitude
+            },
             laudo: null
         });
 
@@ -25,7 +28,7 @@ export const createEvidencia = async (req, res) => {
 
 export const getAllEvidencias = async (req, res) => {
     try {
-        const evidencias = await Evidencia.find().populate('coletadaPor').populate('imagens').populate('textos').populate('geolocalizacoes').populate('laudo');
+        const evidencias = await Evidencia.find().populate('coletadaPor').populate('imagens').populate('textos').populate('laudo');
 
         res.status(200).json(evidencias);
     } catch (error) {
@@ -37,7 +40,7 @@ export const getEvidenciaById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const evidencia = await Evidencia.findById(id).populate('coletadaPor').populate('imagens').populate('textos').populate('geolocalizacoes').populate('laudo');
+        const evidencia = await Evidencia.findById(id).populate('coletadaPor').populate('imagens').populate('textos').populate('laudo');
 
         if (!evidencia) {
             return res.status(404).json({ error: "Evidência não encontrada" });
@@ -51,14 +54,18 @@ export const getEvidenciaById = async (req, res) => {
 
 export const updateEvidencia = async (req, res) => {
     const { id } = req.params;
-    const { tipo, dataColeta, status, coletadaPor } = req.body;
+    const { tipo, dataColeta, status, coletadaPor, latitude, longitude } = req.body;
 
     try {
         const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
             tipo,
             dataColeta,
             status,
-            coletadaPor
+            coletadaPor,
+            geolocalizacao: {
+                latitude,
+                longitude
+            }
         }, { new: true });
 
         if (!updatedEvidencia) {
@@ -160,43 +167,5 @@ export const removeTextoFromEvidencia = async (req, res) => {
         res.status(200).json({ message: "Texto removido da evidência com sucesso!", evidencia: updatedEvidencia });
     } catch (error) {
         res.status(500).json({ error: "Erro ao remover texto da evidência" });
-    }
-};
-
-export const addGeolocalizacaoToEvidencia = async (req, res) => {
-    const { id } = req.params;
-    const { idGeolocalizacao } = req.body;
-
-    try {
-        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
-            $addToSet: { geolocalizacoes: idGeolocalizacao }
-        }, { new: true });
-
-        if (!updatedEvidencia) {
-            return res.status(404).json({ error: "Evidência não encontrada" });
-        }
-
-        res.status(200).json({ message: "Geolocalização adicionada à evidência com sucesso!", evidencia: updatedEvidencia });
-    } catch (error) {
-        res.status(500).json({ error: "Erro ao adicionar geolocalização à evidência" });
-    }
-};
-
-export const removeGeolocalizacaoFromEvidencia = async (req, res) => {
-    const { id } = req.params;
-    const { idGeolocalizacao } = req.body;
-
-    try {
-        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
-            $pull: { geolocalizacoes: idGeolocalizacao }
-        }, { new: true });
-
-        if (!updatedEvidencia) {
-            return res.status(404).json({ error: "Evidência não encontrada" });
-        }
-
-        res.status(200).json({ message: "Geolocalização removida da evidência com sucesso!", evidencia: updatedEvidencia });
-    } catch (error) {
-        res.status(500).json({ error: "Erro ao remover geolocalização da evidência" });
     }
 };

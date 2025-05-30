@@ -8,8 +8,7 @@ const VitimaSchema = mongoose.Schema({
     documento: { type: String, unique: true, sparse: true },
     endereco: { type: String, required: false },
     corEtnia: { type: String, required: false },
-    odontograma: { type: String, required: false },
-    regioesAnatomicas: { type: String, required: false },
+    odontograma: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Odontograma', required: false }],
 });
 
 const Vitima = mongoose.model('Vitima', VitimaSchema);
