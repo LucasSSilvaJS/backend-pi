@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const ImagemEvidenciaSchema = new mongoose.Schema({
     imagemUrl: { type: String, required: true },
@@ -6,4 +6,4 @@ const ImagemEvidenciaSchema = new mongoose.Schema({
 
 const ImagemEvidencia = mongoose.model('ImagemEvidencia', ImagemEvidenciaSchema);
 
-module.exports = ImagemEvidencia;
+export default ImagemEvidencia;

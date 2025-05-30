@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const TextoEvidenciaSchema = new mongoose.Schema({
     conteudo: { type: String, required: true },
@@ -6,4 +6,4 @@ const TextoEvidenciaSchema = new mongoose.Schema({
 
 const TextoEvidencia = mongoose.model('TextoEvidencia', TextoEvidenciaSchema);
 
-module.exports = TextoEvidencia;
+export default TextoEvidencia;

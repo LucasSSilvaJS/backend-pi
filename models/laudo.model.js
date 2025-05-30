@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const LaudoSchema = new mongoose.Schema({
     descricao: {
@@ -23,4 +23,4 @@ const LaudoSchema = new mongoose.Schema({
 
 const Laudo = mongoose.model('Laudo', LaudoSchema);
 
-module.exports = Laudo;
+export default Laudo;

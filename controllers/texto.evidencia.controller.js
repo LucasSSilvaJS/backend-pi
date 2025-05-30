@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-const TextoEvidencia = mongoose.model('TextoEvidencia');
+import TextoEvidencia from '../models/texto.evidencia.model.js';
 
-exports.getAllTextosEvidencia = async (req, res) => {
+export const getAllTextosEvidencia = async (req, res) => {
     try {
         const textosEvidencia = await TextoEvidencia.find().sort({ createdAt: -1 });
         res.status(200).json(textosEvidencia);
@@ -10,7 +9,7 @@ exports.getAllTextosEvidencia = async (req, res) => {
     }
 };
 
-exports.getTextoEvidenciaById = async (req, res) => {
+export const getTextoEvidenciaById = async (req, res) => {
     try {
         const textoEvidencia = await TextoEvidencia.findById(req.params.id);
         if (!textoEvidencia) {
@@ -22,7 +21,7 @@ exports.getTextoEvidenciaById = async (req, res) => {
     }
 };
 
-exports.createTextoEvidencia = async (req, res) => {
+export const createTextoEvidencia = async (req, res) => {
     try {
         const { conteudo } = req.body;
         const textoEvidencia = await TextoEvidencia.create({ conteudo });
@@ -32,7 +31,7 @@ exports.createTextoEvidencia = async (req, res) => {
     }
 };
 
-exports.updateTextoEvidencia = async (req, res) => {
+export const updateTextoEvidencia = async (req, res) => {
     try {
         const { conteudo } = req.body;
         const textoEvidencia = await TextoEvidencia.findByIdAndUpdate(req.params.id, { conteudo }, { new: true });
@@ -45,7 +44,7 @@ exports.updateTextoEvidencia = async (req, res) => {
     }
 };
 
-exports.deleteTextoEvidencia = async (req, res) => {
+export const deleteTextoEvidencia = async (req, res) => {
     try {
         const textoEvidencia = await TextoEvidencia.findByIdAndRemove(req.params.id);
         if (!textoEvidencia) {

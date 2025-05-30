@@ -1,9 +1,6 @@
-// Necessário mudar posteriormente
+import ImagemEvidencia from '../models/imagem.evidencia.model.js';
 
-const mongoose = require('mongoose');
-const ImagemEvidencia = mongoose.model('ImagemEvidencia');
-
-exports.getAllImagemEvidencia = async (req, res) => {
+export const getAllImagemEvidencia = async (req, res) => {
     try {
         const imagens = await ImagemEvidencia.find().sort({ createdAt: -1 });
         res.status(200).json(imagens);
@@ -12,7 +9,7 @@ exports.getAllImagemEvidencia = async (req, res) => {
     }
 };
 
-exports.getImagemEvidenciaById = async (req, res) => {
+export const getImagemEvidenciaById = async (req, res) => {
     try {
         const imagem = await ImagemEvidencia.findById(req.params.id);
         if (!imagem) {
@@ -24,7 +21,7 @@ exports.getImagemEvidenciaById = async (req, res) => {
     }
 };
 
-exports.createImagemEvidencia = async (req, res) => {
+export const createImagemEvidencia = async (req, res) => {
     try {
         if (req.file) {
             const imagemUrl = await uploadToCloudinary(req.file);
@@ -38,7 +35,7 @@ exports.createImagemEvidencia = async (req, res) => {
     }
 };
 
-exports.updateImagemEvidencia = async (req, res) => {
+export const updateImagemEvidencia = async (req, res) => {
     try {
         if (req.file) {
             const imagemUrl = await uploadToCloudinary(req.file);
@@ -54,7 +51,7 @@ exports.updateImagemEvidencia = async (req, res) => {
     }
 };
 
-exports.deleteImagemEvidencia = async (req, res) => {
+export const deleteImagemEvidencia = async (req, res) => {
     try {
         const imagem = await ImagemEvidencia.findByIdAndRemove(req.params.id);
         if (!imagem) {

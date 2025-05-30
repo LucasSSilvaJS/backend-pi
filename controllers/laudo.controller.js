@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import Laudo from '../models/laudo.model.js';
 
 export const createLaudo = async (req, res) => {
