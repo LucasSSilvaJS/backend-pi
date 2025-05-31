@@ -204,3 +204,40 @@ export const removeTextoFromEvidencia = async (req, res) => {
         res.status(500).json({ error: "Erro ao remover texto da evidência" });
     }
 };
+
+export const addLaudoToEvidencia = async (req, res) => {
+    const { id } = req.params;
+    const { idLaudo } = req.body;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $set: { laudo: idLaudo }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        res.status(200).json({ message: "Laudo adicionado à evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao adicionar laudo à evidência" });
+    }
+};
+
+export const removeLaudoFromEvidencia = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
+            $set: { laudo: null }
+        }, { new: true });
+
+        if (!updatedEvidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        res.status(200).json({ message: "Laudo removido da evidência com sucesso!", evidencia: updatedEvidencia });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao remover laudo da evidência" });
+    }
+};
