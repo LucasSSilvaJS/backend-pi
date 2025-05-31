@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login } from "../controllers/auth.controller.js";
+import { register, login, getUsers } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -193,5 +193,37 @@ router.route("/register").post(authMiddleware("admin"), register);
  *                   example: Erro interno do servidor 
  */
 router.route("/login").post(login);
+
+/**
+ * @swagger
+ * /auth/users:
+ *   get:
+ *     tags:
+ *       - Autenticação
+ *     summary: Retorna todos os usuários
+ *     security:
+ *       - bearerAuth: []
+ *     description: Retorna todos os usuários cadastrados no banco de dados
+ *     responses:
+ *       200:
+ *         description: Usuários encontrados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro interno do servidor 
+ */
+router.route("/users").get(authMiddleware("admin"), getUsers);
 
 export default router;

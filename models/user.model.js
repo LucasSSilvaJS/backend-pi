@@ -5,11 +5,27 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
-    cargo: { 
-        type: String, 
-        required: true, 
-        enum: ['perito', 'assistente', 'admin'] 
-    },
+    casos: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Caso',
+            required: false
+        }
+    ],
+    relatorios: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Relatorio',
+            required: false
+        }
+    ],
+    evidencias: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Evidencia',
+            required: false
+        }
+    ]
 }, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {
