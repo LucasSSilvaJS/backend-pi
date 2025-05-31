@@ -1,4 +1,8 @@
 import Evidencia from "../models/evidencia.model.js";
+import User from "../models/user.model.js";
+import ImagemEvidencia from "../models/imagem.evidencia.model.js";
+import TextoEvidencia from "../models/texto.evidencia.model.js";
+import Laudo from "../models/laudo.model.js";
 
 export const createEvidencia = async (req, res) => {
     const { tipo, dataColeta, status, coletadaPor, latitude, longitude } = req.body;
@@ -89,6 +93,23 @@ export const deleteEvidencia = async (req, res) => {
     const { userId } = req.body;
 
     try {
+
+        // Remove all relations from evidencia
+        const evidenciaRelations = await Evidencia.findById(req.params.id).populate('imagens textos laudo');
+
+        if (evidenciaRelations.imagens?.length) {
+            const imagemIds = evidenciaRelations.imagens.map(i => i._id);
+            await ImagemEvidencia.deleteMany({ _id: { $in: imagemIds } });
+        }
+
+        if (evidenciaRelations.textos?.length) {
+            const textoIds = evidenciaRelations.textos.map(t => t._id);
+            await TextoEvidencia.deleteMany({ _id: { $in: textoIds } });
+        }
+
+        if (evidenciaRelations.laudo) {
+            await Laudo.findByIdAndDelete(evidenciaRelations.laudo._id);
+        }
 
         const deletedEvidencia = await Evidencia.findByIdAndDelete(req.params.id);
 

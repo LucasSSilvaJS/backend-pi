@@ -1,5 +1,8 @@
 import Caso from '../models/caso.model.js';
 import User from '../models/user.model.js';
+import Evidencia from '../models/evidencia.model.js';
+import Relatorio from '../models/relatorio.model.js';
+import Vitima from '../models/vitima.model.js';
 
 // Create a new caso
 export const createCaso = async (req, res) => {
@@ -81,8 +84,8 @@ export const updateCaso = async (req, res) => {
                 dataAbertura,
                 dataFechamento
             },
-            { 
-                new: true 
+            {
+                new: true
             }
         );
         if (!updatedCaso) {
@@ -97,6 +100,24 @@ export const updateCaso = async (req, res) => {
 // Delete a caso
 export const deleteCaso = async (req, res) => {
     try {
+        // Remove all relations from caso
+        const casoRelations = await Caso.findById(req.params.id).populate('evidencias relatorios vitimas');
+
+        if (casoRelations.evidencias?.length) {
+            const evidenciaIds = casoRelations.evidencias.map(e => e._id);
+            await Evidencia.deleteMany({ _id: { $in: evidenciaIds } });
+        }
+
+        if (casoRelations.relatorios?.length) {
+            const relatorioIds = casoRelations.relatorios.map(r => r._id);
+            await Relatorio.deleteMany({ _id: { $in: relatorioIds } });
+        }
+
+        if (casoRelations.vitimas?.length) {
+            const vitimaIds = casoRelations.vitimas.map(v => v._id);
+            await Vitima.deleteMany({ _id: { $in: vitimaIds } });
+        }
+
         const { userId } = req.body;
         const deletedCaso = await Caso.findByIdAndDelete(req.params.id);
         if (!deletedCaso) {
@@ -108,6 +129,7 @@ export const deleteCaso = async (req, res) => {
             { $pull: { casos: deletedCaso._id } },
             { new: true }
         );
+
         res.status(200).json({ message: 'Caso deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar caso' });
