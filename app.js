@@ -14,6 +14,7 @@ import casoRoutes from "./router/caso.router.js";
 import authRoutes from "./router/auth.router.js";
 import dashboardRoutes from "./router/dashboard.router.js";
 import adminRoutes from "./router/admin.router.js";
+import odontogramaROutes from "./router/odontograma.router.js";
 
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger.js";
@@ -44,6 +45,7 @@ app.use('/laudos', laudoRoutes);
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/admin', adminRoutes);
+app.use('/odontogramas', odontogramaROutes);
 
 app.get('/', (req, res) => {
     res.json({
@@ -56,6 +58,7 @@ app.get('/', (req, res) => {
             '/auth',
             '/dashboard',
             '/admin',
+            '/odontogramas',
             '/api-docs'            
         ],
         documentacao: 'https://odontolegal-api.onrender.com/api-docs'
