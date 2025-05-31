@@ -1,6 +1,6 @@
 import Odontograma from '../models/odontograma.model.js';
 
-export const criarOdontograma = async (req, res) => {
+export const createOdontograma = async (req, res) => {
   try {
     const newOdontograma = await Odontograma.save({});
     res.status(201).json(newOdontograma);
