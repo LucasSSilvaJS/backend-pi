@@ -8,12 +8,10 @@ import morgan from "morgan";
 import helmet from "helmet";
 
 import laudoRoutes from "./router/laudo.router.js";
-import pacienteRoutes from "./router/paciente.router.js";
 import evidenciaRoutes from "./router/evidencia.router.js";
 import casoRoutes from "./router/caso.router.js";
 import authRoutes from "./router/auth.router.js";
 import dashboardRoutes from "./router/dashboard.router.js";
-import adminRoutes from "./router/admin.router.js";
 import odontogramaROutes from "./router/odontograma.router.js";
 
 import swaggerUi from "swagger-ui-express";
@@ -40,11 +38,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //consumindo rotas
 app.use('/evidencias', evidenciaRoutes);
 app.use('/casos', casoRoutes);
-app.use('/pacientes', pacienteRoutes);
 app.use('/laudos', laudoRoutes);
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
-app.use('/admin', adminRoutes);
 app.use('/odontogramas', odontogramaROutes);
 
 app.get('/', (req, res) => {
