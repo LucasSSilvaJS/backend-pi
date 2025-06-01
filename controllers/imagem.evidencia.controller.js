@@ -1,6 +1,6 @@
 import ImagemEvidencia from '../models/imagem.evidencia.model.js';
-import { uploadToCloudinary } from '../utils/cloudinary.js';
 import Evidencia from '../models/evidencia.model.js';
+import { uploadToCloudinary } from '../utils/upload.cloudinary.js';
 
 export const getAllImagemEvidencia = async (req, res) => {
     try {
