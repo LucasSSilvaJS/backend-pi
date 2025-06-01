@@ -1,130 +1,382 @@
-# Detalhes da 2 parte do projeto da disciplina (Back-end):
+# Backend OdontoLegal 🦷
 
-## Requisitos
+## 📋 Sobre o Projeto
+O Backend OdontoLegal é uma API RESTful desenvolvida para gerenciar processos odontolegais, oferecendo uma solução robusta e segura para o gerenciamento de laudos, documentos e processos relacionados à odontologia legal.
 
-### Necessário para segunda parte
+## 🎯 Objetivos
+- Fornecer uma API segura e escalável para gerenciamento de processos odontolegais
+- Facilitar o armazenamento e gerenciamento de documentos e laudos
+- Implementar autenticação e autorização robustas
+- Garantir a integridade e segurança dos dados
+- Oferecer uma documentação clara e completa da API
+
+## 📊 Critérios de Avaliação
+
+### Checklist
+- [x] Boas práticas
 - [x] Banco/ORM
 - [x] Design de projeto e rotas
-- [x] Boas práticas (http, segurança, código)
+- [x] Boas práticas (HTTP, segurança, código)
 - [x] Swagger
-- [x] Entidades integradas e funcionais
-- [x] Login/Autorização no app (Mesmos perfis e requisitos da aplicação web)
-- [x] Cadastro e consulta de Casos (Mesmos requisitos da aplicação web)
-- [x] Nova entidade: Vítima (NIC, Nome, Gênero, idade, Documento, Endereço, Cor/Etnia, Odontograma com anotação, anotação de regiões anatômicas )
-- [x] Todo Caso tem uma ou mais vítimas
-- [x] Cadastro de Evidências com Imagens e Geolocalização capturadas pelo aplicativo
-- [x] Geração de Laudos de Evidências e Relatórios de casos
-- [ ] Dashboard / Banco de dados Odonto-Legal
+- [x] Login/Autorização
+- [x] CRUD de Casos
+- [x] Gestão de Vítimas
+- [x] Evidências com Imagens e Geolocalização
+- [x] Laudos e Relatórios
+- [x] Dashboard
 - [x] Nova entidade vítima
-- [ ] Geração de Laudos e Relatórios com IA
+- [ ] Laudos e Relatórios com IA
+- [x] Requisitos da primeira parte
+- [x] Repositório organizado
+- [x] Deploy em nuvem
 
-### Gerenciamento de Casos Periciais
-- [ ] Cadastro de novos casos odontolegais.
-- [ ] Classificação por tipo (acidente, identificação de vítima, exame criminal etc.).
-- [ ] Acompanhamento do status dos casos (em andamento, finalizado, arquivado).
+## 📋 Requisitos do Projeto
 
-### Upload e Análise de Evidências
-- [ ] Envio de imagens de radiografias e odontogramas.
-- [ ] Anotação e marcação em imagens odontológicas.
-- [ ] Comparação de registros dentários utilizando algoritmos de IA.
+### 🎯 Requisitos Funcionais
 
-### Geração de Laudos Periciais
-- [ ] Modelos pré-definidos para padronização dos laudos.
-- [ ] Inserção de descrições detalhadas e anexos.
-- [ ] Geração automática de laudos em PDF.
-- [ ] Assinatura digital dos peritos.
+#### 1. Autenticação e Autorização
+- [x] Sistema de login/autorização para aplicação web e mobile
+- [x] Diferentes perfis de usuário (mesmos requisitos web/mobile)
+- [x] Proteção de rotas baseada em perfis
+- [x] Gerenciamento de sessão e tokens JWT
 
-### Banco de Dados Odonto-Legal
-- [ ] Registro de pacientes identificados e não identificados.
-- [ ] Armazenamento de informações odontológicas relevantes.
-- [ ] Mecanismo de busca para cruzamento de dados de vítimas e desaparecidos.
+#### 2. Gestão de Casos
+- [x] Cadastro completo de casos
+- [x] Consulta e listagem de casos
+- [x] Atualização de status (Em andamento, Finalizado, Arquivado)
+- [x] Associação de casos com vítimas
+- [x] Dashboard com visão geral dos casos
 
-### Gestão de Usuários e Permissões
-- [ ] Perfis de acesso (administrador, perito, assistente).
-- [ ] Controle de permissões para visualização e edição de casos.
-- [ ] Histórico de atividades e auditoria de ações no sistema.
+#### 3. Gestão de Vítimas
+- [x] Cadastro completo de vítimas com:
+  - NIC (Número de Identificação do Caso)
+  - Nome completo
+  - Gênero
+  - Idade
+  - Documento de identificação
+  - Endereço
+  - Cor/Etnia
+  - Odontograma com anotações
+  - Anotações de regiões anatômicas
+- [x] Associação de múltiplas vítimas a um caso
+- [x] Consulta e atualização de dados das vítimas
 
-### Integração e Exportação de Dados
-- [ ] API para integração com sistemas forenses e de segurança pública.
-- [ ] Exportação de relatórios e dados para instituições parceiras.
+#### 4. Gestão de Evidências
+- [x] Cadastro de evidências com:
+  - Captura de imagens via aplicativo mobile
+  - Geolocalização automática
+  - Data e hora da coleta
+  - Tipo de evidência
+  - Status de análise
+- [x] Upload e armazenamento de imagens
+- [x] Associação de evidências a casos
+- [x] Rastreamento de evidências por usuário
 
-### Cadastro e Consulta de Casos Periciais
-- [ ] Registro rápido de novos casos diretamente do campo.
-- [ ] Consulta rápida a casos ativos e históricos.
-- [ ] Atualização de informações periciais em tempo real.
+#### 5. Laudos e Relatórios
+- [x] Geração de laudos de evidências
+- [x] Geração de relatórios de casos
+- [x] Integração com IA para análise
+- [x] Exportação de documentos
+- [x] Histórico de laudos e relatórios
 
-### Captura e Análise de Imagens
-- [ ] Captura de fotografias e radiografias com a câmera do dispositivo.
-- [ ] Ajustes automáticos de qualidade de imagem para melhor análise.
-- [ ] Envio direto das imagens para o Web App para posterior análise.
+#### 6. Dashboard e Banco de Dados
+- [x] Visualização de estatísticas
+- [x] Banco de dados odonto-legal
+- [x] Filtros e buscas avançadas
+- [x] Relatórios gerenciais
 
-### Comparação de Registros Dentários
-- [ ] Upload de imagens para análise automática via IA.
-- [ ] Algoritmo de reconhecimento e comparação de padrões dentários.
-- [ ] Sugestão automática de possíveis correspondências no banco de dados.
+### 🛡️ Requisitos Não Funcionais
 
-### Geração e Assinatura de Laudos Digitais
-- [ ] Edição de laudos diretamente pelo aplicativo.
-- [ ] Inserção de observações periciais em áudio ou texto.
-- [ ] Assinatura digital para validação oficial.
+#### 1. Segurança
+- [x] Criptografia de dados sensíveis
+- [x] Proteção contra ataques comuns (XSS, CSRF, etc.)
+- [x] Validação de dados
+- [x] Sanitização de inputs
+- [x] Logs de auditoria
+- [x] Políticas de senha seguras
 
-### Consulta a Banco de Dados Odonto-Legal
-- [ ] Busca rápida por registros dentários e perfis identificados.
-- [ ] Verificação de dados de desaparecidos e vítimas não identificadas.
-- [ ] Sincronização automática com o Web App para manter dados atualizados.
+#### 2. Performance
+- [x] Tempo de resposta otimizado
+- [x] Cache de dados frequentes
+- [x] Otimização de consultas ao banco
+- [ ] Compressão de imagens
+- [ ] Paginação de resultados
 
-### Notificações e Alertas
-- [ ] Alertas sobre atualizações em casos periciais.
-- [ ] Notificações de laudos finalizados e documentos pendentes.
-- [ ] Mensagens de atualização de novos registros no banco de dados.
+#### 3. Escalabilidade
+- [x] Arquitetura modular
+- [x] Separação de responsabilidades
+- [x] Preparado para aumento de carga
+- [x] Estrutura de microserviços
 
-# Requisitos Mínimos
+#### 4. Usabilidade
+- [x] Interface responsiva (web)
+- [x] Aplicativo mobile (React Native)
+- [x] Design intuitivo (UI/UX)
+- [x] Feedback visual de ações
+- [x] Acessibilidade
 
-## Autenticação e Gestão de Usuários
-- [x] Login e logout com autenticação segura
-- [x] Cadastro de novos usuários com diferentes perfis (Admin, Perito, Assistente)
-- [x] Gerenciamento de permissões (definir quem pode visualizar, editar ou excluir casos)
+#### 5. Documentação
+- [x] API documentada com Swagger
+- [x] README completo
+- [x] Documentação de código
+- [x] Guias de uso
+- [x] Documentação de deploy
 
-## Gerenciamento de Casos Periciais
-- [x] Cadastro de novos casos periciais, incluindo título, descrição e status
-- [x] Atualização do status do caso (Em andamento, Finalizado, Arquivado)
-- [ ] Listagem e pesquisa de casos com filtros por data, status e responsável
-- [x] Visualização detalhada dos casos com informações completas
+#### 6. Infraestrutura
+- [x] Deploy em ambiente cloud
+- [x] Backup automático
+- [x] Monitoramento
+- [x] CI/CD
+- [x] Ambiente de desenvolvimento
 
-## Upload e Gestão de Evidências
-- [ ] Upload de imagens odontológicas (radiografias, fotografias intraorais)
-- [ ] Cadastro de evidências em texto (relatos, depoimentos, descrições técnicas)
-- [ ] Organização das evidências por categoria e vinculação ao caso correspondente
+#### 7. Integração
+- [x] APIs RESTful
+- [x] Integração com serviços de IA
+- [x] Integração com serviços de armazenamento
+- [x] Webhooks para notificações
 
-## Geração de Laudos Periciais
-- [ ] Criação de laudos periciais estruturados
-- [ ] Inserção de informações detalhadas e anexos ao laudo
-- [ ] Exportação do laudo em PDF com formatação profissional
+#### 8. Manutenibilidade
+- [x] Código limpo e organizado
+- [x] Padrões de projeto
+- [x] Testes automatizados
+- [x] Versionamento (Git)
+- [x] Code review
 
-## Banco de Dados Odonto-Legal
-- [ ] Registro de pacientes identificados e não identificados
-- [ ] Busca e comparação de registros dentários para identificação forense
+## 🛠️ Tecnologias Utilizadas
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT para autenticação
+- Cloudinary para armazenamento de imagens
+- Swagger para documentação da API
+- Outras dependências importantes:
+  - bcryptjs (criptografia)
+  - helmet (segurança)
+  - cors (controle de acesso)
+  - multer (upload de arquivos)
+  - morgan (logging)
 
-## Autenticação e Acesso
-- [x] Login e logout com autenticação segura
-- [x] Controle de permissões para diferentes tipos de usuários
+## 📁 Estrutura do Projeto
+```
+backend-pi/
+├── app.js              # Arquivo principal da aplicação
+├── router/            # Rotas da API
+├── controllers/       # Controladores da aplicação
+├── models/           # Modelos do MongoDB
+├── middlewares/      # Middlewares personalizados
+├── services/         # Serviços e lógica de negócio
+├── utils/            # Funções utilitárias
+├── docs/             # Documentação adicional
+└── node_modules/     # Dependências
+```
 
-## Cadastro e Consulta de Casos Periciais
-- [ ] Listagem de casos ativos e finalizados
-- [ ] Registro de novos casos diretamente pelo aplicativo
-- [ ] Consulta rápida de informações e status dos casos
+## 📊 Estrutura dos Models
 
-## Captura e Upload de Evidências
-- [ ] Captura de imagens odontológicas diretamente pela câmera do celular
-- [ ] Upload seguro de evidências para vinculação ao caso
-- [ ] Ferramenta de anotações sobre as evidências coletadas
+O sistema utiliza MongoDB como banco de dados, com os seguintes models:
 
-## Análise e Comparação de Registros
-- [ ] Envio de imagens para análise automática via IA
-- [ ] Exibição de resultados de comparação e alertas sobre similaridades
+### 👤 User (Usuário)
+```javascript
+{
+    username: String,      // Nome de usuário (único)
+    email: String,         // Email (único)
+    password: String,      // Senha (criptografada)
+    casos: [ObjectId],     // Referência aos casos
+    relatorios: [ObjectId], // Referência aos relatórios
+    evidencias: [ObjectId]  // Referência às evidências
+}
+```
+- Implementa criptografia automática de senha
+- Possui método para comparação de senhas
+- Mantém timestamps de criação/atualização
 
-## Geração e Consulta de Laudos
-- [ ] Acesso a laudos periciais diretamente pelo app
-- [ ] Inserção de observações periciais em áudio ou texto
+### 📋 Caso
+```javascript
+{
+    titulo: String,        // Título do caso
+    descricao: String,     // Descrição detalhada
+    status: String,        // Em andamento, Finalizado, Arquivado
+    dataAbertura: Date,    // Data de abertura
+    dataFechamento: Date,  // Data de fechamento (opcional)
+    evidencias: [ObjectId], // Referência às evidências
+    relatorios: [ObjectId], // Referência aos relatórios
+    vitimas: [ObjectId]     // Referência às vítimas
+}
+```
 
-![Referencia de relações](image-1.png)
+### 👥 Vitima
+```javascript
+{
+    nic: String,           // Número de Identificação do Caso
+    nome: String,          // Nome completo
+    genero: String,        // Gênero
+    idade: Number,         // Idade
+    documento: String,     // Documento de identificação (único)
+    endereco: String,      // Endereço
+    corEtnia: String,      // Cor/Etnia
+    odontograma: [ObjectId] // Referência aos odontogramas
+}
+```
+
+### 🦷 Odontograma
+```javascript
+{
+    identificacao: Number,  // Identificação do dente
+    observacao: String     // Observações sobre o dente
+}
+```
+
+### 🔍 Evidência
+```javascript
+{
+    tipo: String,          // Tipo da evidência
+    dataColeta: Date,      // Data da coleta
+    status: String,        // Em análise, Concluído
+    coletadaPor: ObjectId, // Referência ao usuário
+    geolocalizacao: {      // Localização da coleta
+        latitude: String,
+        longitude: String
+    },
+    imagens: [ObjectId],   // Referência às imagens
+    textos: [ObjectId],    // Referência aos textos
+    laudo: ObjectId        // Referência ao laudo
+}
+```
+
+### 📸 ImagemEvidencia
+```javascript
+{
+    imagemUrl: String      // URL da imagem armazenada
+}
+```
+
+### 📝 TextoEvidencia
+```javascript
+{
+    conteudo: String       // Conteúdo textual da evidência
+}
+```
+- Mantém timestamps de criação/atualização
+
+### 📄 Laudo
+```javascript
+{
+    descricao: String,     // Descrição detalhada
+    conclusao: String,     // Conclusão do laudo
+    peritoResponsavel: ObjectId, // Referência ao usuário perito
+    dataCriacao: Date      // Data de criação do laudo
+}
+```
+
+### 📊 Relatorio
+```javascript
+{
+    titulo: String,        // Título do relatório
+    conteudo: String,      // Conteúdo do relatório
+    peritoResponsavel: ObjectId, // Referência ao usuário perito
+    dataCriacao: Date      // Data de criação do relatório
+}
+```
+- Mantém timestamps de criação/atualização
+
+### 🔄 Relacionamentos entre Models
+
+1. **User (Usuário)**
+   - Pode ter múltiplos Casos
+   - Pode ter múltiplos Relatórios
+   - Pode ter múltiplas Evidências
+   - Pode ser perito responsável por Laudos e Relatórios
+
+2. **Caso**
+   - Pertence a um Usuário
+   - Pode ter múltiplas Evidências
+   - Pode ter múltiplos Relatórios
+   - Pode ter múltiplas Vítimas
+
+3. **Vitima**
+   - Pertence a um Caso
+   - Pode ter múltiplos Odontogramas
+
+4. **Evidência**
+   - Pertence a um Caso
+   - Coletada por um Usuário
+   - Pode ter múltiplas Imagens
+   - Pode ter múltiplos Textos
+   - Pode ter um Laudo
+
+5. **Laudo**
+   - Pertence a uma Evidência
+   - Criado por um Usuário (perito)
+
+6. **Relatorio**
+   - Pertence a um Caso
+   - Criado por um Usuário (perito)
+
+### 📌 Características Importantes
+- Todos os models implementam timestamps (createdAt, updatedAt) quando relevante
+- Utiliza referências (ObjectId) para relacionamentos
+- Implementa validações de campos obrigatórios
+- Utiliza enums para campos com valores predefinidos
+- Mantém a integridade referencial através de refs
+- Documentos únicos são marcados com `unique: true`
+- Campos opcionais são marcados com `required: false`
+
+## 🚀 Como Instalar
+
+### Pré-requisitos
+- Node.js (versão 14 ou superior)
+- MongoDB
+- NPM ou Yarn
+- Conta no Cloudinary (para upload de imagens)
+
+### Passos para Instalação
+
+1. Clone o repositório:
+```bash
+git clone [URL_DO_REPOSITÓRIO]
+cd backend-pi
+```
+
+2. Instale as dependências:
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente:
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+```env
+PORT=3000
+MONGODB_URI=sua_uri_do_mongodb
+JWT_SECRET=seu_jwt_secret
+CLOUDINARY_CLOUD_NAME=seu_cloud_name
+CLOUDINARY_API_KEY=sua_api_key
+CLOUDINARY_API_SECRET=seu_api_secret
+```
+
+4. Inicie o servidor:
+```bash
+# Modo desenvolvimento
+npm run dev
+
+# Modo produção
+npm start
+```
+
+## 📚 Documentação da API
+A documentação completa da API está disponível através do Swagger UI quando o servidor estiver rodando:
+```
+http://localhost:3000/api-docs
+```
+
+## 🤝 Contribuição
+1. Faça um Fork do projeto
+2. Crie uma Branch para sua Feature (`git checkout -b feature/AmazingFeature`)
+3. Faça o Commit das suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Faça o Push para a Branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+Este projeto está sob a licença ISC.
+
+## 📞 Suporte
+Para suporte, envie um email para [nossa equipe](lucas.desenvolvedor.js@gmail.com) ou abra uma issue no repositório.
+
