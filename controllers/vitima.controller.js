@@ -63,10 +63,19 @@ export const updateVitima = async (req, res) => {
 export const deleteVitima = async (req, res) => {
     try {
         const id = req.params.id;
-        const vitima = await Vitima.findByIdAndDelete(id);
-        if (!vitima) {
+        const vitima = await Vitima.findById(id).populate('odontograma');
+        
+        if (vitima.odontograma?.length) {
+            const odontogramaIds = vitima.odontograma.map(o => o._id);
+            await Odontograma.deleteMany({ _id: { $in: odontogramaIds } });
+        }
+        
+        const deletedVitima = await Vitima.findByIdAndDelete(id);
+        
+        if (!deletedVitima) {
             return res.status(404).json({ error: "Vitima nao encontrada" });
         }
+
         res.status(200).json({ message: "Vitima deletada com sucesso" });
     } catch (error) {
         res.status(500).json({ error: "Erro ao deletar vitima" });
