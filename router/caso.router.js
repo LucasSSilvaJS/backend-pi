@@ -25,6 +25,8 @@ const router = express.Router();
  *     description: Create a new caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -99,6 +101,8 @@ const router = express.Router();
  *     description: Get all casos
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: The list of all casos
@@ -157,6 +161,8 @@ router.route('/')
  *     description: Get a caso by id
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -215,6 +221,8 @@ router.route('/')
  *     description: Update a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -310,6 +318,8 @@ router.route('/')
  *     description: Delete a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -356,6 +366,8 @@ router.route('/:id')
  *     description: Add an evidence ID to a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -385,6 +397,8 @@ router.route('/:id')
  *     description: Remove an evidence ID from a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -423,6 +437,8 @@ router.route('/:id/evidencias')
  *     description: Add a report ID to a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -452,6 +468,8 @@ router.route('/:id/evidencias')
  *     description: Remove a report ID from a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -489,6 +507,8 @@ router.route('/:id/relatorios')
  *     description: Add a vitima ID to a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -518,6 +538,8 @@ router.route('/:id/relatorios')
  *     description: Remove a vitima ID from a caso
  *     tags:
  *       - Casos
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
