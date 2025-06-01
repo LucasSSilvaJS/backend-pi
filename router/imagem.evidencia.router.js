@@ -7,6 +7,8 @@ import {
     deleteImagemEvidencia
 } from '../controllers/imagem.evidencia.controller.js';
 
+import { upload } from "../middlewares/upload.js";
+
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -41,12 +43,19 @@ const router = express.Router();
  *       - ImagemEvidencia
  *     summary: Cria uma nova imagem de evidência
  *     description: Cria uma nova imagem de evidência com base no corpo da requisição
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/ImagemEvidencia'
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Imagem a ser cadastrada
  *     responses:
  *       201:
  *         description: Imagem de evidência criada com sucesso
@@ -61,8 +70,7 @@ const router = express.Router();
  */
 router.route('/')
     .get(authMiddleware("admin", "perito", "assistente"), getAllImagemEvidencia)
-    .post(authMiddleware("admin", "perito", "assistente"), createImagemEvidencia);
-
+    .post(authMiddleware("admin", "perito", "assistente"), upload.single('file'), createImagemEvidencia);
 
 /**
  * @swagger
@@ -99,6 +107,8 @@ router.route('/')
  *       - ImagemEvidencia
  *     summary: Atualiza uma imagem de evidência
  *     description: Atualiza a imagem de evidência com o ID fornecido
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - in: path
  *         name: id
@@ -109,9 +119,14 @@ router.route('/')
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/ImagemEvidencia'
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Imagem a ser atualizada
  *     responses:
  *       200:
  *         description: Imagem de evidência atualizada com sucesso
@@ -165,7 +180,7 @@ router.route('/')
  */
 router.route('/:id')
     .get(authMiddleware("admin", "perito", "assistente"), getImagemEvidenciaById)
-    .put(authMiddleware("admin", "perito", "assistente"), updateImagemEvidencia)
+    .put(authMiddleware("admin", "perito", "assistente"), upload.single('file'), updateImagemEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteImagemEvidencia);
 
 export default router;
