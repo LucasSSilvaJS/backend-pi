@@ -32,7 +32,7 @@ export const createImagemEvidencia = async (req, res) => {
         const imagem = new ImagemEvidencia(req.body);
         await imagem.save();
 
-        const evidencia = await Evidencia.findByIdAndUpdate(req.body.evidencia, { $addToSet: { imagens: imagem._id } }, { new: true });
+        const evidencia = await Evidencia.findByIdAndUpdate(req.body.evidenciaId, { $addToSet: { imagens: imagem._id } }, { new: true });
 
         if (!evidencia) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
@@ -63,7 +63,7 @@ export const updateImagemEvidencia = async (req, res) => {
 export const deleteImagemEvidencia = async (req, res) => {
     try {
         await Evidencia.findByIdAndUpdate(
-            req.body.evidencia,
+            req.body.evidenciaId,
             { $pull: { imagens: req.params.id } }
         );
         const imagem = await ImagemEvidencia.findByIdAndRemove(req.params.id);

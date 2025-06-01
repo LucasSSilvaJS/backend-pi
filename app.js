@@ -62,8 +62,8 @@ app.get('/', (req, res) => {
             '/dashboard',
             '/admin',
             '/odontogramas',
-            '/evidencias/imagem',
-            '/evidencias/texto'          
+            '/evidencias/imagens',
+            '/evidencias/textos'          
         ],
         documentacao: 'https://odontolegal-api.onrender.com/api-docs'
     });
