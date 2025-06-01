@@ -7,12 +7,16 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 
-import laudoRoutes from "./router/laudo.router.js";
-import evidenciaRoutes from "./router/evidencia.router.js";
-import casoRoutes from "./router/caso.router.js";
 import authRoutes from "./router/auth.router.js";
+import casoRoutes from "./router/caso.router.js";
 import dashboardRoutes from "./router/dashboard.router.js";
+import evidenciaRoutes from "./router/evidencia.router.js";
+import imagemEvidenciaRoutes from "./router/imagem.evidencia.router.js";
+import laudoRoutes from "./router/laudo.router.js";
 import odontogramaROutes from "./router/odontograma.router.js";
+import relatorioRoutes from "./router/relatorio.router.js";
+import textoEvidenciaRoutes from "./router/texto.evidencia.router.js";
+import vitimaRoutes from "./router/vitima.router.js";
 
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger.js";
@@ -23,7 +27,6 @@ const PORT = process.env.PORT || 8080;
 const DB_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/';
 
 const app = express();
-
 
 //middlewares
 app.use(morgan('dev'));
@@ -38,10 +41,14 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //consumindo rotas
 app.use('/evidencias', evidenciaRoutes);
 app.use('/casos', casoRoutes);
+app.use('/pacientes', vitimaRoutes);
 app.use('/laudos', laudoRoutes);
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/admin', relatorioRoutes);
 app.use('/odontogramas', odontogramaROutes);
+app.use('/evidencias/imagem', imagemEvidenciaRoutes);
+app.use('/evidencias/texto', textoEvidenciaRoutes);
 
 app.get('/', (req, res) => {
     res.json({
@@ -55,7 +62,8 @@ app.get('/', (req, res) => {
             '/dashboard',
             '/admin',
             '/odontogramas',
-            '/api-docs'            
+            '/evidencias/imagem',
+            '/evidencias/texto'          
         ],
         documentacao: 'https://odontolegal-api.onrender.com/api-docs'
     });

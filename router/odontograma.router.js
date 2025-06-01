@@ -4,8 +4,8 @@ import {
     createOdontograma,
     getAllOdontogramas,
     getOdontogramaById,
-    updateOdontograma,
-    deleteOdontograma
+    updateOdontogramaById,
+    deleteOdontogramaById
 } from '../controllers/odontograma.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -18,7 +18,7 @@ router.route('/')
 
 router.route('/:id')
     .get(authMiddleware("admin", "perito", "assistente"), getOdontogramaById)
-    .put(authMiddleware("admin", "perito"), updateOdontograma)
-    .delete(authMiddleware("admin", "perito"), deleteOdontograma);
+    .put(authMiddleware("admin", "perito"), updateOdontogramaById)
+    .delete(authMiddleware("admin", "perito"), deleteOdontogramaById);
 
 export default router;

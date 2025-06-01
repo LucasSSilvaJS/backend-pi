@@ -7,7 +7,7 @@ import {
   deleteVitima,
   addOdontogramaToVitima,
   removeOdontogramaFromVitima,
-} from "../controllers/vitima.controller";
+} from "../controllers/vitima.controller.js";
 
 const router = express.Router();
 
