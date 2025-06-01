@@ -17,6 +17,8 @@ const router = express.Router();
  * /odontogramas:
  *   get:
  *     summary: Retorna todos os odontogramas
+ *     tags:
+ *       - Odontograma 
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -36,6 +38,8 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Error'
  *   post:
  *     summary: Cria um novo odontograma
+ *     tags:
+ *       - Odontograma
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -77,6 +81,8 @@ router.route('/')
  * @openapi
  * /odontograma/{id}:
  *   get:
+ *     tags:
+ *       - Odontograma
  *     summary: Busca um odontograma pelo id
  *     security:
  *       - bearerAuth: []
@@ -107,6 +113,8 @@ router.route('/')
  *               $ref: '#/components/schemas/Error'
  *   put:
  *     summary: Atualiza um odontograma
+ *     tags:
+ *       - Odontograma
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -150,6 +158,8 @@ router.route('/')
  *               $ref: '#/components/schemas/Error'
  *   delete:
  *     summary: Deleta um odontograma
+ *     tags:
+ *       - Odontograma
  *     security:
  *       - bearerAuth: []
  *     parameters:
