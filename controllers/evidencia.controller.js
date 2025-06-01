@@ -3,9 +3,10 @@ import User from "../models/user.model.js";
 import ImagemEvidencia from "../models/imagem.evidencia.model.js";
 import TextoEvidencia from "../models/texto.evidencia.model.js";
 import Laudo from "../models/laudo.model.js";
+import Caso from "../models/caso.model.js";
 
 export const createEvidencia = async (req, res) => {
-    const { tipo, dataColeta, status, coletadaPor, latitude, longitude } = req.body;
+    const { tipo, dataColeta, status, coletadaPor, latitude, longitude, casoId } = req.body;
 
     try {
         const newEvidencia = new Evidencia({
@@ -31,6 +32,13 @@ export const createEvidencia = async (req, res) => {
             { new: true }
         );
 
+        // Adiciona o id da evidência na lista de evidências em casos
+        await Caso.findByIdAndUpdate(
+            casoId,
+            { $addToSet: { evidencias: savedEvidencia._id } },
+            { new: true }
+        );
+        
         res.status(201).json({ message: "Evidência criada com sucesso!", evidencia: savedEvidencia });
     } catch (error) {
         res.status(500).json({ error: "Erro ao criar evidência" });
@@ -90,7 +98,7 @@ export const updateEvidencia = async (req, res) => {
 };
 
 export const deleteEvidencia = async (req, res) => {
-    const { userId } = req.body;
+    const { userId, casoId } = req.body;
 
     try {
 
@@ -120,6 +128,12 @@ export const deleteEvidencia = async (req, res) => {
         await User.findByIdAndUpdate(
             userId,
             { $pull: { evidencias: deleteEvidencia._id } },
+            { new: true }
+        );
+
+        await Caso.findByIdAndUpdate(
+            casoId,
+            { $pull: { evidencias: deletedEvidencia._id } },
             { new: true }
         );
 
