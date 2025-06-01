@@ -24,8 +24,8 @@ export const getOdontogramaById = async (req, res) => {
 
 export const createOdontograma = async (req, res) => {
     try {
-        const { numero, observacao } = req.body;
-        const odontograma = await Odontograma.create({ numero, observacao });
+        const { identificacao, observacao } = req.body;
+        const odontograma = await Odontograma.create({ identificacao, observacao });
         res.status(201).json(odontograma);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar odontograma' });
@@ -35,8 +35,8 @@ export const createOdontograma = async (req, res) => {
 export const updateOdontogramaById = async (req, res) => {
     try {
         const { id } = req.params;
-        const { numero, observacao } = req.body;
-        const odontograma = await Odontograma.findByIdAndUpdate(id, { numero, observacao }, { new: true });
+        const { identificacao, observacao } = req.body;
+        const odontograma = await Odontograma.findByIdAndUpdate(id, { identificacao, observacao }, { new: true });
         if (!odontograma) {
             return res.status(404).json({ error: 'Odontograma nao encontrado' });
         }
