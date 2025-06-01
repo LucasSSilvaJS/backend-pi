@@ -1,4 +1,6 @@
 import Vitima from "../models/vitima.model.js";
+import Odontograma from "../models/odontograma.model.js";
+import Caso from "../models/caso.model.js";
 
 export const getAllVitimas = async (req, res) => {
     try {
@@ -24,7 +26,7 @@ export const getVitimaById = async (req, res) => {
 
 export const createVitima = async (req, res) => {
     try {
-        const { nic, nome, genero, idade, documento, endereco, corEtnia } = req.body;
+        const { nic, nome, genero, idade, documento, endereco, corEtnia, idCaso } = req.body;
         const vitima = new Vitima({
             nic,
             nome,
@@ -36,6 +38,13 @@ export const createVitima = async (req, res) => {
             odontograma: [],
         });
         const savedVitima = await vitima.save();
+
+        await Caso.findByIdAndUpdate(
+            idCaso,
+            { $addToSet: { vitimas: savedVitima._id } },
+            { new: true }
+        );
+
         res.status(201).json(savedVitima);
     } catch (error) {
         res.status(500).json({ error: "Erro ao criar vitima" });
@@ -75,6 +84,11 @@ export const deleteVitima = async (req, res) => {
         if (!deletedVitima) {
             return res.status(404).json({ error: "Vitima nao encontrada" });
         }
+
+        await Caso.updateMany(
+            { vitimas: id },
+            { $pull: { vitimas: id } }
+        );
 
         res.status(200).json({ message: "Vitima deletada com sucesso" });
     } catch (error) {
