@@ -1,9 +1,10 @@
 import Relatorio from '../models/relatorio.model.js';
 import User from '../models/user.model.js';
+import Caso from '../models/caso.model.js';
 
 export const createRelatorio = async (req, res) => {
     try {
-        const { titulo, conteudo, peritoResponsavel, userId } = req.body;
+        const { titulo, conteudo, peritoResponsavel, userId, casoId } = req.body;
         const relatorio = new Relatorio({
             titulo,
             conteudo,
@@ -14,6 +15,12 @@ export const createRelatorio = async (req, res) => {
         await User.findByIdAndUpdate(
             userId,
             { $addToSet: { relatorios: createRelatorio._id } }, // Add caso ID to user's casos array if not already present
+            { new: true }
+        );
+        // Update the caso with the new relatorio ID
+        await Caso.findByIdAndUpdate(
+            casoId,
+            { $addToSet: { relatorios: createdRelatorio._id } }, // Add relatorio ID to caso's relatorios array if not already present
             { new: true }
         );
         res.status(201).json(createdRelatorio);
@@ -62,13 +69,18 @@ export const updateRelatorio = async (req, res) => {
 
 export const deleteRelatorio = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId, casoId } = req.body;
         const relatorio = await Relatorio.findByIdAndDelete(req.params.id);
         if (!relatorio) {
             return res.status(404).json({ error: 'Relatório não encontrado' });
         }
         await User.findByIdAndUpdate(
             userId,
+            { $pull: { relatorios: relatorio._id } },
+            { new: true }
+        );
+        await Caso.findByIdAndUpdate(
+            casoId,
             { $pull: { relatorios: relatorio._id } },
             { new: true }
         );

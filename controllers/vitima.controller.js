@@ -72,6 +72,7 @@ export const updateVitima = async (req, res) => {
 export const deleteVitima = async (req, res) => {
     try {
         const id = req.params.id;
+        const { idCaso } = req.body;
         const vitima = await Vitima.findById(id).populate('odontograma');
         
         if (vitima.odontograma?.length) {
@@ -85,7 +86,8 @@ export const deleteVitima = async (req, res) => {
             return res.status(404).json({ error: "Vitima nao encontrada" });
         }
 
-        await Caso.updateMany(
+        await Caso.findByIdAndUpdate(
+            idCaso,
             { vitimas: id },
             { $pull: { vitimas: id } }
         );
