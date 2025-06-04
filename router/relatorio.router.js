@@ -162,7 +162,7 @@ router.route('/')
  *       500:
  *         description: Error deleting relatorio
  */
-router.route('/:id')
+router.route("/:id")
     .get(authMiddleware("admin", "perito", "assistente"), getRelatorioById)
     .put(authMiddleware("admin", "perito"), updateRelatorio)
     .delete(authMiddleware("admin", "perito"), deleteRelatorio);
