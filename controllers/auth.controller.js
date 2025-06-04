@@ -19,14 +19,14 @@ export const register = async (req, res) => {
         });
 
         const token = jwt.sign(
-            { userId: user.id, username: user.username, email: user.email, cargo: user.cargo },
+            { userId: user._id, username: user.username, email: user.email, cargo: user.cargo },
             process.env.JWT_SECRET || "secret"
         );
 
         res.status(201).json({
             message: "Usuário criado com sucesso!",
             user: {
-                id: user.id,
+                id: user._id,
                 username: user.username,
                 email: user.email,
                 cargo: user.cargo,
@@ -62,14 +62,14 @@ export const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user.id, username: user.username, email: user.email, cargo: user.cargo },
+            { userId: user._id, username: user.username, email: user.email, cargo: user.cargo },
             process.env.JWT_SECRET || "secret"
         );
 
         res.status(200).json({
             message: "Logado com sucesso!",
             user: {
-                id: user.id,
+                id: user._id,
                 username: user.username,
                 email: user.email,
                 cargo: user.cargo,
