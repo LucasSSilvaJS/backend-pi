@@ -46,8 +46,8 @@ app.use('/laudos', laudoRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/relatorios', relatorioRoutes);
 app.use('/odontogramas', odontogramaRoutes);
-app.use('/evidencias/imagem', imagemEvidenciaRoutes);
-app.use('/evidencias/texto', textoEvidenciaRoutes);
+app.use('/evidencias-imagens', imagemEvidenciaRoutes);
+app.use('/evidencias-textos', textoEvidenciaRoutes);
 app.use('/evidencias', evidenciaRoutes);
 
 app.get('/', (req, res) => {
@@ -62,8 +62,8 @@ app.get('/', (req, res) => {
             '/dashboard',
             '/relatorios',
             '/odontogramas',
-            '/evidencias/imagem',
-            '/evidencias/texto'          
+            '/evidencias-imagens',
+            '/evidencias-textos'          
         ],
         documentacao: 'https://odontolegal-api.onrender.com/api-docs'
     });

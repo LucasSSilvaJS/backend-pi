@@ -15,7 +15,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /evidencias/imagens:
+ * /evidencias-imagens:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -74,7 +74,7 @@ router.route('/')
 
 /**
  * @swagger
- * /evidencias/imagens/{id}:
+ * /evidencias-imagens/{id}:
  *   get:
  *     security:
  *       - bearerAuth: []

@@ -186,7 +186,7 @@ router.route('/:id')
 
 /**
  * @swagger
- * /evidencias/{id}/imagens:
+ * /evidencias/{id}/evidencias-imagens:
  *   post:
  *     security:
  *       - bearerAuth: []
@@ -252,13 +252,13 @@ router.route('/:id')
  *       500:
  *         description: Erro ao remover imagem da evidência
  */
-router.route('/:id/imagens')
+router.route('/:id/evidencias-imagens')
     .post(authMiddleware("admin", "perito", "assistente"), upload.single('file'), addImagemToEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), removeImagemFromEvidencia);
 
 /**
  * @swagger
- * /evidencias/{id}/textos:
+ * /evidencias/{id}/evidencias-textos:
  *   post:
  *     security:
  *       - bearerAuth: []
@@ -322,7 +322,7 @@ router.route('/:id/imagens')
  *       500:
  *         description: Erro ao remover texto da evidência
  */
-router.route('/:id/textos')
+router.route('/:id/evidencias-textos')
     .post(authMiddleware("admin", "perito", "assistente"), addTextoToEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), removeTextoFromEvidencia);
 

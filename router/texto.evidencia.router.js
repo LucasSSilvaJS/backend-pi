@@ -13,7 +13,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /evidencias/textos:
+ * /evidencias-textos:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -74,7 +74,7 @@ router.route('/')
 
 /**
  * @swagger
- * /evidencias/textos/{id}:
+ * /evidencias-textos/{id}:
  *   get:
  *     security:
  *       - bearerAuth: []
