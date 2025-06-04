@@ -40,15 +40,15 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //consumindo rotas - reorganizando a ordem
 app.use('/auth', authRoutes);
+app.use('/evidencias/imagem', imagemEvidenciaRoutes);
+app.use('/evidencias/texto', textoEvidenciaRoutes);
+app.use('/evidencias', evidenciaRoutes);
 app.use('/vitimas', vitimaRoutes);
 app.use('/casos', casoRoutes);
-app.use('/evidencias', evidenciaRoutes);
 app.use('/laudos', laudoRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/relatorios', relatorioRoutes);
 app.use('/odontogramas', odontogramaROutes);
-app.use('/evidencias/imagem', imagemEvidenciaRoutes);
-app.use('/evidencias/texto', textoEvidenciaRoutes);
 
 app.get('/', (req, res) => {
     res.json({
