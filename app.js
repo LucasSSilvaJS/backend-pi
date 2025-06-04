@@ -41,7 +41,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //consumindo rotas
 app.use('/evidencias', evidenciaRoutes);
 app.use('/casos', casoRoutes);
-app.use('/pacientes', vitimaRoutes);
+app.use('/vitimas', vitimaRoutes);
 app.use('/laudos', laudoRoutes);
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
         rotas: [
             '/evidencias',
             '/casos',
-            '/pacientes',
+            '/vitimas',
             '/laudos',
             '/auth',
             '/dashboard',
