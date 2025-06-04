@@ -125,6 +125,22 @@ const options = {
                             },
                             description: "Evid ncias relacionadas ao usu rio",
                         },
+                        Error: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "Mensagem de erro",
+                                    example: "Erro interno no servidor",
+                                },
+                                code: {
+                                    type: "integer",
+                                    description: "Código do erro HTTP",
+                                    example: 500,
+                                },
+                            },
+                            required: ["message"],
+                        },
                     },
                 },
                 TextoEvidencia: {
