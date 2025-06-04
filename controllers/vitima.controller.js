@@ -3,30 +3,23 @@ import Odontograma from "../models/odontograma.model.js";
 import Caso from "../models/caso.model.js";
 
 export const getAllVitimas = async (req, res) => {
-    console.log("[getAllVitimas] Iniciando busca de vítimas");
-    try {
+    try{
         const vitimas = await Vitima.find().populate("odontograma");
-        console.log(`[getAllVitimas] Encontradas ${vitimas.length} vítimas`);
         res.status(200).json(vitimas);
-    } catch (error) {
-        console.error("[getAllVitimas] Erro:", error);
-        res.status(500).json({ error: "Erro ao buscar vitimas", details: error.message });
+    }catch(error){
+        res.status(500).json({ error: "Erro ao buscar vítimas" });
     }
 };
 
 export const getVitimaById = async (req, res) => {
-    const id = req.params.id;
-    console.log(`[getVitimaById] Buscando vítima com ID: ${id}`);
+    const { id } = req.params;
     try {
         const vitima = await Vitima.findById(id).populate("odontograma");
         if (!vitima) {
-            console.log(`[getVitimaById] Vítima não encontrada: ${id}`);
             return res.status(404).json({ error: "Vitima nao encontrada" });
         }
-        console.log(`[getVitimaById] Vítima encontrada: ${id}`);
         res.status(200).json(vitima);
     } catch (error) {
-        console.error(`[getVitimaById] Erro ao buscar vítima ${id}:`, error);
         res.status(500).json({ error: "Erro ao buscar vitima por ID", details: error.message });
     }
 };
@@ -78,7 +71,7 @@ export const updateVitima = async (req, res) => {
 
 export const deleteVitima = async (req, res) => {
     try {
-        const id = req.params.id;
+        const { id } = req.params;
         const { idCaso } = req.body;
         const vitima = await Vitima.findById(id).populate('odontograma');
         
