@@ -455,11 +455,6 @@ const options = {
                 },
             }
         },
-        security: [
-            {
-                bearerAuth: [],
-            },
-        ],
     },
     apis: ["./router/*.js"],
 };
