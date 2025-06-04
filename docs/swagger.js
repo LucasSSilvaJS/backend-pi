@@ -98,6 +98,11 @@ const options = {
                             example: "123456",
                             writeOnly: true,
                         },
+                        cargo: {
+                            type: "string",
+                            description: "Cargo do usuario",
+                            example: "admin",
+                        },
                         casos: {
                             type: "array",
                             items: {
@@ -124,22 +129,6 @@ const options = {
                                 example: "627b6a9c4f6f6e62d5c7b6a9",
                             },
                             description: "Evid ncias relacionadas ao usu rio",
-                        },
-                        Error: {
-                            type: "object",
-                            properties: {
-                                message: {
-                                    type: "string",
-                                    description: "Mensagem de erro",
-                                    example: "Erro interno no servidor",
-                                },
-                                code: {
-                                    type: "integer",
-                                    description: "Código do erro HTTP",
-                                    example: 500,
-                                },
-                            },
-                            required: ["message"],
                         },
                     },
                 },
