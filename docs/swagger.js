@@ -442,14 +442,7 @@ const options = {
                         },
                     },
                 },
-            },
-            securitySchemes: {
-                bearerAuth: {
-                    type: "http",
-                    scheme: "bearer",
-                    bearerFormat: "JWT",
-                },
-            },
+            }
         },
     },
     apis: ["./router/*.js"],

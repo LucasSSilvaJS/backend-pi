@@ -45,7 +45,7 @@ app.use('/casos', casoRoutes);
 app.use('/evidencias', evidenciaRoutes);
 app.use('/laudos', laudoRoutes);
 app.use('/dashboard', dashboardRoutes);
-app.use('/admin', relatorioRoutes);
+app.use('/relatorios', relatorioRoutes);
 app.use('/odontogramas', odontogramaROutes);
 app.use('/evidencias/imagem', imagemEvidenciaRoutes);
 app.use('/evidencias/texto', textoEvidenciaRoutes);
@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
             '/evidencias',
             '/laudos',
             '/dashboard',
-            '/admin',
+            '/relatorios',
             '/odontogramas',
             '/evidencias/imagem',
             '/evidencias/texto'          
