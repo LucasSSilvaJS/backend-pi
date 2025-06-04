@@ -38,12 +38,12 @@ app.use(bodyParser.json());
 //swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-//consumindo rotas
-app.use('/evidencias', evidenciaRoutes);
-app.use('/casos', casoRoutes);
-app.use('/vitimas', vitimaRoutes);
-app.use('/laudos', laudoRoutes);
+//consumindo rotas - reorganizando a ordem
 app.use('/auth', authRoutes);
+app.use('/vitimas', vitimaRoutes);
+app.use('/casos', casoRoutes);
+app.use('/evidencias', evidenciaRoutes);
+app.use('/laudos', laudoRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/admin', relatorioRoutes);
 app.use('/odontogramas', odontogramaROutes);
@@ -54,16 +54,16 @@ app.get('/', (req, res) => {
     res.json({
         objetivo: 'Backend para o projeto de PI Odonto-legal',
         rotas: [
-            '/evidencias',
-            '/casos',
-            '/vitimas',
-            '/laudos',
             '/auth',
+            '/vitimas',
+            '/casos',
+            '/evidencias',
+            '/laudos',
             '/dashboard',
             '/admin',
             '/odontogramas',
-            '/evidencias/imagens',
-            '/evidencias/textos'          
+            '/evidencias/imagem',
+            '/evidencias/texto'          
         ],
         documentacao: 'https://odontolegal-api.onrender.com/api-docs'
     });
