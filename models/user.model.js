@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
+    cargo: { type: String, required: true, enum: ['admin', 'perito', 'assistente'], default: 'perito' },
     casos: [
         {
             type: mongoose.Schema.Types.ObjectId, 
