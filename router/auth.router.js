@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getUsers, desativarUsuario, reativarUsuario } from "../controllers/auth.controller.js";
+import { register, login, getUsers, desativarUsuario, reativarUsuario, alterarSenha } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -393,5 +393,88 @@ router.route("/users/:id/desativar")
  */
 router.route("/users/:id/reativar")
     .put(authMiddleware("admin"), reativarUsuario);
+
+/**
+ * @swagger
+ * /auth/alterar-senha:
+ *   put:
+ *     tags:
+ *       - Autenticação
+ *     summary: Altera a senha do usuário
+ *     security:
+ *       - bearerAuth: []
+ *     description: Altera a senha do usuário logado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - senhaAtual
+ *               - novaSenha
+ *             properties:
+ *               senhaAtual:
+ *                 type: string
+ *                 description: Senha atual do usuário
+ *                 example: "123456"
+ *               novaSenha:
+ *                 type: string
+ *                 description: Nova senha do usuário
+ *                 example: "654321"
+ *     responses:
+ *       200:
+ *         description: Senha alterada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Senha alterada com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Senha atual e nova senha são obrigatórias
+ *       401:
+ *         description: Senha atual incorreta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Senha atual incorreta
+ *       404:
+ *         description: Usuário não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário não encontrado
+ *       500:
+ *         description: Erro ao alterar senha
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao alterar senha
+ */
+router.route("/alterar-senha")
+    .put(authMiddleware("admin", "perito", "assistente"), alterarSenha);
 
 export default router;

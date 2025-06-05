@@ -136,3 +136,34 @@ export const reativarUsuario = async (req, res) => {
     }
 };
 
+export const alterarSenha = async (req, res) => {
+    const { senhaAtual, novaSenha } = req.body;
+    const userId = req.user.userId;
+
+    if (!senhaAtual || !novaSenha) {
+        return res.status(400).json({ error: "Senha atual e nova senha são obrigatórias" });
+    }
+
+    try {
+        const user = await User.findById(userId).select("+password");
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        const senhaValida = await user.comparePassword(senhaAtual);
+
+        if (!senhaValida) {
+            return res.status(401).json({ error: "Senha atual incorreta" });
+        }
+
+        user.password = novaSenha;
+        await user.save();
+
+        res.status(200).json({ message: "Senha alterada com sucesso" });
+    } catch (err) {
+        console.error("Erro ao alterar senha:", err);
+        res.status(500).json({ error: "Erro ao alterar senha" });
+    }
+};
+
