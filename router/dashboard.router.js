@@ -1,5 +1,5 @@
 import express from "express";
-import { getQuantidadeCasos, getQuantidadeEvidencias, getQuantidadeVitimas, getQuantidadeVitimasPorGeneroDeUmCaso, getQuantidadeVitimasPorEtniaDeUmCaso, getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso, getQuantidadeCasosPorStatus, getQuantidadeCasosUltimosMeses, getCasosAtivos, getQuantidadeCasosAtivos, getQuantidadeTotalEvidencias, getQuantidadeTotalLaudos } from "../controllers/dashboard.controller.js";
+import { getQuantidadeCasos, getQuantidadeEvidencias, getQuantidadeVitimas, getQuantidadeVitimasPorGeneroDeUmCaso, getQuantidadeVitimasPorEtniaDeUmCaso, getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso, getQuantidadeCasosPorStatus, getQuantidadeCasosUltimosMeses, getQuantidadeCasosAtivos, getQuantidadeTotalEvidencias, getQuantidadeTotalLaudos } from "../controllers/dashboard.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
