@@ -10,7 +10,7 @@ const options = {
         },
         servers: [
             {
-                url: "https://odontolegal-api.onrender.com/",
+                url: "https://backend-pi-26cz.onrender.com/",
                 description: "Produção"
             },
             {

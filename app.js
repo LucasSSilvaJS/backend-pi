@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
             '/evidencias-imagens',
             '/evidencias-textos'          
         ],
-        documentacao: 'https://odontolegal-api.onrender.com/api-docs'
+        documentacao: 'https://backend-pi-26cz.onrender.com/api-docs'
     });
 });
 
