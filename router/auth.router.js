@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getUsers, desativarUsuario, reativarUsuario, alterarSenha } from "../controllers/auth.controller.js";
+import { register, login, getUsers, desativarUsuario, reativarUsuario, alterarSenha, alterarEmail } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -476,5 +476,98 @@ router.route("/users/:id/reativar")
  */
 router.route("/alterar-senha")
     .put(authMiddleware("admin", "perito", "assistente"), alterarSenha);
+
+/**
+ * @swagger
+ * /auth/alterar-email:
+ *   put:
+ *     tags:
+ *       - Autenticação
+ *     summary: Altera o email do usuário
+ *     security:
+ *       - bearerAuth: []
+ *     description: Altera o email do usuário logado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Novo email do usuário
+ *                 example: "novo.email@exemplo.com"
+ *     responses:
+ *       200:
+ *         description: Email alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email alterado com sucesso
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "627b6a9c4f6f6e62d5c7b6a9"
+ *                     username:
+ *                       type: string
+ *                       example: "joao"
+ *                     email:
+ *                       type: string
+ *                       example: "novo.email@exemplo.com"
+ *                     cargo:
+ *                       type: string
+ *                       example: "perito"
+ *       400:
+ *         description: Email não fornecido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Email é obrigatório
+ *       404:
+ *         description: Usuário não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário não encontrado
+ *       409:
+ *         description: Email já em uso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Email já está em uso
+ *       500:
+ *         description: Erro ao alterar email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao alterar email
+ */
+router.route("/alterar-email")
+    .put(authMiddleware("admin", "perito", "assistente"), alterarEmail);
 
 export default router;
