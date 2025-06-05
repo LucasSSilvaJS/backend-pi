@@ -80,5 +80,5 @@ mongoose.connect(DB_URL)
 
 app.listen(PORT, () => {
     console.log(`Servidor conectado na porta ${PORT}`);
-    console.log(`Documentação: https://odontolegal-api.onrender.com/api-docs`);
+    console.log(`Documentação: https://backend-pi-26cz.onrender.com/api-docs`);
 });
