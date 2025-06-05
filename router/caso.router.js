@@ -21,8 +21,8 @@ const router = express.Router();
  * @swagger
  * /casos:
  *   post:
- *     summary: Create a new caso
- *     description: Create a new caso
+ *     summary: Criar um novo caso
+ *     description: Cria um novo caso
  *     tags:
  *       - Casos
  *     security:
@@ -36,25 +36,25 @@ const router = express.Router();
  *             properties:
  *               userId:
  *                 type: string
- *                 description: The user ID
+ *                 description: ID do usuário
  *               titulo:
  *                 type: string
- *                 description: The title of the caso
+ *                 description: Título do caso
  *               descricao:
  *                 type: string
- *                 description: The description of the caso
+ *                 description: Descrição do caso
  *               status:
  *                 type: string
- *                 description: The status of the caso
+ *                 description: Status do caso
  *               dataAbertura:
  *                 type: string
- *                 description: The start date of the caso
+ *                 description: Data de abertura do caso
  *               dataFechamento:
  *                 type: string
- *                 description: The end date of the caso
+ *                 description: Data de fechamento do caso
  *     responses:
  *       201:
- *         description: The created caso
+ *         description: Caso criado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -62,50 +62,50 @@ const router = express.Router();
  *               properties:
  *                 _id:
  *                   type: string
- *                   description: The ID of the caso
+ *                   description: ID do caso
  *                 titulo:
  *                   type: string
- *                   description: The title of the caso
+ *                   description: Título do caso
  *                 descricao:
  *                   type: string
- *                   description: The description of the caso
+ *                   description: Descrição do caso
  *                 status:
  *                   type: string
- *                   description: The status of the caso
+ *                   description: Status do caso
  *                 dataAbertura:
  *                   type: string
- *                   description: The start date of the caso
+ *                   description: Data de abertura do caso
  *                 dataFechamento:
  *                   type: string
- *                   description: The end date of the caso
+ *                   description: Data de fechamento do caso
  *                 evidencias:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The evidence IDs associated with the caso
+ *                   description: IDs das evidências associadas ao caso
  *                 relatorios:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The report IDs associated with the caso
+ *                   description: IDs dos relatórios associados ao caso
  *                 vitimas:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The vitima IDs associated with the caso
+ *                   description: IDs das vítimas associadas ao caso
  *       500:
- *         description: Error creating the caso
+ *         description: Erro ao criar o caso
  *
  *   get:
- *     summary: Get all casos
- *     description: Get all casos
+ *     summary: Obter todos os casos
+ *     description: Retorna todos os casos cadastrados
  *     tags:
  *       - Casos
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: The list of all casos
+ *         description: Lista de todos os casos
  *         content:
  *           application/json:
  *             schema:
@@ -115,39 +115,39 @@ const router = express.Router();
  *                 properties:
  *                   _id:
  *                     type: string
- *                     description: The ID of the caso
+ *                     description: ID do caso
  *                   titulo:
  *                     type: string
- *                     description: The title of the caso
+ *                     description: Título do caso
  *                   descricao:
  *                     type: string
- *                     description: The description of the caso
+ *                     description: Descrição do caso
  *                   status:
  *                     type: string
- *                     description: The status of the caso
+ *                     description: Status do caso
  *                   dataAbertura:
  *                     type: string
- *                     description: The start date of the caso
+ *                     description: Data de abertura do caso
  *                   dataFechamento:
  *                     type: string
- *                     description: The end date of the caso
+ *                     description: Data de fechamento do caso
  *                   evidencias:
  *                     type: array
  *                     items:
  *                       type: string
- *                     description: The evidence IDs associated with the caso
+ *                     description: IDs das evidências associadas ao caso
  *                   relatorios:
  *                     type: array
  *                     items:
  *                       type: string
- *                     description: The report IDs associated with the caso
+ *                     description: IDs dos relatórios associados ao caso
  *                   vitimas:
  *                     type: array
  *                     items:
  *                       type: string
- *                     description: The vitima IDs associated with the caso
+ *                     description: IDs das vítimas associadas ao caso
  *       500:
- *         description: Error getting the list of casos
+ *         description: Erro ao obter a lista de casos
  */
 router.route('/')
     .get(authMiddleware("admin", "perito", "assistente"), getAllCasos)
@@ -157,8 +157,8 @@ router.route('/')
  * @swagger
  * /casos/{id}:
  *   get:
- *     summary: Get a caso by id
- *     description: Get a caso by id
+ *     summary: Obter um caso por ID
+ *     description: Retorna um caso específico com base no ID fornecido
  *     tags:
  *       - Casos
  *     security:
@@ -169,10 +169,10 @@ router.route('/')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     responses:
  *       200:
- *         description: The caso
+ *         description: Caso encontrado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -180,45 +180,45 @@ router.route('/')
  *               properties:
  *                 _id:
  *                   type: string
- *                   description: The ID of the caso
+ *                   description: ID do caso
  *                 titulo:
  *                   type: string
- *                   description: The title of the caso
+ *                   description: Título do caso
  *                 descricao:
  *                   type: string
- *                   description: The description of the caso
+ *                   description: Descrição do caso
  *                 status:
  *                   type: string
- *                   description: The status of the caso
+ *                   description: Status do caso
  *                 dataAbertura:
  *                   type: string
- *                   description: The start date of the caso
+ *                   description: Data de abertura do caso
  *                 dataFechamento:
  *                   type: string
- *                   description: The end date of the caso
+ *                   description: Data de fechamento do caso
  *                 evidencias:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The evidence IDs associated with the caso
+ *                   description: IDs das evidências associadas ao caso
  *                 relatorios:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The report IDs associated with the caso
+ *                   description: IDs dos relatórios associados ao caso
  *                 vitimas:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The vitima IDs associated with the caso
+ *                   description: IDs das vítimas associadas ao caso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error getting the caso
+ *         description: Erro ao buscar o caso
  *
  *   put:
- *     summary: Update a caso
- *     description: Update a caso
+ *     summary: Atualizar um caso
+ *     description: Atualiza um caso existente
  *     tags:
  *       - Casos
  *     security:
@@ -229,7 +229,7 @@ router.route('/')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -239,37 +239,37 @@ router.route('/')
  *             properties:
  *               titulo:
  *                 type: string
- *                 description: The title of the caso
+ *                 description: Título do caso
  *               descricao:
  *                 type: string
- *                 description: The description of the caso
+ *                 description: Descrição do caso
  *               status:
  *                 type: string
- *                 description: The status of the caso
+ *                 description: Status do caso
  *               dataAbertura:
  *                 type: string
- *                 description: The start date of the caso
+ *                 description: Data de abertura do caso
  *               dataFechamento:
  *                 type: string
- *                 description: The end date of the caso
+ *                 description: Data de fechamento do caso
  *               evidencias:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: The evidence IDs associated with the caso
+ *                 description: IDs das evidências associadas ao caso
  *               relatorios:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: The report IDs associated with the caso
+ *                 description: IDs dos relatórios associados ao caso
  *               vitimas:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: The vitima IDs associated with the caso
+ *                 description: IDs das vítimas associadas ao caso
  *     responses:
  *       200:
- *         description: The updated caso
+ *         description: Caso atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -277,45 +277,45 @@ router.route('/')
  *               properties:
  *                 _id:
  *                   type: string
- *                   description: The ID of the caso
+ *                   description: ID do caso
  *                 titulo:
  *                   type: string
- *                   description: The title of the caso
+ *                   description: Título do caso
  *                 descricao:
  *                   type: string
- *                   description: The description of the caso
+ *                   description: Descrição do caso
  *                 status:
  *                   type: string
- *                   description: The status of the caso
+ *                   description: Status do caso
  *                 dataAbertura:
  *                   type: string
- *                   description: The start date of the caso
+ *                   description: Data de abertura do caso
  *                 dataFechamento:
  *                   type: string
- *                   description: The end date of the caso
+ *                   description: Data de fechamento do caso
  *                 evidencias:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The evidence IDs associated with the caso
+ *                   description: IDs das evidências associadas ao caso
  *                 relatorios:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The report IDs associated with the caso
+ *                   description: IDs dos relatórios associados ao caso
  *                 vitimas:
  *                   type: array
  *                   items:
  *                     type: string
- *                   description: The vitima IDs associated with the caso
+ *                   description: IDs das vítimas associadas ao caso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error updating the caso
+ *         description: Erro ao atualizar o caso
  *
  *   delete:
- *     summary: Delete a caso
- *     description: Delete a caso
+ *     summary: Excluir um caso
+ *     description: Exclui um caso existente
  *     tags:
  *       - Casos
  *     security:
@@ -326,7 +326,7 @@ router.route('/')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -336,10 +336,10 @@ router.route('/')
  *             properties:
  *               userId:
  *                 type: string
- *                 description: The ID of the user
+ *                 description: ID do usuário
  *     responses:
  *       200:
- *         description: The caso was deleted successfully
+ *         description: Caso excluído com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -347,12 +347,12 @@ router.route('/')
  *               properties:
  *                 message:
  *                   type: string
- *                   description: The message of success
+ *                   description: Mensagem de sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error deleting the caso
- * */
+ *         description: Erro ao excluir o caso
+ */
 router.route('/:id')
     .get(authMiddleware("admin", "perito", "assistente"), getCasoById)
     .put(authMiddleware("admin", "perito"), updateCaso)
@@ -362,8 +362,8 @@ router.route('/:id')
  * @swagger
  * /casos/{id}/evidencias:
  *   post:
- *     summary: Add an evidence ID to a caso
- *     description: Add an evidence ID to a caso
+ *     summary: Adicionar uma evidência ao caso
+ *     description: Adiciona uma evidência a um caso específico
  *     tags:
  *       - Casos
  *     security:
@@ -374,7 +374,7 @@ router.route('/:id')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -384,17 +384,17 @@ router.route('/:id')
  *             properties:
  *               idEvidencia:
  *                 type: string
- *                 description: The ID of the evidence to add
+ *                 description: ID da evidência a ser adicionada
  *     responses:
  *       200:
- *         description: Evidence added to caso
+ *         description: Evidência adicionada ao caso com sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
  *         description: Erro ao adicionar evidência ao caso
  *   delete:
- *     summary: Remove an evidence ID from a caso
- *     description: Remove an evidence ID from a caso
+ *     summary: Remover uma evidência do caso
+ *     description: Remove uma evidência de um caso específico
  *     tags:
  *       - Casos
  *     security:
@@ -405,7 +405,7 @@ router.route('/:id')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -415,10 +415,10 @@ router.route('/:id')
  *             properties:
  *               idEvidencia:
  *                 type: string
- *                 description: The ID of the evidence to remove
+ *                 description: ID da evidência a ser removida
  *     responses:
  *       200:
- *         description: Evidence removed from caso
+ *         description: Evidência removida do caso com sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
@@ -428,13 +428,12 @@ router.route('/:id/evidencias')
     .post(authMiddleware("admin", "perito", "assistente"), addEvidenciaToCaso)
     .delete(authMiddleware("admin", "perito", "assistente"), removeEvidenciaFromCaso);
 
-
 /**
  * @swagger
  * /casos/{id}/relatorios:
  *   post:
- *     summary: Add a report ID to a caso
- *     description: Add a report ID to a caso
+ *     summary: Adicionar um relatório ao caso
+ *     description: Adiciona um relatório a um caso específico
  *     tags:
  *       - Casos
  *     security:
@@ -445,7 +444,7 @@ router.route('/:id/evidencias')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -455,17 +454,17 @@ router.route('/:id/evidencias')
  *             properties:
  *               idRelatorio:
  *                 type: string
- *                 description: The ID of the report to add
+ *                 description: ID do relatório a ser adicionado
  *     responses:
  *       200:
- *         description: Report added to caso
+ *         description: Relatório adicionado ao caso com sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error adding report to caso
+ *         description: Erro ao adicionar relatório ao caso
  *   delete:
- *     summary: Remove a report ID from a caso
- *     description: Remove a report ID from a caso
+ *     summary: Remover um relatório do caso
+ *     description: Remove um relatório de um caso específico
  *     tags:
  *       - Casos
  *     security:
@@ -476,7 +475,7 @@ router.route('/:id/evidencias')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -486,14 +485,14 @@ router.route('/:id/evidencias')
  *             properties:
  *               idRelatorio:
  *                 type: string
- *                 description: The ID of the report to remove
+ *                 description: ID do relatório a ser removido
  *     responses:
  *       200:
- *         description: Report removed from caso
+ *         description: Relatório removido do caso com sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error removing report from caso
+ *         description: Erro ao remover relatório do caso
  */
 router.route('/:id/relatorios')
     .post(authMiddleware("admin", "perito"), addRelatorioToCaso)
@@ -503,8 +502,8 @@ router.route('/:id/relatorios')
  * @swagger
  * /casos/{id}/vitimas:
  *   post:
- *     summary: Add a vitima ID to a caso
- *     description: Add a vitima ID to a caso
+ *     summary: Adicionar uma vítima ao caso
+ *     description: Adiciona uma vítima a um caso específico
  *     tags:
  *       - Casos
  *     security:
@@ -515,7 +514,7 @@ router.route('/:id/relatorios')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -525,17 +524,17 @@ router.route('/:id/relatorios')
  *             properties:
  *               idVitima:
  *                 type: string
- *                 description: The ID of the vitima to add
+ *                 description: ID da vítima a ser adicionada
  *     responses:
  *       200:
- *         description: Vitima added to caso
+ *         description: Vítima adicionada ao caso com sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error adding vitima to caso
+ *         description: Erro ao adicionar vítima ao caso
  *   delete:
- *     summary: Remove a vitima ID from a caso
- *     description: Remove a vitima ID from a caso
+ *     summary: Remover uma vítima do caso
+ *     description: Remove uma vítima de um caso específico
  *     tags:
  *       - Casos
  *     security:
@@ -546,7 +545,7 @@ router.route('/:id/relatorios')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the caso
+ *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
@@ -556,14 +555,14 @@ router.route('/:id/relatorios')
  *             properties:
  *               idVitima:
  *                 type: string
- *                 description: The ID of the vitima to remove
+ *                 description: ID da vítima a ser removida
  *     responses:
  *       200:
- *         description: Vitima removed from caso
+ *         description: Vítima removida do caso com sucesso
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Error removing vitima from caso
+ *         description: Erro ao remover vítima do caso
  */
 router.route('/:id/vitimas')
     .post(authMiddleware("admin", "perito"), addVitimaToCaso)

@@ -17,15 +17,15 @@ const router = express.Router();
  * @swagger
  * /vitimas:
  *   get:
- *     summary: Get all Vitimas
- *     description: Get all Vitimas
+ *     summary: Obter todas as vítimas
+ *     description: Retorna todas as vítimas cadastradas
  *     tags:
  *       - Vitimas
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Vitimas found
+ *         description: Vítimas encontradas com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -33,10 +33,10 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Vitima'
  *       500:
- *         description: Error finding Vitimas
+ *         description: Erro ao buscar vítimas
  *   post:
- *     summary: Create a Vitima
- *     description: Create a Vitima
+ *     summary: Criar uma vítima
+ *     description: Cria uma nova vítima
  *     tags:
  *       - Vitimas
  *     security:
@@ -49,15 +49,15 @@ const router = express.Router();
  *             $ref: '#/components/schemas/Vitima'
  *     responses:
  *       201:
- *         description: Vitima created
+ *         description: Vítima criada com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Vitima'
  *       400:
- *         description: Bad request
+ *         description: Requisição inválida
  *       500:
- *         description: Error creating Vitima
+ *         description: Erro ao criar vítima
  */
 router.route("/")
     .get(authMiddleware("admin", "perito", "assistente"), getAllVitimas)
@@ -171,8 +171,8 @@ router.route("/:id")
  * @swagger
  * /vitimas/{id}/odontograma:
  *   post:
- *     summary: Add an odontograma to a vitima
- *     description: Add an odontograma to a vitima
+ *     summary: Adicionar um odontograma a uma vítima
+ *     description: Adiciona um odontograma a uma vítima específica
  *     tags:
  *       - Vitimas
  *     security:
@@ -183,7 +183,7 @@ router.route("/:id")
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the vitima to add the odontograma to
+ *         description: ID da vítima para adicionar o odontograma
  *     requestBody:
  *       required: true
  *       content:
@@ -193,21 +193,21 @@ router.route("/:id")
  *             properties:
  *               odontogramaId:
  *                 type: string
- *                 description: The ID of the odontograma to add
+ *                 description: ID do odontograma a ser adicionado
  *     responses:
  *       200:
- *         description: Odontograma added
+ *         description: Odontograma adicionado com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Vitima'
  *       404:
- *         description: Vitima nao encontrada
+ *         description: Vítima não encontrada
  *       500:
- *         description: Error adding odontograma
+ *         description: Erro ao adicionar odontograma
  *   delete:
- *     summary: Remove an odontograma from a vitima
- *     description: Remove an odontograma from a vitima
+ *     summary: Remover um odontograma de uma vítima
+ *     description: Remove um odontograma de uma vítima específica
  *     tags:
  *       - Vitimas
  *     security:
@@ -218,7 +218,7 @@ router.route("/:id")
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the vitima to remove the odontograma from
+ *         description: ID da vítima para remover o odontograma
  *     requestBody:
  *       required: true
  *       content:
@@ -228,18 +228,18 @@ router.route("/:id")
  *             properties:
  *               odontogramaId:
  *                 type: string
- *                 description: The ID of the odontograma to remove
+ *                 description: ID do odontograma a ser removido
  *     responses:
  *       200:
- *         description: Odontograma removed
+ *         description: Odontograma removido com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Vitima'
  *       404:
- *         description: Vitima nao encontrada
+ *         description: Vítima não encontrada
  *       500:
- *         description: Error removing odontograma
+ *         description: Erro ao remover odontograma
  */
 router.route("/:id/odontograma")
     .post(authMiddleware("admin", "perito"), addOdontogramaToVitima)

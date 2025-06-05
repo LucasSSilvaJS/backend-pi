@@ -93,28 +93,28 @@ const options = {
                     properties: {
                         _id: {
                             type: "string",
-                            description: "ID do usu rio",
+                            description: "ID do usuário",
                             example: "627b6a9c4f6f6e62d5c7b6a9",
                         },
                         username: {
                             type: "string",
-                            description: "Nome de usu rio do usu rio",
+                            description: "Nome de usuário",
                             example: "joao",
                         },
                         email: {
                             type: "string",
-                            description: "E-mail do usu rio",
+                            description: "E-mail do usuário",
                             example: "joao@exemplo.com",
                         },
                         password: {
                             type: "string",
-                            description: "Senha do usu rio",
+                            description: "Senha do usuário",
                             example: "123456",
                             writeOnly: true,
                         },
                         cargo: {
                             type: "string",
-                            description: "Cargo do usuario",
+                            description: "Cargo do usuário",
                             example: "admin",
                         },
                         casos: {
@@ -124,25 +124,25 @@ const options = {
                                 description: "ID do caso",
                                 example: "627b6a9c4f6f6e62d5c7b6a9",
                             },
-                            description: "Casos relacionados ao usu rio",
+                            description: "Casos relacionados ao usuário",
                         },
                         relatorios: {
                             type: "array",
                             items: {
                                 type: "string",
-                                description: "ID do relatorio",
+                                description: "ID do relatório",
                                 example: "627b6a9c4f6f6e62d5c7b6a9",
                             },
-                            description: "Relat rios relacionados ao usu rio",
+                            description: "Relatórios relacionados ao usuário",
                         },
                         evidencias: {
                             type: "array",
                             items: {
                                 type: "string",
-                                description: "ID da evid ncia",
+                                description: "ID da evidência",
                                 example: "627b6a9c4f6f6e62d5c7b6a9",
                             },
-                            description: "Evid ncias relacionadas ao usu rio",
+                            description: "Evidências relacionadas ao usuário",
                         },
                     },
                 },
@@ -151,24 +151,24 @@ const options = {
                     properties: {
                         _id: {
                             type: "string",
-                            description: "ID do texto de evid ncia",
+                            description: "ID do texto de evidência",
                             example: "627b6a9c4f6f6e62d5c7b6a9",
                         },
                         conteudo: {
                             type: "string",
-                            description: "Conte do do texto de evid ncia",
-                            example: "Texto de evid ncia",
+                            description: "Conteúdo do texto de evidência",
+                            example: "Texto de evidência",
                         },
                         createdAt: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de cria o do texto de evid ncia",
+                            description: "Data de criação do texto de evidência",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                         updatedAt: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de atualiza o do texto de evid ncia",
+                            description: "Data de atualização do texto de evidência",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                     },
@@ -178,43 +178,43 @@ const options = {
                     properties: {
                         _id: {
                             type: "string",
-                            description: "ID do relatorio",
+                            description: "ID do relatório",
                             example: "627b6a9c4f6f6e62d5c7b6a9",
                         },
                         titulo: {
                             type: "string",
-                            description: "T tulo do relatorio",
-                            example: "Relat rio de teste",
+                            description: "Título do relatório",
+                            example: "Relatório de teste",
                         },
                         conteudo: {
                             type: "string",
-                            description: "Conte do do relatorio",
-                            example: "Conte do do relatorio de teste",
+                            description: "Conteúdo do relatório",
+                            example: "Conteúdo do relatório de teste",
                         },
                         peritoResponsavel: {
                             type: "string",
-                            description: "ID do perito respons vel pelo relatorio",
+                            description: "ID do perito responsável pelo relatório",
                             example: "627b6a9c4f6f6e62d5c7b6a9",
                         },
                         dataCriacao: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de cria o do relatorio",
+                            description: "Data de criação do relatório",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                         createdAt: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de cria o do relatorio",
+                            description: "Data de criação do relatório",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                         updatedAt: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de atualiza o do relatorio",
+                            description: "Data de atualização do relatório",
                             example: "2022-01-01T12:00:00.000Z",
                         },
-                    },
+                    }
                 },
                 Odontograma: {
                     type: "object",
@@ -258,23 +258,23 @@ const options = {
                         },
                         descricao: {
                             type: "string",
-                            description: "Descri o do laudo",
-                            example: "Descri o do laudo",
+                            description: "Descrição do laudo",
+                            example: "Descrição do laudo",
                         },
                         conclusao: {
                             type: "string",
-                            description: "Conclus o do laudo",
-                            example: "Conclus o do laudo",
+                            description: "Conclusão do laudo",
+                            example: "Conclusão do laudo",
                         },
                         peritoResponsavel: {
                             type: "string",
-                            description: "ID do perito respons vel",
+                            description: "ID do perito responsável",
                             example: "627b6a9c4f6f6e62d5c7b6a9",
                         },
                         dataCriacao: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de cria o do laudo",
+                            description: "Data de criação do laudo",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                     },
@@ -284,24 +284,24 @@ const options = {
                     properties: {
                         _id: {
                             type: "string",
-                            description: "ID da imagem de evid ncia",
+                            description: "ID da imagem de evidência",
                             example: "627b6a9c4f6f6e62d5c7b6a9",
                         },
                         imagemUrl: {
                             type: "string",
-                            description: "URL da imagem de evid ncia",
+                            description: "URL da imagem de evidência",
                             example: "https://exemplo.com/imagem.jpg",
                         },
                         createdAt: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de cria o da imagem de evid ncia",
+                            description: "Data de criação da imagem de evidência",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                         updatedAt: {
                             type: "string",
                             format: "date-time",
-                            description: "Data de atualiza o da imagem de evid ncia",
+                            description: "Data de atualização da imagem de evidência",
                             example: "2022-01-01T12:00:00.000Z",
                         },
                     },

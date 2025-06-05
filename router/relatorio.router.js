@@ -70,8 +70,8 @@ router.route('/')
  * @swagger
  * /relatorios/{id}:
  *   get:
- *     summary: Get a relatorio by ID
- *     description: Retrieve a relatorio by ID
+ *     summary: Obter um relatório por ID
+ *     description: Retorna um relatório específico com base no ID fornecido
  *     tags:
  *       - Relatorios
  *     security:
@@ -82,17 +82,17 @@ router.route('/')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the relatorio
+ *         description: ID do relatório
  *     responses:
  *       200:
- *         description: A relatorio
+ *         description: Relatório encontrado com sucesso
  *       404:
- *         description: Relatorio not found
+ *         description: Relatório não encontrado
  *       500:
- *         description: Error fetching relatorio
+ *         description: Erro ao buscar relatório
  *   put:
- *     summary: Update a relatorio
- *     description: Update a relatorio with title, content, and responsible expert
+ *     summary: Atualizar um relatório
+ *     description: Atualiza um relatório com título, conteúdo e perito responsável
  *     tags:
  *       - Relatorios
  *     security:
@@ -103,7 +103,7 @@ router.route('/')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the relatorio
+ *         description: ID do relatório
  *     requestBody:
  *       required: true
  *       content:
@@ -113,23 +113,23 @@ router.route('/')
  *             properties:
  *               titulo:
  *                 type: string
- *                 description: The title of the relatorio
+ *                 description: Título do relatório
  *               conteudo:
  *                 type: string
- *                 description: The content of the relatorio
+ *                 description: Conteúdo do relatório
  *               peritoResponsavel:
  *                 type: string
- *                 description: The ID of the responsible expert
+ *                 description: ID do perito responsável
  *     responses:
  *       200:
- *         description: Relatorio updated successfully
+ *         description: Relatório atualizado com sucesso
  *       404:
- *         description: Relatorio not found
+ *         description: Relatório não encontrado
  *       500:
- *         description: Error updating relatorio
+ *         description: Erro ao atualizar relatório
  *   delete:
- *     summary: Delete a relatorio
- *     description: Delete a relatorio
+ *     summary: Excluir um relatório
+ *     description: Exclui um relatório existente
  *     tags:
  *       - Relatorios
  *     security:
@@ -140,7 +140,7 @@ router.route('/')
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the relatorio
+ *         description: ID do relatório
  *     requestBody:
  *       required: true
  *       content:
@@ -150,17 +150,17 @@ router.route('/')
  *             properties:
  *               userId:
  *                 type: string
- *                 description: The ID of the user
+ *                 description: ID do usuário
  *               casoId:
  *                 type: string
- *                 description: The ID of the caso
+ *                 description: ID do caso
  *     responses:
  *       200:
- *         description: Relatorio deleted successfully
+ *         description: Relatório excluído com sucesso
  *       404:
- *         description: Relatorio not found
+ *         description: Relatório não encontrado
  *       500:
- *         description: Error deleting relatorio
+ *         description: Erro ao excluir relatório
  */
 router.route("/:id")
     .get(authMiddleware("admin", "perito", "assistente"), getRelatorioById)
