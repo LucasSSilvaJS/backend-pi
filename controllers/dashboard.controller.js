@@ -1,4 +1,5 @@
 import Caso from "../models/caso.model.js";
+import Laudo from "../models/laudo.model.js";
 
 export const getQuantidadeCasos = async (req, res) => {
     try {
@@ -83,3 +84,87 @@ export const getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso = async (req, res) 
         res.status(500).json({ error: "Erro ao obter estatísticas das vítimas por intervalo de idade de um caso" });
     }
 };
+
+export const getQuantidadeCasosPorStatus = async (req, res) => {
+    try {
+        const quantidadeEmAndamento = await Caso.countDocuments({ status: 'Em andamento' });
+        const quantidadeFinalizados = await Caso.countDocuments({ status: 'Finalizado' });
+        const quantidadeArquivados = await Caso.countDocuments({ status: 'Arquivado' });
+
+        res.status(200).json({
+            quantidadeEmAndamento,
+            quantidadeFinalizados,
+            quantidadeArquivados
+        });
+    } catch (err) {
+        res.status(500).json({ error: "Erro ao obter estatísticas dos casos por status" });
+    }
+};
+
+export const getQuantidadeCasosUltimosMeses = async (req, res) => {
+    try {
+        const hoje = new Date();
+        const meses = [];
+        const nomesMeses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+
+        // Criar array com os últimos 5 meses
+        for (let i = 4; i >= 0; i--) {
+            const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+            const mesInicio = new Date(data.getFullYear(), data.getMonth(), 1);
+            const mesFim = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+
+            const quantidade = await Caso.countDocuments({
+                dataAbertura: {
+                    $gte: mesInicio,
+                    $lte: mesFim
+                }
+            });
+
+            meses.push({
+                mes: nomesMeses[data.getMonth()],
+                quantidade: quantidade
+            });
+        }
+
+        res.status(200).json({ meses });
+    } catch (err) {
+        res.status(500).json({ error: "Erro ao obter estatísticas dos casos dos últimos meses" });
+    }
+};
+
+export const getQuantidadeCasosAtivos = async (req, res) => {
+    try {
+        const quantidadeCasosAtivos = await Caso.countDocuments({ status: 'Em andamento' });
+        res.status(200).json({ quantidadeCasosAtivos });
+    } catch (err) {
+        res.status(500).json({ error: "Erro ao obter quantidade de casos ativos" });
+    }
+};
+
+export const getQuantidadeTotalEvidencias = async (req, res) => {
+    try {
+        const quantidadeTotalEvidencias = await Caso.aggregate([
+            { $unwind: "$evidencias" },
+            { $group: { _id: null, total: { $sum: 1 } } }
+        ]);
+
+        res.status(200).json({ 
+            quantidadeTotalEvidencias: quantidadeTotalEvidencias.length > 0 ? quantidadeTotalEvidencias[0].total : 0 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "Erro ao obter quantidade total de evidências" });
+    }
+};
+
+export const getQuantidadeTotalLaudos = async (req, res) => {
+    try {
+        const quantidadeTotalLaudos = await Laudo.countDocuments();
+        res.status(200).json({ quantidadeTotalLaudos });
+    } catch (err) {
+        res.status(500).json({ error: "Erro ao obter quantidade total de laudos" });
+    }
+};
+
