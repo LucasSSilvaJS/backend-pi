@@ -93,36 +93,23 @@ export const getUsers = async (req, res) => {
 export const desativarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { motivo } = req.body;
 
-        // Verifica se o usuário existe
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(404).json({ error: "Usuário não encontrado" });
+        const usuario = await User.findById(id);
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado" });
         }
 
-        // Verifica se o usuário já está inativo
-        if (user.status === 'inativo') {
-            return res.status(400).json({ error: "Usuário já está inativo" });
+        if (usuario.status === 'inativo') {
+            return res.status(400).json({ message: "Usuário já está inativo" });
         }
 
-        // Atualiza o status do usuário para inativo
-        const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { 
-                status: 'inativo',
-                motivoDesativacao: motivo || 'Não especificado'
-            },
-            { new: true }
-        ).select('-password');
+        usuario.status = 'inativo';
+        await usuario.save();
 
-        res.status(200).json({
-            message: "Usuário desativado com sucesso",
-            user: updatedUser
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erro ao desativar usuário" });
+        res.status(200).json({ message: "Usuário desativado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao desativar usuário:", error);
+        res.status(500).json({ message: "Erro ao desativar usuário", error: error.message });
     }
 };
 
@@ -130,34 +117,22 @@ export const reativarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Verifica se o usuário existe
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(404).json({ error: "Usuário não encontrado" });
+        const usuario = await User.findById(id);
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado" });
         }
 
-        // Verifica se o usuário já está ativo
-        if (user.status === 'ativo') {
-            return res.status(400).json({ error: "Usuário já está ativo" });
+        if (usuario.status === 'ativo') {
+            return res.status(400).json({ message: "Usuário já está ativo" });
         }
 
-        // Atualiza o status do usuário para ativo e limpa o motivo de desativação
-        const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { 
-                status: 'ativo',
-                motivoDesativacao: null
-            },
-            { new: true }
-        ).select('-password');
+        usuario.status = 'ativo';
+        await usuario.save();
 
-        res.status(200).json({
-            message: "Usuário reativado com sucesso",
-            user: updatedUser
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erro ao reativar usuário" });
+        res.status(200).json({ message: "Usuário reativado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao reativar usuário:", error);
+        res.status(500).json({ message: "Erro ao reativar usuário", error: error.message });
     }
 };
 

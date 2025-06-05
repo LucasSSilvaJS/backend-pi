@@ -7,7 +7,6 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true, select: false },
     cargo: { type: String, required: true, enum: ['admin', 'perito', 'assistente'], default: 'perito' },
     status: { type: String, required: true, enum: ['ativo', 'inativo'], default: 'ativo' },
-    motivoDesativacao: { type: String, required: false },
     casos: [
         {
             type: mongoose.Schema.Types.ObjectId, 
