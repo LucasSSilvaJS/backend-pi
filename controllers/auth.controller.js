@@ -1,4 +1,3 @@
-
 import jwt from "jsonwebtoken";
 
 import User from "../models/user.model.js";
@@ -90,3 +89,75 @@ export const getUsers = async (req, res) => {
         res.status(500).json({ error: "Erro ao buscar usuários" });
     }
 };
+
+export const desativarUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { motivo } = req.body;
+
+        // Verifica se o usuário existe
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        // Verifica se o usuário já está inativo
+        if (user.status === 'inativo') {
+            return res.status(400).json({ error: "Usuário já está inativo" });
+        }
+
+        // Atualiza o status do usuário para inativo
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { 
+                status: 'inativo',
+                motivoDesativacao: motivo || 'Não especificado'
+            },
+            { new: true }
+        ).select('-password');
+
+        res.status(200).json({
+            message: "Usuário desativado com sucesso",
+            user: updatedUser
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erro ao desativar usuário" });
+    }
+};
+
+export const reativarUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Verifica se o usuário existe
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        // Verifica se o usuário já está ativo
+        if (user.status === 'ativo') {
+            return res.status(400).json({ error: "Usuário já está ativo" });
+        }
+
+        // Atualiza o status do usuário para ativo e limpa o motivo de desativação
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { 
+                status: 'ativo',
+                motivoDesativacao: null
+            },
+            { new: true }
+        ).select('-password');
+
+        res.status(200).json({
+            message: "Usuário reativado com sucesso",
+            user: updatedUser
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erro ao reativar usuário" });
+    }
+};
+

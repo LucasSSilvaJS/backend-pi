@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getUsers } from "../controllers/auth.controller.js";
+import { register, login, getUsers, desativarUsuario, reativarUsuario } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -225,5 +225,173 @@ router.route("/login").post(login);
  *                   example: Erro interno do servidor 
  */
 router.route("/users").get(authMiddleware("admin"), getUsers);
+
+/**
+ * @swagger
+ * /auth/users/{id}/desativar:
+ *   put:
+ *     tags:
+ *       - Autenticação
+ *     summary: Desativa um usuário
+ *     security:
+ *       - bearerAuth: []
+ *     description: Desativa um usuário existente, alterando seu status para inativo
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário a ser desativado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motivo:
+ *                 type: string
+ *                 description: Motivo da desativação do usuário
+ *                 example: Aposentadoria
+ *     responses:
+ *       200:
+ *         description: Usuário desativado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Usuário desativado com sucesso
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     cargo:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                       example: inativo
+ *                     motivoDesativacao:
+ *                       type: string
+ *       400:
+ *         description: Usuário já está inativo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário já está inativo
+ *       404:
+ *         description: Usuário não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário não encontrado
+ *       500:
+ *         description: Erro ao desativar usuário
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao desativar usuário
+ */
+router.route("/users/:id/desativar")
+    .put(authMiddleware("admin"), desativarUsuario);
+
+/**
+ * @swagger
+ * /auth/users/{id}/reativar:
+ *   put:
+ *     tags:
+ *       - Autenticação
+ *     summary: Reativa um usuário
+ *     security:
+ *       - bearerAuth: []
+ *     description: Reativa um usuário que está inativo, alterando seu status para ativo
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário a ser reativado
+ *     responses:
+ *       200:
+ *         description: Usuário reativado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Usuário reativado com sucesso
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     cargo:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                       example: ativo
+ *                     motivoDesativacao:
+ *                       type: string
+ *                       nullable: true
+ *       400:
+ *         description: Usuário já está ativo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário já está ativo
+ *       404:
+ *         description: Usuário não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário não encontrado
+ *       500:
+ *         description: Erro ao reativar usuário
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao reativar usuário
+ */
+router.route("/users/:id/reativar")
+    .put(authMiddleware("admin"), reativarUsuario);
 
 export default router;
