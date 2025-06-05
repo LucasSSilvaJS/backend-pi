@@ -1,6 +1,7 @@
 import express from "express";
-import { register, login, getUsers, desativarUsuario, reativarUsuario, alterarSenha, alterarEmail } from "../controllers/auth.controller.js";
+import { register, login, getUsers, desativarUsuario, reativarUsuario, alterarSenha, alterarEmail, atualizarFotoPerfil } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -569,5 +570,91 @@ router.route("/alterar-senha")
  */
 router.route("/alterar-email")
     .put(authMiddleware("admin", "perito", "assistente"), alterarEmail);
+
+/**
+ * @swagger
+ * /auth/foto-perfil:
+ *   put:
+ *     tags:
+ *       - Autenticação
+ *     summary: Atualiza a foto de perfil do usuário
+ *     security:
+ *       - bearerAuth: []
+ *     description: Atualiza a foto de perfil do usuário logado
+ *     consumes:
+ *       - multipart/form-data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Imagem de perfil a ser atualizada
+ *     responses:
+ *       200:
+ *         description: Foto de perfil atualizada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Foto de perfil atualizada com sucesso
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "627b6a9c4f6f6e62d5c7b6a9"
+ *                     username:
+ *                       type: string
+ *                       example: "joao"
+ *                     email:
+ *                       type: string
+ *                       example: "joao@exemplo.com"
+ *                     cargo:
+ *                       type: string
+ *                       example: "perito"
+ *                     fotoPerfil:
+ *                       type: string
+ *                       example: "https://res.cloudinary.com/example/image/upload/v1234567890/profile.jpg"
+ *       400:
+ *         description: Nenhuma imagem enviada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Nenhuma imagem foi enviada
+ *       404:
+ *         description: Usuário não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário não encontrado
+ *       500:
+ *         description: Erro ao atualizar foto de perfil
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao atualizar foto de perfil
+ */
+router.route("/foto-perfil")
+    .put(authMiddleware("admin", "perito", "assistente"), upload.single('file'), atualizarFotoPerfil);
 
 export default router;

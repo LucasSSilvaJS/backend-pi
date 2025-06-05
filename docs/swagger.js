@@ -117,6 +117,12 @@ const options = {
                             description: "Cargo do usuário",
                             example: "admin",
                         },
+                        fotoPerfil: {
+                            type: "string",
+                            description: "URL da foto de perfil do usuário",
+                            example: "https://res.cloudinary.com/example/image/upload/v1234567890/profile.jpg",
+                            nullable: true
+                        },
                         casos: {
                             type: "array",
                             items: {

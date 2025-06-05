@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import User from "../models/user.model.js";
+import { uploadToCloudinary } from '../utils/upload.cloudinary.js';
 
 export const register = async (req, res) => {
     const { username, cargo, email, password } = req.body;
@@ -203,6 +204,40 @@ export const alterarEmail = async (req, res) => {
     } catch (err) {
         console.error("Erro ao alterar email:", err);
         res.status(500).json({ error: "Erro ao alterar email" });
+    }
+};
+
+export const atualizarFotoPerfil = async (req, res) => {
+    const userId = req.user.userId;
+
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "Nenhuma imagem foi enviada" });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        const imagemUrl = await uploadToCloudinary(req.file);
+        user.fotoPerfil = imagemUrl;
+        await user.save();
+
+        res.status(200).json({
+            message: "Foto de perfil atualizada com sucesso",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                cargo: user.cargo,
+                fotoPerfil: user.fotoPerfil
+            }
+        });
+    } catch (err) {
+        console.error("Erro ao atualizar foto de perfil:", err);
+        res.status(500).json({ error: "Erro ao atualizar foto de perfil" });
     }
 };
 
