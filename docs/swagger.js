@@ -406,74 +406,93 @@ const options = {
                         _id: {
                             type: "string",
                             description: "ID do caso",
-                            example: "627b6a9c4f6f6e62d5c7b6a9",
+                            example: "627b6a9c4f6f6e62d5c7b6a9"
                         },
                         titulo: {
                             type: "string",
                             description: "Título do caso",
-                            example: "Caso de teste",
+                            example: "Caso de teste"
                         },
                         descricao: {
                             type: "string",
                             description: "Descrição do caso",
-                            example: "Descrição do caso de teste",
+                            example: "Descrição detalhada do caso"
                         },
                         status: {
                             type: "string",
                             description: "Status do caso",
                             enum: ["Em andamento", "Finalizado", "Arquivado"],
-                            default: "Em andamento",
-                            example: "Em andamento",
+                            example: "Em andamento"
                         },
                         dataAbertura: {
                             type: "string",
                             format: "date-time",
                             description: "Data de abertura do caso",
-                            example: "2022-01-01T12:00:00.000Z",
+                            example: "2022-01-01T12:00:00.000Z"
                         },
                         dataFechamento: {
                             type: "string",
                             format: "date-time",
                             description: "Data de fechamento do caso",
                             example: "2022-01-01T12:00:00.000Z",
+                            nullable: true
+                        },
+                        geolocalizacao: {
+                            type: "object",
+                            description: "Geolocalização do caso",
+                            properties: {
+                                latitude: {
+                                    type: "string",
+                                    description: "Latitude do caso",
+                                    example: "-23.550520",
+                                    nullable: true
+                                },
+                                longitude: {
+                                    type: "string",
+                                    description: "Longitude do caso",
+                                    example: "-46.633308",
+                                    nullable: true
+                                }
+                            },
+                            nullable: true
                         },
                         evidencias: {
                             type: "array",
                             items: {
                                 type: "string",
                                 description: "ID da evidência",
-                                example: "627b6a9c4f6f6e62d5c7b6a9",
+                                example: "627b6a9c4f6f6e62d5c7b6a9"
                             },
+                            description: "Evidências relacionadas ao caso"
                         },
-                        relatorios: {
-                            type: "array",
-                            items: {
-                                type: "string",
-                                description: "ID do relatório",
-                                example: "627b6a9c4f6f6e62d5c7b6a9",
-                            },
+                        relatorio: {
+                            type: "string",
+                            description: "ID do relatório associado ao caso",
+                            example: "627b6a9c4f6f6e62d5c7b6a9",
+                            nullable: true
                         },
                         vitimas: {
                             type: "array",
                             items: {
                                 type: "string",
                                 description: "ID da vítima",
-                                example: "627b6a9c4f6f6e62d5c7b6a9",
+                                example: "627b6a9c4f6f6e62d5c7b6a9"
                             },
+                            description: "Vítimas relacionadas ao caso"
                         },
                         createdAt: {
                             type: "string",
                             format: "date-time",
                             description: "Data de criação do caso",
-                            example: "2022-01-01T12:00:00.000Z",
+                            example: "2022-01-01T12:00:00.000Z"
                         },
                         updatedAt: {
                             type: "string",
                             format: "date-time",
                             description: "Data de atualização do caso",
-                            example: "2022-01-01T12:00:00.000Z",
-                        },
-                    },
+                            example: "2022-01-01T12:00:00.000Z"
+                        }
+                    }
                 },
             }
         },

@@ -13,7 +13,8 @@ export const createCaso = async (req, res) => {
             descricao,
             status,
             dataAbertura,
-            dataFechamento
+            dataFechamento,
+            geolocalizacao
         } = req.body;
 
         const newCaso = new Caso({
@@ -22,6 +23,7 @@ export const createCaso = async (req, res) => {
             status,
             dataAbertura,
             dataFechamento,
+            geolocalizacao,
             evidencias: [],
             relatorios: [],
             vitimas: []
@@ -73,7 +75,8 @@ export const updateCaso = async (req, res) => {
             descricao,
             status,
             dataAbertura,
-            dataFechamento
+            dataFechamento,
+            geolocalizacao
         } = req.body;
         const updatedCaso = await Caso.findByIdAndUpdate(
             req.params.id,
@@ -82,7 +85,8 @@ export const updateCaso = async (req, res) => {
                 descricao,
                 status,
                 dataAbertura,
-                dataFechamento
+                dataFechamento,
+                geolocalizacao
             },
             {
                 new: true

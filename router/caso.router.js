@@ -52,6 +52,16 @@ const router = express.Router();
  *               dataFechamento:
  *                 type: string
  *                 description: Data de fechamento do caso
+ *               geolocalizacao:
+ *                 type: object
+ *                 description: Geolocalização do caso
+ *                 properties:
+ *                   latitude:
+ *                     type: string
+ *                     description: Latitude do caso
+ *                   longitude:
+ *                     type: string
+ *                     description: Longitude do caso
  *     responses:
  *       201:
  *         description: Caso criado com sucesso
@@ -78,6 +88,16 @@ const router = express.Router();
  *                 dataFechamento:
  *                   type: string
  *                   description: Data de fechamento do caso
+ *                 geolocalizacao:
+ *                   type: object
+ *                   description: Geolocalização do caso
+ *                   properties:
+ *                     latitude:
+ *                       type: string
+ *                       description: Latitude do caso
+ *                     longitude:
+ *                       type: string
+ *                       description: Longitude do caso
  *                 evidencias:
  *                   type: array
  *                   items:
@@ -252,6 +272,16 @@ router.route('/')
  *               dataFechamento:
  *                 type: string
  *                 description: Data de fechamento do caso
+ *               geolocalizacao:
+ *                 type: object
+ *                 description: Geolocalização do caso
+ *                 properties:
+ *                   latitude:
+ *                     type: string
+ *                     description: Latitude do caso
+ *                   longitude:
+ *                     type: string
+ *                     description: Longitude do caso
  *               evidencias:
  *                 type: array
  *                 items:
@@ -293,6 +323,16 @@ router.route('/')
  *                 dataFechamento:
  *                   type: string
  *                   description: Data de fechamento do caso
+ *                 geolocalizacao:
+ *                   type: object
+ *                   description: Geolocalização do caso
+ *                   properties:
+ *                     latitude:
+ *                       type: string
+ *                       description: Latitude do caso
+ *                     longitude:
+ *                       type: string
+ *                       description: Longitude do caso
  *                 evidencias:
  *                   type: array
  *                   items:
