@@ -179,7 +179,10 @@ O sistema utiliza MongoDB como banco de dados, com os seguintes models:
 {
     username: String,      // Nome de usuário (único)
     email: String,         // Email (único)
-    password: String,      // Senha (criptografada)
+    password: String,      // Senha (criptografada, não retornada em queries)
+    cargo: String,         // Enum: ['admin', 'perito', 'assistente']
+    status: String,        // Enum: ['ativo', 'inativo']
+    fotoPerfil: String,    // URL da foto (opcional)
     casos: [ObjectId],     // Referência aos casos
     relatorios: [ObjectId], // Referência aos relatórios
     evidencias: [ObjectId]  // Referência às evidências
@@ -194,65 +197,73 @@ O sistema utiliza MongoDB como banco de dados, com os seguintes models:
 {
     titulo: String,        // Título do caso
     descricao: String,     // Descrição detalhada
-    status: String,        // Em andamento, Finalizado, Arquivado
-    dataAbertura: Date,    // Data de abertura
+    status: String,        // Enum: ['Em andamento', 'Finalizado', 'Arquivado']
+    dataAbertura: Date,    // Data de abertura (automática)
     dataFechamento: Date,  // Data de fechamento (opcional)
+    geolocalizacao: {      // Localização do caso
+        latitude: String,
+        longitude: String
+    },
     evidencias: [ObjectId], // Referência às evidências
-    relatorios: [ObjectId], // Referência aos relatórios
-    vitimas: [ObjectId]     // Referência às vítimas
+    relatorio: ObjectId,    // Referência ao relatório (um por caso)
+    vitimas: [ObjectId]     // Referência às vítimas (obrigatório)
 }
 ```
+- Mantém timestamps de criação/atualização
 
 ### 👥 Vitima
 ```javascript
 {
-    nic: String,           // Número de Identificação do Caso
-    nome: String,          // Nome completo
-    genero: String,        // Gênero
-    idade: Number,         // Idade
-    documento: String,     // Documento de identificação (único)
-    endereco: String,      // Endereço
-    corEtnia: String,      // Cor/Etnia
-    odontograma: [ObjectId] // Referência aos odontogramas
+    nic: String,           // Número de Identificação do Caso (8 dígitos, único, imutável)
+    nome: String,          // Nome completo (opcional)
+    genero: String,        // Gênero (opcional)
+    idade: Number,         // Idade (opcional)
+    documento: String,     // Documento de identificação (único, opcional)
+    endereco: String,      // Endereço (opcional)
+    corEtnia: String,      // Cor/Etnia (opcional)
+    odontograma: [ObjectId] // Referência aos odontogramas (opcional)
 }
 ```
+- Validação de formato do NIC (8 dígitos)
+- NIC é imutável após criação
 
 ### 🦷 Odontograma
 ```javascript
 {
-    identificacao: Number,  // Identificação do dente
-    observacao: String     // Observações sobre o dente
+    identificacao: Number,  // Identificação do dente (obrigatório)
+    observacao: String     // Observações sobre o dente (obrigatório)
 }
 ```
 
 ### 🔍 Evidência
 ```javascript
 {
-    tipo: String,          // Tipo da evidência
-    dataColeta: Date,      // Data da coleta
-    status: String,        // Em análise, Concluído
-    coletadaPor: ObjectId, // Referência ao usuário
-    geolocalizacao: {      // Localização da coleta
+    tipo: String,          // Tipo da evidência (obrigatório)
+    dataColeta: Date,      // Data da coleta (obrigatório)
+    status: String,        // Enum: ['Em análise', 'Concluído']
+    coletadaPor: ObjectId, // Referência ao usuário (obrigatório)
+    geolocalizacao: {      // Localização da coleta (obrigatório)
         latitude: String,
         longitude: String
     },
-    imagens: [ObjectId],   // Referência às imagens
-    textos: [ObjectId],    // Referência aos textos
-    laudo: ObjectId        // Referência ao laudo
+    imagens: [ObjectId],   // Referência às imagens (obrigatório)
+    textos: [ObjectId],    // Referência aos textos (obrigatório)
+    laudo: ObjectId        // Referência ao laudo (opcional)
 }
 ```
+- Mantém timestamps de criação/atualização
 
 ### 📸 ImagemEvidencia
 ```javascript
 {
-    imagemUrl: String      // URL da imagem armazenada
+    imagemUrl: String      // URL da imagem armazenada (obrigatório)
 }
 ```
 
 ### 📝 TextoEvidencia
 ```javascript
 {
-    conteudo: String       // Conteúdo textual da evidência
+    conteudo: String       // Conteúdo textual da evidência (obrigatório)
 }
 ```
 - Mantém timestamps de criação/atualização
@@ -260,20 +271,20 @@ O sistema utiliza MongoDB como banco de dados, com os seguintes models:
 ### 📄 Laudo
 ```javascript
 {
-    descricao: String,     // Descrição detalhada
-    conclusao: String,     // Conclusão do laudo
-    peritoResponsavel: ObjectId, // Referência ao usuário perito
-    dataCriacao: Date      // Data de criação do laudo
+    descricao: String,     // Descrição detalhada (obrigatório)
+    conclusao: String,     // Conclusão do laudo (obrigatório)
+    peritoResponsavel: ObjectId, // Referência ao usuário perito (obrigatório)
+    dataCriacao: Date      // Data de criação do laudo (automática)
 }
 ```
 
 ### 📊 Relatorio
 ```javascript
 {
-    titulo: String,        // Título do relatório
-    conteudo: String,      // Conteúdo do relatório
-    peritoResponsavel: ObjectId, // Referência ao usuário perito
-    dataCriacao: Date      // Data de criação do relatório
+    titulo: String,        // Título do relatório (obrigatório)
+    conteudo: String,      // Conteúdo do relatório (gerado por LLM, obrigatório)
+    peritoResponsavel: ObjectId, // Referência ao usuário perito (obrigatório)
+    dataCriacao: Date      // Data de criação do relatório (automática)
 }
 ```
 - Mantém timestamps de criação/atualização
@@ -285,31 +296,39 @@ O sistema utiliza MongoDB como banco de dados, com os seguintes models:
    - Pode ter múltiplos Relatórios
    - Pode ter múltiplas Evidências
    - Pode ser perito responsável por Laudos e Relatórios
+   - Possui cargo específico (admin, perito, assistente)
+   - Possui status (ativo, inativo)
 
 2. **Caso**
-   - Pertence a um Usuário
+   - Deve ter pelo menos uma Vítima
    - Pode ter múltiplas Evidências
-   - Pode ter múltiplos Relatórios
-   - Pode ter múltiplas Vítimas
+   - Possui um único Relatório
+   - Possui geolocalização
+   - Possui status específico (Em andamento, Finalizado, Arquivado)
 
 3. **Vitima**
-   - Pertence a um Caso
+   - Possui NIC único e imutável
    - Pode ter múltiplos Odontogramas
+   - Possui campos opcionais para informações pessoais
 
 4. **Evidência**
-   - Pertence a um Caso
-   - Coletada por um Usuário
-   - Pode ter múltiplas Imagens
-   - Pode ter múltiplos Textos
-   - Pode ter um Laudo
+   - Deve ter pelo menos uma Imagem
+   - Deve ter pelo menos um Texto
+   - Coletada por um Usuário específico
+   - Possui geolocalização obrigatória
+   - Pode ter um Laudo associado
+   - Possui status específico (Em análise, Concluído)
 
 5. **Laudo**
    - Pertence a uma Evidência
-   - Criado por um Usuário (perito)
+   - Criado por um Usuário perito
+   - Possui data de criação automática
 
 6. **Relatorio**
    - Pertence a um Caso
-   - Criado por um Usuário (perito)
+   - Criado por um Usuário perito
+   - Conteúdo gerado por LLM
+   - Possui data de criação automática
 
 ### 📌 Características Importantes
 - Todos os models implementam timestamps (createdAt, updatedAt) quando relevante
@@ -319,6 +338,9 @@ O sistema utiliza MongoDB como banco de dados, com os seguintes models:
 - Mantém a integridade referencial através de refs
 - Documentos únicos são marcados com `unique: true`
 - Campos opcionais são marcados com `required: false`
+- Implementa validações específicas (ex: formato do NIC)
+- Utiliza campos imutáveis quando necessário
+- Integração com LLM para geração de relatórios
 
 ## 🚀 Como Instalar
 
