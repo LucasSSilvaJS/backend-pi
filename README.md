@@ -57,7 +57,6 @@ O Backend OdontoLegal é uma API RESTful desenvolvida para gerenciar processos o
   - Endereço
   - Cor/Etnia
   - Odontograma com anotações
-  - Anotações de regiões anatômicas
 - [x] Associação de múltiplas vítimas a um caso
 - [x] Consulta e atualização de dados das vítimas
 
@@ -91,16 +90,11 @@ O Backend OdontoLegal é uma API RESTful desenvolvida para gerenciar processos o
 - [x] Criptografia de dados sensíveis
 - [x] Proteção contra ataques comuns (XSS, CSRF, etc.)
 - [x] Validação de dados
-- [x] Sanitização de inputs
-- [x] Logs de auditoria
 - [x] Políticas de senha seguras
 
 #### 2. Performance
 - [x] Tempo de resposta otimizado
-- [x] Cache de dados frequentes
 - [x] Otimização de consultas ao banco
-- [ ] Compressão de imagens
-- [ ] Paginação de resultados
 
 #### 3. Escalabilidade
 - [x] Arquitetura modular
@@ -124,7 +118,6 @@ O Backend OdontoLegal é uma API RESTful desenvolvida para gerenciar processos o
 
 #### 6. Infraestrutura
 - [x] Deploy em ambiente cloud
-- [x] Backup automático
 - [x] Monitoramento
 - [x] CI/CD
 - [x] Ambiente de desenvolvimento
@@ -133,7 +126,6 @@ O Backend OdontoLegal é uma API RESTful desenvolvida para gerenciar processos o
 - [x] APIs RESTful
 - [x] Integração com serviços de IA
 - [x] Integração com serviços de armazenamento
-- [x] Webhooks para notificações
 
 #### 8. Manutenibilidade
 - [x] Código limpo e organizado
@@ -342,6 +334,99 @@ O sistema utiliza MongoDB como banco de dados, com os seguintes models:
 - Utiliza campos imutáveis quando necessário
 - Integração com LLM para geração de relatórios
 
+## 🔄 Fluxo de Inserção de Dados
+
+O sistema segue uma hierarquia específica para inserção de dados, garantindo a integridade e consistência das informações. Abaixo está o fluxo detalhado:
+
+### 1. Usuário (👤)
+- **Pré-requisito**: Nenhum
+- **Campos Obrigatórios**: username, email, password, cargo
+- **Observações**: 
+  - O cargo determina as permissões do usuário
+  - A senha é automaticamente criptografada
+  - O status padrão é 'ativo'
+
+### 2. Caso (📋)
+- **Pré-requisito**: Usuário criado
+- **Campos Obrigatórios**: titulo, descricao, vitimas
+- **Fluxo**:
+  1. Criar o caso com informações básicas
+  2. Associar pelo menos uma vítima
+  3. O status inicial é 'Em andamento'
+  4. A data de abertura é automática
+
+### 3. Vítima (👥)
+- **Pré-requisito**: Caso criado
+- **Campos Obrigatórios**: nic (8 dígitos)
+- **Campos Opcionais**: nome, genero, idade, documento, endereco, corEtnia
+- **Fluxo**:
+  1. Gerar NIC único (8 dígitos)
+  2. Preencher informações básicas
+  3. Associar ao caso
+  4. O NIC não pode ser alterado após a criação
+
+### 4. Evidência (🔍)
+- **Pré-requisito**: Caso e Usuário criados
+- **Campos Obrigatórios**: tipo, dataColeta, coletadaPor, geolocalizacao, imagens, textos
+- **Fluxo**:
+  1. Registrar tipo e data da evidência
+  2. Incluir geolocalização
+  3. Associar usuário que coletou
+  4. Adicionar pelo menos uma imagem
+  5. Adicionar pelo menos um texto
+  6. Status inicial é 'Em análise'
+
+### 5. Imagem da Evidência (📸)
+- **Pré-requisito**: Evidência criada
+- **Campos Obrigatórios**: imagemUrl
+- **Fluxo**:
+  1. Upload da imagem
+  2. Geração da URL
+  3. Associação à evidência
+
+### 6. Texto da Evidência (📝)
+- **Pré-requisito**: Evidência criada
+- **Campos Obrigatórios**: conteudo
+- **Fluxo**:
+  1. Inserir conteúdo textual
+  2. Associação à evidência
+
+### 7. Odontograma (🦷)
+- **Pré-requisito**: Vítima criada
+- **Campos Obrigatórios**: identificacao, observacao
+- **Fluxo**:
+  1. Registrar identificação do dente
+  2. Adicionar observações
+  3. Associar à vítima
+
+### 8. Laudo (📄)
+- **Pré-requisito**: Evidência criada e Usuário perito
+- **Campos Obrigatórios**: descricao, conclusao, peritoResponsavel
+- **Fluxo**:
+  1. Criar laudo com descrição e conclusão
+  2. Associar perito responsável
+  3. Vincular à evidência
+  4. Data de criação é automática
+
+### 9. Relatório (📊)
+- **Pré-requisito**: Caso criado e Usuário perito
+- **Campos Obrigatórios**: titulo, conteudo, peritoResponsavel
+- **Fluxo**:
+  1. Criar relatório com título
+  2. Gerar conteúdo via LLM
+  3. Associar perito responsável
+  4. Vincular ao caso
+  5. Data de criação é automática
+
+### 📌 Observações Importantes
+- A ordem de inserção deve ser respeitada para manter a integridade dos dados
+- Cada nível depende da existência do nível anterior
+- Relacionamentos são mantidos através de referências (ObjectId)
+- Campos obrigatórios devem ser preenchidos em cada nível
+- Alguns campos são preenchidos automaticamente pelo sistema
+- Validações específicas são aplicadas em cada nível
+- Permissões de usuário são verificadas em cada operação
+
 ## 🚀 Como Instalar
 
 ### Pré-requisitos
@@ -366,13 +451,60 @@ npm install
 3. Configure as variáveis de ambiente:
 Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 ```env
-PORT=3000
-MONGODB_URI=sua_uri_do_mongodb
-JWT_SECRET=seu_jwt_secret
-CLOUDINARY_CLOUD_NAME=seu_cloud_name
-CLOUDINARY_API_KEY=sua_api_key
-CLOUDINARY_API_SECRET=seu_api_secret
+# Configurações do Servidor
+PORT=3000                    # Porta onde o servidor irá rodar
+DISABLE_AUTH=false          # Desabilita autenticação (apenas para desenvolvimento)
+
+# Configurações do MongoDB
+DATABASE_URL=mongodb://...   # URL de conexão com o MongoDB
+
+# Configurações de Segurança
+JWT_SECRET=seu_jwt_secret    # Chave secreta para geração de tokens JWT
+
+# Configurações do Cloudinary (Armazenamento de Imagens)
+CLOUD_NAME=seu_cloud_name    # Nome da sua conta no Cloudinary
+API_KEY=sua_api_key         # Chave de API do Cloudinary
+API_SECRET=seu_api_secret   # Chave secreta do Cloudinary
+
+# Configurações da IA (Google Gemini)
+GEMINI_API_KEY=sua_chave    # Chave de API do Google Gemini para geração de relatórios
 ```
+
+### 📌 Observações sobre as Variáveis de Ambiente
+
+#### Configurações do Servidor
+- `PORT`: Define a porta onde o servidor irá rodar (padrão: 3000)
+- `DISABLE_AUTH`: Quando true, desabilita a autenticação (use apenas em desenvolvimento)
+
+#### Configurações do MongoDB
+- `DATABASE_URL`: URL completa de conexão com o MongoDB
+  - Formato: `mongodb://[username:password@]host[:port]/database`
+  - Exemplo: `mongodb://localhost:27017/odontolegal`
+
+#### Configurações de Segurança
+- `JWT_SECRET`: Chave secreta para assinatura dos tokens JWT
+  - Deve ser uma string complexa e segura
+  - Mantenha em segredo em produção
+
+#### Configurações do Cloudinary
+- `CLOUD_NAME`: Nome da sua conta no Cloudinary
+- `API_KEY`: Chave de API do Cloudinary
+- `API_SECRET`: Chave secreta do Cloudinary
+  - Necessário para upload e gerenciamento de imagens
+  - Obtenha estas credenciais no dashboard do Cloudinary
+
+#### Configurações da IA
+- `GEMINI_API_KEY`: Chave de API do Google Gemini
+  - Utilizada para geração automática de relatórios
+  - Obtenha a chave no Google Cloud Console
+
+### ⚠️ Importante
+- Nunca compartilhe ou comite o arquivo `.env` no repositório
+- Mantenha diferentes arquivos `.env` para desenvolvimento e produção
+- Use valores diferentes para `JWT_SECRET` em cada ambiente
+- Em produção, use sempre `DISABLE_AUTH=false`
+- Mantenha as chaves de API em segredo
+- Faça backup das credenciais em local seguro
 
 4. Inicie o servidor:
 ```bash
@@ -386,7 +518,7 @@ npm start
 ## 📚 Documentação da API
 A documentação completa da API está disponível através do Swagger UI quando o servidor estiver rodando:
 ```
-http://localhost:3000/api-docs
+https://backend-pi-26cz.onrender.com/api-docs
 ```
 
 ## 🤝 Contribuição
