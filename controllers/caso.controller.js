@@ -105,16 +105,15 @@ export const updateCaso = async (req, res) => {
 export const deleteCaso = async (req, res) => {
     try {
         // Remove all relations from caso
-        const casoRelations = await Caso.findById(req.params.id).populate('evidencias relatorios vitimas');
+        const casoRelations = await Caso.findById(req.params.id).populate('evidencias relatorio vitimas');
 
         if (casoRelations.evidencias?.length) {
             const evidenciaIds = casoRelations.evidencias.map(e => e._id);
             await Evidencia.deleteMany({ _id: { $in: evidenciaIds } });
         }
 
-        if (casoRelations.relatorios?.length) {
-            const relatorioIds = casoRelations.relatorios.map(r => r._id);
-            await Relatorio.deleteMany({ _id: { $in: relatorioIds } });
+        if (casoRelations.relatorio) {
+            await Relatorio.findByIdAndDelete(casoRelations.relatorio._id);
         }
 
         if (casoRelations.vitimas?.length) {
@@ -176,7 +175,7 @@ export const removeEvidenciaFromCaso = async (req, res) => {
     }
 };
 
-// Add a report ID to a caso
+// Add a report to a caso
 export const addRelatorioToCaso = async (req, res) => {
     try {
         const { idCaso, idRelatorio } = req.body;
@@ -188,14 +187,22 @@ export const addRelatorioToCaso = async (req, res) => {
         }
 
         if (caso.relatorio) {
-            return res.status(400).json({ error: 'Este caso já possui um relatório. Atualize o relatório existente ou remova-o primeiro.' });
+            return res.status(400).json({ 
+                error: 'Este caso já possui um relatório. Para atualizar, remova o relatório existente primeiro.' 
+            });
+        }
+
+        // Verifica se o relatório existe
+        const relatorio = await Relatorio.findById(idRelatorio);
+        if (!relatorio) {
+            return res.status(404).json({ error: 'Relatório não encontrado' });
         }
 
         const updatedCaso = await Caso.findByIdAndUpdate(
             idCaso,
             { relatorio: idRelatorio },
             { new: true }
-        );
+        ).populate('relatorio');
         
         res.status(200).json(updatedCaso);
     } catch (error) {
@@ -203,7 +210,7 @@ export const addRelatorioToCaso = async (req, res) => {
     }
 };
 
-// Remove a report ID from a caso
+// Remove a report from a caso
 export const removeRelatorioFromCaso = async (req, res) => {
     try {
         const { idCaso, idRelatorio } = req.body;
@@ -218,11 +225,15 @@ export const removeRelatorioFromCaso = async (req, res) => {
             return res.status(400).json({ error: 'Este caso não possui o relatório especificado' });
         }
 
+        // Remove o relatório do caso
         const updatedCaso = await Caso.findByIdAndUpdate(
             idCaso,
             { $unset: { relatorio: 1 } },
             { new: true }
         );
+        
+        // Opcional: Remove o relatório do banco de dados
+        await Relatorio.findByIdAndDelete(idRelatorio);
         
         res.status(200).json(updatedCaso);
     } catch (error) {

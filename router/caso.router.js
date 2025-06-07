@@ -19,10 +19,106 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Caso:
+ *       type: object
+ *       required:
+ *         - titulo
+ *         - descricao
+ *         - vitimas
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID único do caso
+ *         titulo:
+ *           type: string
+ *           description: Título do caso
+ *         descricao:
+ *           type: string
+ *           description: Descrição detalhada do caso
+ *         status:
+ *           type: string
+ *           enum: [Em andamento, Finalizado, Arquivado]
+ *           default: Em andamento
+ *           description: Status atual do caso
+ *         dataAbertura:
+ *           type: string
+ *           format: date-time
+ *           description: Data de abertura do caso
+ *         dataFechamento:
+ *           type: string
+ *           format: date-time
+ *           description: Data de fechamento do caso (opcional)
+ *         geolocalizacao:
+ *           type: object
+ *           properties:
+ *             latitude:
+ *               type: string
+ *               description: Latitude do local do caso
+ *             longitude:
+ *               type: string
+ *               description: Longitude do local do caso
+ *         evidencias:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: IDs das evidências associadas ao caso
+ *         relatorio:
+ *           type: string
+ *           description: ID do relatório associado ao caso (opcional)
+ *         vitimas:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: IDs das vítimas associadas ao caso
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Data de criação do registro
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Data da última atualização
+ *     Relatorio:
+ *       type: object
+ *       required:
+ *         - titulo
+ *         - conteudo
+ *         - peritoResponsavel
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID único do relatório
+ *         titulo:
+ *           type: string
+ *           description: Título do relatório
+ *         conteudo:
+ *           type: string
+ *           description: Conteúdo do relatório (gerado por LLM)
+ *         peritoResponsavel:
+ *           type: string
+ *           description: ID do perito responsável pelo relatório
+ *         dataCriacao:
+ *           type: string
+ *           format: date-time
+ *           description: Data de criação do relatório
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Data de criação do registro
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Data da última atualização
+ */
+
+/**
+ * @swagger
  * /casos:
  *   post:
  *     summary: Criar um novo caso
- *     description: Cria um novo caso
+ *     description: Cria um novo caso com as informações básicas
  *     tags:
  *       - Casos
  *     security:
@@ -32,142 +128,40 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 description: ID do usuário
- *               titulo:
- *                 type: string
- *                 description: Título do caso
- *               descricao:
- *                 type: string
- *                 description: Descrição do caso
- *               status:
- *                 type: string
- *                 description: Status do caso
- *               dataAbertura:
- *                 type: string
- *                 description: Data de abertura do caso
- *               dataFechamento:
- *                 type: string
- *                 description: Data de fechamento do caso
- *               geolocalizacao:
- *                 type: object
- *                 description: Geolocalização do caso
- *                 properties:
- *                   latitude:
- *                     type: string
- *                     description: Latitude do caso
- *                   longitude:
- *                     type: string
- *                     description: Longitude do caso
+ *             $ref: '#/components/schemas/Caso'
  *     responses:
  *       201:
  *         description: Caso criado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   description: ID do caso
- *                 titulo:
- *                   type: string
- *                   description: Título do caso
- *                 descricao:
- *                   type: string
- *                   description: Descrição do caso
- *                 status:
- *                   type: string
- *                   description: Status do caso
- *                 dataAbertura:
- *                   type: string
- *                   description: Data de abertura do caso
- *                 dataFechamento:
- *                   type: string
- *                   description: Data de fechamento do caso
- *                 geolocalizacao:
- *                   type: object
- *                   description: Geolocalização do caso
- *                   properties:
- *                     latitude:
- *                       type: string
- *                       description: Latitude do caso
- *                     longitude:
- *                       type: string
- *                       description: Longitude do caso
- *                 evidencias:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: IDs das evidências associadas ao caso
- *                 relatorios:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: IDs dos relatórios associados ao caso
- *                 vitimas:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: IDs das vítimas associadas ao caso
+ *               $ref: '#/components/schemas/Caso'
+ *       400:
+ *         description: Dados inválidos fornecidos
+ *       401:
+ *         description: Não autorizado
  *       500:
- *         description: Erro ao criar o caso
- *
+ *         description: Erro interno do servidor
  *   get:
- *     summary: Obter todos os casos
- *     description: Retorna todos os casos cadastrados
+ *     summary: Listar todos os casos
+ *     description: Retorna uma lista de todos os casos cadastrados
  *     tags:
  *       - Casos
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de todos os casos
+ *         description: Lista de casos retornada com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: ID do caso
- *                   titulo:
- *                     type: string
- *                     description: Título do caso
- *                   descricao:
- *                     type: string
- *                     description: Descrição do caso
- *                   status:
- *                     type: string
- *                     description: Status do caso
- *                   dataAbertura:
- *                     type: string
- *                     description: Data de abertura do caso
- *                   dataFechamento:
- *                     type: string
- *                     description: Data de fechamento do caso
- *                   evidencias:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: IDs das evidências associadas ao caso
- *                   relatorios:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: IDs dos relatórios associados ao caso
- *                   vitimas:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: IDs das vítimas associadas ao caso
+ *                 $ref: '#/components/schemas/Caso'
+ *       401:
+ *         description: Não autorizado
  *       500:
- *         description: Erro ao obter a lista de casos
+ *         description: Erro interno do servidor
  */
 router.route('/')
     .get(authMiddleware("admin", "perito", "assistente"), getAllCasos)
@@ -221,11 +215,9 @@ router.route('/')
  *                   items:
  *                     type: string
  *                   description: IDs das evidências associadas ao caso
- *                 relatorios:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: IDs dos relatórios associados ao caso
+ *                 relatorio:
+ *                   type: string
+ *                   description: ID do relatório associado ao caso
  *                 vitimas:
  *                   type: array
  *                   items:
@@ -287,11 +279,9 @@ router.route('/')
  *                 items:
  *                   type: string
  *                 description: IDs das evidências associadas ao caso
- *               relatorios:
- *                 type: array
- *                 items:
- *                   type: string
- *                 description: IDs dos relatórios associados ao caso
+ *               relatorio:
+ *                 type: string
+ *                 description: ID do relatório associado ao caso
  *               vitimas:
  *                 type: array
  *                 items:
@@ -338,11 +328,9 @@ router.route('/')
  *                   items:
  *                     type: string
  *                   description: IDs das evidências associadas ao caso
- *                 relatorios:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: IDs dos relatórios associados ao caso
+ *                 relatorio:
+ *                   type: string
+ *                   description: ID do relatório associado ao caso
  *                 vitimas:
  *                   type: array
  *                   items:
@@ -470,71 +458,85 @@ router.route('/:id/evidencias')
 
 /**
  * @swagger
- * /casos/{id}/relatorios:
+ * /casos/relatorio:
  *   post:
  *     summary: Adicionar um relatório ao caso
- *     description: Adiciona um relatório a um caso específico
+ *     description: Adiciona um único relatório ao caso. Se o caso já possuir um relatório, retorna erro.
  *     tags:
  *       - Casos
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - idCaso
+ *               - idRelatorio
  *             properties:
+ *               idCaso:
+ *                 type: string
+ *                 description: ID do caso
  *               idRelatorio:
  *                 type: string
  *                 description: ID do relatório a ser adicionado
  *     responses:
  *       200:
- *         description: Relatório adicionado ao caso com sucesso
+ *         description: Relatório adicionado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Caso'
+ *       400:
+ *         description: Caso já possui um relatório
+ *       401:
+ *         description: Não autorizado
  *       404:
- *         description: Caso não encontrado
+ *         description: Caso ou relatório não encontrado
  *       500:
- *         description: Erro ao adicionar relatório ao caso
+ *         description: Erro interno do servidor
  *   delete:
- *     summary: Remover um relatório do caso
- *     description: Remove um relatório de um caso específico
+ *     summary: Remover o relatório do caso
+ *     description: Remove o relatório associado ao caso e o deleta do banco de dados
  *     tags:
  *       - Casos
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID do caso
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - idCaso
+ *               - idRelatorio
  *             properties:
+ *               idCaso:
+ *                 type: string
+ *                 description: ID do caso
  *               idRelatorio:
  *                 type: string
  *                 description: ID do relatório a ser removido
  *     responses:
  *       200:
- *         description: Relatório removido do caso com sucesso
+ *         description: Relatório removido com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Caso'
+ *       400:
+ *         description: Caso não possui o relatório especificado
+ *       401:
+ *         description: Não autorizado
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Erro ao remover relatório do caso
+ *         description: Erro interno do servidor
  */
-router.route('/:id/relatorios')
+router.route('/relatorio')
     .post(authMiddleware("admin", "perito"), addRelatorioToCaso)
     .delete(authMiddleware("admin", "perito"), removeRelatorioFromCaso);
 
