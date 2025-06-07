@@ -5,6 +5,7 @@ import {
     getLaudoById,
     updateLaudo,
     deleteLaudo,
+    generateLaudoWithGemini
 } from "../controllers/laudo.controller.js";
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -79,6 +80,53 @@ router.route('/')
     .get(authMiddleware("admin", "perito", "assistente"), getAllLaudos)
     .post(authMiddleware("admin", "perito"), createLaudo);
 
+/**
+ * @swagger
+ * /laudos/generate-with-ia:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Laudo
+ *     summary: Gerar laudo usando Inteligência Artificial
+ *     description: Gera um laudo pericial completo usando IA (Gemini) com base nas evidências fornecidas
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - evidenciaId
+ *               - peritoResponsavel
+ *             properties:
+ *               evidenciaId:
+ *                 type: string
+ *                 description: ID da evidência para a qual o laudo será gerado
+ *               peritoResponsavel:
+ *                 type: string
+ *                 description: ID do perito responsável pelo laudo
+ *     responses:
+ *       201:
+ *         description: Laudo gerado com sucesso usando IA
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Laudo gerado com sucesso usando IA
+ *                 laudo:
+ *                   $ref: '#/components/schemas/Laudo'
+ *       400:
+ *         description: Evidência já possui um laudo
+ *       404:
+ *         description: Evidência não encontrada
+ *       500:
+ *         description: Erro ao gerar laudo com IA
+ */
+router.post('/generate-with-ia', authMiddleware("admin", "perito"), generateLaudoWithGemini);
 
 /**
  * @swagger
