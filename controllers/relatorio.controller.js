@@ -1,6 +1,10 @@
 import Relatorio from '../models/relatorio.model.js';
 import User from '../models/user.model.js';
 import Caso from '../models/caso.model.js';
+import Vitima from '../models/vitima.model.js';
+import Odontograma from '../models/odontograma.model.js';
+import Evidencia from '../models/evidencia.model.js';
+import { GeminiService } from '../services/gemini.service.js';
 
 export const createRelatorio = async (req, res) => {
     try {
@@ -108,3 +112,101 @@ export const deleteRelatorio = async (req, res) => {
         res.status(500).json({ error: 'Erro ao deletar relatório' });
     }
 };
+
+export const generateRelatorioWithGemini = async (req, res) => {
+    try {
+        const { casoId, userId } = req.body;
+        const geminiService = new GeminiService();
+
+        // Busca o caso e popula todas as relações necessárias
+        const caso = await Caso.findById(casoId)
+            .populate({
+                path: 'vitimas',
+                populate: {
+                    path: 'odontograma'
+                }
+            })
+            .populate('evidencias');
+
+        if (!caso) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+
+        if (caso.relatorio) {
+            return res.status(400).json({ error: 'Este caso já possui um relatório. Atualize o relatório existente ou remova-o primeiro.' });
+        }
+
+        // Prepara o prompt para o Gemini
+        const prompt = `Gere um relatório de perícia odontolegal detalhado com base nas seguintes informações:
+
+CASO:
+Título: ${caso.titulo}
+Descrição: ${caso.descricao}
+Status: ${caso.status}
+Data de Abertura: ${caso.dataAbertura}
+
+VÍTIMAS:
+${caso.vitimas.map(vitima => `
+Vítima ${vitima.nic}:
+- Nome: ${vitima.nome || 'Não informado'}
+- Gênero: ${vitima.genero || 'Não informado'}
+- Idade: ${vitima.idade || 'Não informada'}
+- Documento: ${vitima.documento || 'Não informado'}
+- Endereço: ${vitima.endereco || 'Não informado'}
+- Cor/Etnia: ${vitima.corEtnia || 'Não informada'}
+- Odontogramas: ${vitima.odontograma.map(odonto => `
+  * Identificação: ${odonto.identificacao}
+  * Observações: ${odonto.observacao}`).join('\n') || 'Nenhum odontograma registrado'}
+`).join('\n')}
+
+EVIDÊNCIAS:
+${caso.evidencias.map(evidencia => `
+- Tipo: ${evidencia.tipo}
+- Data de Coleta: ${evidencia.dataColeta}
+- Status: ${evidencia.status}
+- Localização: ${evidencia.geolocalizacao ? `Lat: ${evidencia.geolocalizacao.latitude}, Long: ${evidencia.geolocalizacao.longitude}` : 'Não informada'}
+`).join('\n')}
+
+Por favor, gere um relatório detalhado incluindo:
+1. Introdução e contextualização do caso
+2. Descrição das vítimas e suas características
+3. Análise dos odontogramas e achados odontológicos
+4. Análise das evidências coletadas
+5. Conclusões e recomendações
+6. Data e assinatura do perito
+
+O relatório deve seguir as normas técnicas de perícia odontolegal e ser adequado para uso em processos legais.`;
+
+        // Gera o relatório usando o Gemini
+        const conteudoRelatorio = await geminiService.generateResponse(prompt);
+
+        // Cria o novo relatório
+        const relatorio = new Relatorio({
+            titulo: `Relatório de Perícia Odontolegal - Caso ${caso.titulo}`,
+            conteudo: conteudoRelatorio,
+            peritoResponsavel: userId
+        });
+
+        const createdRelatorio = await relatorio.save();
+
+        // Atualiza o usuário com o novo relatório
+        await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { relatorios: createdRelatorio._id } },
+            { new: true }
+        );
+
+        // Atualiza o caso com o novo relatório
+        await Caso.findByIdAndUpdate(
+            casoId,
+            { relatorio: createdRelatorio._id },
+            { new: true }
+        );
+
+        res.status(201).json(createdRelatorio);
+    } catch (error) {
+        console.error('Erro ao gerar relatório:', error);
+        res.status(500).json({ error: 'Erro ao gerar relatório com Gemini' });
+    }
+};
+

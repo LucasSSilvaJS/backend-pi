@@ -3,7 +3,8 @@ import {
     getAllRelatorios,
     getRelatorioById,
     updateRelatorio,
-    deleteRelatorio
+    deleteRelatorio,
+    generateRelatorioWithGemini
 } from '../controllers/relatorio.controller.js';
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -166,5 +167,40 @@ router.route("/:id")
     .get(authMiddleware("admin", "perito", "assistente"), getRelatorioById)
     .put(authMiddleware("admin", "perito"), updateRelatorio)
     .delete(authMiddleware("admin", "perito"), deleteRelatorio);
+
+/**
+ * @swagger
+ * /relatorios/generate:
+ *   post:
+ *     summary: Gerar relatório usando Gemini
+ *     description: Gera um relatório de perícia odontolegal usando IA (Gemini) com base nos dados do caso
+ *     tags:
+ *       - Relatorios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               casoId:
+ *                 type: string
+ *                 description: ID do caso para gerar o relatório
+ *               userId:
+ *                 type: string
+ *                 description: ID do perito responsável
+ *     responses:
+ *       201:
+ *         description: Relatório gerado com sucesso
+ *       400:
+ *         description: Caso já possui relatório
+ *       404:
+ *         description: Caso não encontrado
+ *       500:
+ *         description: Erro ao gerar relatório
+ */
+router.post('/generate', authMiddleware("admin", "perito"), generateRelatorioWithGemini);
 
 export default router;
