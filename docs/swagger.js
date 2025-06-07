@@ -37,9 +37,12 @@ const options = {
                         },
                         nic: {
                             type: "string",
-                            description: "Número de Identificação Civil",
+                            description: "Número de Identificação Civil (NIC) - Gerado automaticamente, único, 8 dígitos, não pode ser alterado",
                             example: "12345678",
-                            nullable: true
+                            readOnly: true,
+                            minLength: 8,
+                            maxLength: 8,
+                            pattern: "^\\d{8}$"
                         },
                         nome: {
                             type: "string",

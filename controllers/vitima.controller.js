@@ -24,9 +24,32 @@ export const getVitimaById = async (req, res) => {
     }
 };
 
+// Função para gerar um NIC único de 8 dígitos
+const generateUniqueNIC = async () => {
+    let nic;
+    let isUnique = false;
+    
+    while (!isUnique) {
+        // Gera um número aleatório de 8 dígitos
+        nic = Math.floor(10000000 + Math.random() * 90000000).toString();
+        
+        // Verifica se o NIC já existe
+        const existingVitima = await Vitima.findOne({ nic });
+        if (!existingVitima) {
+            isUnique = true;
+        }
+    }
+    
+    return nic;
+};
+
 export const createVitima = async (req, res) => {
     try {
-        const { nic, nome, genero, idade, documento, endereco, corEtnia, idCaso } = req.body;
+        const { nome, genero, idade, documento, endereco, corEtnia, idCaso } = req.body;
+        
+        // Gera um NIC único
+        const nic = await generateUniqueNIC();
+        
         const vitima = new Vitima({
             nic,
             nome,
@@ -37,6 +60,7 @@ export const createVitima = async (req, res) => {
             corEtnia,
             odontograma: [],
         });
+        
         const savedVitima = await vitima.save();
 
         await Caso.findByIdAndUpdate(
@@ -54,12 +78,15 @@ export const createVitima = async (req, res) => {
 export const updateVitima = async (req, res) => {
     try {
         const id = req.params.id;
-        const { nic, nome, genero, idade, documento, endereco, corEtnia } = req.body;
+        const { nome, genero, idade, documento, endereco, corEtnia } = req.body;
+        
+        // Remove o NIC do objeto de atualização para garantir que não seja alterado
         const updatedVitima = await Vitima.findByIdAndUpdate(
             id,
-            { $set: { nic, nome, genero, idade, documento, endereco, corEtnia } },
+            { $set: { nome, genero, idade, documento, endereco, corEtnia } },
             { new: true }
         );
+        
         if (!updatedVitima) {
             return res.status(404).json({ error: "Vitima nao encontrada" });
         }
