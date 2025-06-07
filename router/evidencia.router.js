@@ -15,9 +15,6 @@ import {
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
-import { upload } from "../middlewares/upload.js";
-
-
 const router = express.Router();
 
 /**
@@ -96,7 +93,7 @@ const router = express.Router();
  */
 router.route('/')
     .get(authMiddleware("admin", "perito", "assistente"), getAllEvidencias)
-    .post(authMiddleware("admin", "perito"), upload.single('file'), createEvidencia);
+    .post(authMiddleware("admin", "perito"), createEvidencia);
 
 /**
  * @swagger
@@ -253,7 +250,7 @@ router.route('/:id')
  *         description: Erro ao remover imagem da evidência
  */
 router.route('/:id/evidencias-imagens')
-    .post(authMiddleware("admin", "perito", "assistente"), upload.single('file'), addImagemToEvidencia)
+    .post(authMiddleware("admin", "perito", "assistente"), addImagemToEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), removeImagemFromEvidencia);
 
 /**
