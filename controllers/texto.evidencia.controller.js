@@ -12,7 +12,8 @@ export const getAllTextosEvidencia = async (req, res) => {
 
 export const getTextoEvidenciaById = async (req, res) => {
     try {
-        const textoEvidencia = await TextoEvidencia.findById(req.params.id);
+        const { textoId } = req.params;
+        const textoEvidencia = await TextoEvidencia.findById(textoId);
         if (!textoEvidencia) {
             return res.status(404).json({ error: "Texto de evidência não encontrado" });
         }
@@ -24,7 +25,8 @@ export const getTextoEvidenciaById = async (req, res) => {
 
 export const createTextoEvidencia = async (req, res) => {
     try {
-        const { conteudo, evidenciaId } = req.body;
+        const { evidenciaId } = req.params;
+        const { conteudo } = req.body;
         const textoEvidencia = await TextoEvidencia.create({ conteudo });
         await Evidencia.findByIdAndUpdate(evidenciaId, {
             $addToSet: { textos: textoEvidencia._id }
@@ -37,8 +39,9 @@ export const createTextoEvidencia = async (req, res) => {
 
 export const updateTextoEvidencia = async (req, res) => {
     try {
+        const { textoId } = req.params;
         const { conteudo } = req.body;
-        const textoEvidencia = await TextoEvidencia.findByIdAndUpdate(req.params.id, { conteudo }, { new: true });
+        const textoEvidencia = await TextoEvidencia.findByIdAndUpdate(textoId, { conteudo }, { new: true });
         if (!textoEvidencia) {
             return res.status(404).json({ error: "Texto de evidência não encontrado" });
         }
@@ -50,11 +53,11 @@ export const updateTextoEvidencia = async (req, res) => {
 
 export const deleteTextoEvidencia = async (req, res) => {
     try {
-        const { evidenciaId } = req.body;
+        const { evidenciaId, textoId } = req.params;
         await Evidencia.findByIdAndUpdate(evidenciaId, {
-            $pull: { textos: req.params.id }
+            $pull: { textos: textoId }
         });
-        const textoEvidencia = await TextoEvidencia.findByIdAndRemove(req.params.id);
+        const textoEvidencia = await TextoEvidencia.findByIdAndRemove(textoId);
         if (!textoEvidencia) {
             return res.status(404).json({ error: "Texto de evidência não encontrado" });
         }

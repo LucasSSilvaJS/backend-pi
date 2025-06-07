@@ -13,17 +13,24 @@ const router = express.Router();
 
 /**
  * @swagger
- * /evidencias-textos:
+ * /evidencias/{evidenciaId}/textos:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - TextoEvidencia
- *     summary: Retorna todos os textos de evidência
- *     description: Retorna todos os textos de evidência
+ *     summary: Retorna todos os textos de uma evidência
+ *     description: Retorna todos os textos associados a uma evidência específica
+ *     parameters:
+ *       - in: path
+ *         name: evidenciaId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da evidência
  *     responses:
  *       200:
- *         description: Textos de evidência retornados com sucesso
+ *         description: Textos da evidência retornados com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -31,14 +38,21 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/TextoEvidencia'
  *       500:
- *         description: Erro ao buscar textos de evidência
+ *         description: Erro ao buscar textos da evidência
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - TextoEvidencia
- *     summary: Cria um texto de evidência
- *     description: Cria um texto de evidência
+ *     summary: Cria um novo texto para uma evidência
+ *     description: Cria um novo texto associado a uma evidência específica
+ *     parameters:
+ *       - in: path
+ *         name: evidenciaId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da evidência
  *     requestBody:
  *       required: true
  *       content:
@@ -48,13 +62,11 @@ const router = express.Router();
  *             properties:
  *               conteudo:
  *                 type: string
- *                 description: Conteúdo do texto de evidência
- *               evidenciaId:
- *                 type: string
- *                 description: ID da evidência à qual o texto de evidência será adicionado
+ *                 description: Conteúdo do texto
+ *                 required: true
  *     responses:
  *       201:
- *         description: Texto de evidência criado com sucesso
+ *         description: Texto criado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -62,58 +74,70 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Mensagem de sucesso
+ *                   example: Texto de evidência criado com sucesso!
  *                 textoEvidencia:
  *                   $ref: '#/components/schemas/TextoEvidencia'
  *       500:
- *         description: Erro ao criar texto de evidência
+ *         description: Erro ao criar texto
  */
-router.route('/')
+router.route('/evidencias/:evidenciaId/textos')
     .get(authMiddleware("admin", "perito", "assistente"), getAllTextosEvidencia)
     .post(authMiddleware("admin", "perito", "assistente"), createTextoEvidencia);
 
 /**
  * @swagger
- * /evidencias-textos/{id}:
+ * /evidencias/{evidenciaId}/textos/{textoId}:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - TextoEvidencia
- *     summary: Retorna um texto de evidência pelo ID
- *     description: Retorna um texto de evidência pelo ID
+ *     summary: Retorna um texto específico de uma evidência
+ *     description: Retorna um texto específico associado a uma evidência
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evidenciaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do texto de evidência
+ *         description: ID da evidência
+ *       - in: path
+ *         name: textoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do texto
  *     responses:
  *       200:
- *         description: Texto de evidência retornado com sucesso
+ *         description: Texto encontrado com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/TextoEvidencia'
  *       404:
- *         description: Texto de evidência não encontrado
+ *         description: Texto não encontrado
  *       500:
- *         description: Erro ao buscar texto de evidência
+ *         description: Erro ao buscar texto
  *   put:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - TextoEvidencia
- *     summary: Atualiza um texto de evidência pelo ID
- *     description: Atualiza um texto de evidência pelo ID
+ *     summary: Atualiza um texto específico de uma evidência
+ *     description: Atualiza o conteúdo de um texto específico de uma evidência
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evidenciaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do texto de evidência
+ *         description: ID da evidência
+ *       - in: path
+ *         name: textoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do texto
  *     requestBody:
  *       required: true
  *       content:
@@ -123,10 +147,11 @@ router.route('/')
  *             properties:
  *               conteudo:
  *                 type: string
- *                 description: Conteúdo do texto de evidência
+ *                 description: Novo conteúdo do texto
+ *                 required: true
  *     responses:
  *       200:
- *         description: Texto de evidência atualizado com sucesso
+ *         description: Texto atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -134,40 +159,36 @@ router.route('/')
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Mensagem de sucesso
+ *                   example: Texto de evidência atualizado com sucesso!
  *                 textoEvidencia:
  *                   $ref: '#/components/schemas/TextoEvidencia'
  *       404:
- *         description: Texto de evidência não encontrado
+ *         description: Texto não encontrado
  *       500:
- *         description: Erro ao atualizar texto de evidência
+ *         description: Erro ao atualizar texto
  *   delete:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - TextoEvidencia
- *     summary: Deleta um texto de evidência pelo ID
- *     description: Deleta um texto de evidência pelo ID
+ *     summary: Remove um texto específico de uma evidência
+ *     description: Remove um texto específico de uma evidência
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evidenciaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do texto de evidência
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               evidenciaId:
- *                 type: string
- *                 description: ID da evidência à qual o texto de evidência será removido
+ *         description: ID da evidência
+ *       - in: path
+ *         name: textoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do texto
  *     responses:
  *       200:
- *         description: Texto de evidência deletado com sucesso
+ *         description: Texto removido com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -175,13 +196,13 @@ router.route('/')
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Mensagem de sucesso
+ *                   example: Texto de evidência deletado com sucesso!
  *       404:
- *         description: Texto de evidência não encontrado
+ *         description: Texto não encontrado
  *       500:
- *         description: Erro ao deletar texto de evidência
+ *         description: Erro ao remover texto
  */
-router.route('/:id')
+router.route('/evidencias/:evidenciaId/textos/:textoId')
     .get(authMiddleware("admin", "perito", "assistente"), getTextoEvidenciaById)
     .put(authMiddleware("admin", "perito", "assistente"), updateTextoEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteTextoEvidencia);
