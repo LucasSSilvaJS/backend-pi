@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const VitimaSchema = mongoose.Schema({
+    //ID GERADO AUTOMATICAMENTE PELO SISTEMA
     nic: { type: String, required: false },
     nome: { type: String, required: false },
     genero: { type: String, required: false },

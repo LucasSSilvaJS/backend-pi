@@ -5,24 +5,38 @@ import Caso from '../models/caso.model.js';
 export const createRelatorio = async (req, res) => {
     try {
         const { titulo, conteudo, peritoResponsavel, userId, casoId } = req.body;
+
+        // Verifica se o caso já tem um relatório
+        const caso = await Caso.findById(casoId);
+        if (!caso) {
+            return res.status(404).json({ error: 'Caso não encontrado' });
+        }
+
+        if (caso.relatorio) {
+            return res.status(400).json({ error: 'Este caso já possui um relatório. Atualize o relatório existente ou remova-o primeiro.' });
+        }
+
         const relatorio = new Relatorio({
             titulo,
             conteudo,
             peritoResponsavel
         });
         const createdRelatorio = await relatorio.save();
-        // Update the user with the new caso ID
+
+        // Atualiza o usuário com o novo relatório
         await User.findByIdAndUpdate(
             userId,
-            { $addToSet: { relatorios: createRelatorio._id } }, // Add caso ID to user's casos array if not already present
+            { $addToSet: { relatorios: createdRelatorio._id } },
             { new: true }
         );
-        // Update the caso with the new relatorio ID
+
+        // Atualiza o caso com o novo relatório
         await Caso.findByIdAndUpdate(
             casoId,
-            { $addToSet: { relatorios: createdRelatorio._id } }, // Add relatorio ID to caso's relatorios array if not already present
+            { relatorio: createdRelatorio._id },
             { new: true }
         );
+
         res.status(201).json(createdRelatorio);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar relatório' });
@@ -74,16 +88,21 @@ export const deleteRelatorio = async (req, res) => {
         if (!relatorio) {
             return res.status(404).json({ error: 'Relatório não encontrado' });
         }
+
+        // Remove o relatório do usuário
         await User.findByIdAndUpdate(
             userId,
             { $pull: { relatorios: relatorio._id } },
             { new: true }
         );
+
+        // Remove o relatório do caso
         await Caso.findByIdAndUpdate(
             casoId,
-            { $pull: { relatorios: relatorio._id } },
+            { $unset: { relatorio: 1 } },
             { new: true }
         );
+
         res.status(200).json({ message: 'Relatório deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar relatório' });

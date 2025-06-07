@@ -1,6 +1,7 @@
 import Caso from "../models/caso.model.js";
 import Laudo from "../models/laudo.model.js";
 
+//GET QUANTIDADE DE CASOS
 export const getQuantidadeCasos = async (req, res) => {
     try {
         const quantidadeCasos = await Caso.countDocuments();
@@ -10,6 +11,7 @@ export const getQuantidadeCasos = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE EVIDENCIAS
 export const getQuantidadeEvidencias = async (req, res) => {
     try {
         const { id } = req.params;
@@ -20,6 +22,7 @@ export const getQuantidadeEvidencias = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE VITIMAS
 export const getQuantidadeVitimas = async (req, res) => {
     try {
         const { id } = req.params;
@@ -30,6 +33,7 @@ export const getQuantidadeVitimas = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE VITIMAS POR GÊNERO
 export const getQuantidadeVitimasPorGeneroDeUmCaso = async (req, res) => {
     try {
         const { idCaso } = req.params;
@@ -50,6 +54,7 @@ export const getQuantidadeVitimasPorGeneroDeUmCaso = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE VITIMAS POR ETNIA
 export const getQuantidadeVitimasPorEtniaDeUmCaso = async (req, res) => {
     try {
         const { idCaso } = req.params;
@@ -72,6 +77,7 @@ export const getQuantidadeVitimasPorEtniaDeUmCaso = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE VITIMAS POR INTERVALO DE IDADE
 export const getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso = async (req, res) => {
     try {
         const { idCaso, idadeInicial, idadeFinal } = req.params;
@@ -85,6 +91,7 @@ export const getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso = async (req, res) 
     }
 };
 
+//GET QUANTIDADE DE CASOS POR STATUS
 export const getQuantidadeCasosPorStatus = async (req, res) => {
     try {
         const quantidadeEmAndamento = await Caso.countDocuments({ status: 'Em andamento' });
@@ -101,6 +108,7 @@ export const getQuantidadeCasosPorStatus = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE CASOS DOS ÚLTIMOS MESES
 export const getQuantidadeCasosUltimosMeses = async (req, res) => {
     try {
         const hoje = new Date();
@@ -135,6 +143,7 @@ export const getQuantidadeCasosUltimosMeses = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE DE CASOS ATIVOS
 export const getQuantidadeCasosAtivos = async (req, res) => {
     try {
         const quantidadeCasosAtivos = await Caso.countDocuments({ status: 'Em andamento' });
@@ -144,6 +153,7 @@ export const getQuantidadeCasosAtivos = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE TOTAL DE EVIDÊNCIAS
 export const getQuantidadeTotalEvidencias = async (req, res) => {
     try {
         const quantidadeTotalEvidencias = await Caso.aggregate([
@@ -159,6 +169,7 @@ export const getQuantidadeTotalEvidencias = async (req, res) => {
     }
 };
 
+//GET QUANTIDADE TOTAL DE LAUDOS
 export const getQuantidadeTotalLaudos = async (req, res) => {
     try {
         const quantidadeTotalLaudos = await Laudo.countDocuments();

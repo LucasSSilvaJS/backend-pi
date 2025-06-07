@@ -176,14 +176,23 @@ export const removeEvidenciaFromCaso = async (req, res) => {
 export const addRelatorioToCaso = async (req, res) => {
     try {
         const { idCaso, idRelatorio } = req.body;
-        const updatedCaso = await Caso.findByIdAndUpdate(
-            idCaso,
-            { $addToSet: { relatorios: idRelatorio } }, // Add to relatorios array if not already present
-            { new: true }
-        );
-        if (!updatedCaso) {
+        
+        // Verifica se o caso já tem um relatório
+        const caso = await Caso.findById(idCaso);
+        if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
+
+        if (caso.relatorio) {
+            return res.status(400).json({ error: 'Este caso já possui um relatório. Atualize o relatório existente ou remova-o primeiro.' });
+        }
+
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            idCaso,
+            { relatorio: idRelatorio },
+            { new: true }
+        );
+        
         res.status(200).json(updatedCaso);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao adicionar relatório ao caso' });
@@ -194,14 +203,23 @@ export const addRelatorioToCaso = async (req, res) => {
 export const removeRelatorioFromCaso = async (req, res) => {
     try {
         const { idCaso, idRelatorio } = req.body;
-        const updatedCaso = await Caso.findByIdAndUpdate(
-            idCaso,
-            { $pull: { relatorios: idRelatorio } }, // Remove from relatorios array
-            { new: true }
-        );
-        if (!updatedCaso) {
+        
+        // Verifica se o caso tem o relatório especificado
+        const caso = await Caso.findById(idCaso);
+        if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
+
+        if (!caso.relatorio || caso.relatorio.toString() !== idRelatorio) {
+            return res.status(400).json({ error: 'Este caso não possui o relatório especificado' });
+        }
+
+        const updatedCaso = await Caso.findByIdAndUpdate(
+            idCaso,
+            { $unset: { relatorio: 1 } },
+            { new: true }
+        );
+        
         res.status(200).json(updatedCaso);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao remover relatório do caso' });
