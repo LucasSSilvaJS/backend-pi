@@ -25,7 +25,6 @@ export const createCaso = async (req, res) => {
             dataFechamento,
             geolocalizacao,
             evidencias: [],
-            relatorios: [],
             vitimas: []
         });
 
@@ -34,7 +33,7 @@ export const createCaso = async (req, res) => {
         // Update the user with the new caso ID
         await User.findByIdAndUpdate(
             userId,
-            { $addToSet: { casos: savedCaso._id } }, // Add caso ID to user's casos array if not already present
+            { $addToSet: { casos: savedCaso._id } },
             { new: true }
         );
 
@@ -47,7 +46,7 @@ export const createCaso = async (req, res) => {
 // Get all casos
 export const getAllCasos = async (req, res) => {
     try {
-        const casos = await Caso.find().populate('evidencias relatorios vitimas');
+        const casos = await Caso.find().populate('evidencias relatorio vitimas');
         res.status(200).json(casos);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao obter casos' });
@@ -57,7 +56,7 @@ export const getAllCasos = async (req, res) => {
 // Get a caso by id
 export const getCasoById = async (req, res) => {
     try {
-        const caso = await Caso.findById(req.params.id).populate('evidencias relatorios vitimas');
+        const caso = await Caso.findById(req.params.id).populate('evidencias relatorio vitimas');
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -180,12 +179,13 @@ export const addRelatorioToCaso = async (req, res) => {
     try {
         const { idCaso, idRelatorio } = req.body;
         
-        // Verifica se o caso já tem um relatório
+        // Verifica se o caso existe
         const caso = await Caso.findById(idCaso);
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
 
+        // Verifica se o caso já tem um relatório
         if (caso.relatorio) {
             return res.status(400).json({ 
                 error: 'Este caso já possui um relatório. Para atualizar, remova o relatório existente primeiro.' 
@@ -198,6 +198,7 @@ export const addRelatorioToCaso = async (req, res) => {
             return res.status(404).json({ error: 'Relatório não encontrado' });
         }
 
+        // Atualiza o caso com o novo relatório
         const updatedCaso = await Caso.findByIdAndUpdate(
             idCaso,
             { relatorio: idRelatorio },
@@ -206,6 +207,7 @@ export const addRelatorioToCaso = async (req, res) => {
         
         res.status(200).json(updatedCaso);
     } catch (error) {
+        console.error('Erro ao adicionar relatório:', error);
         res.status(500).json({ error: 'Erro ao adicionar relatório ao caso' });
     }
 };
@@ -215,12 +217,13 @@ export const removeRelatorioFromCaso = async (req, res) => {
     try {
         const { idCaso, idRelatorio } = req.body;
         
-        // Verifica se o caso tem o relatório especificado
+        // Verifica se o caso existe
         const caso = await Caso.findById(idCaso);
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
 
+        // Verifica se o caso tem o relatório especificado
         if (!caso.relatorio || caso.relatorio.toString() !== idRelatorio) {
             return res.status(400).json({ error: 'Este caso não possui o relatório especificado' });
         }
@@ -232,11 +235,12 @@ export const removeRelatorioFromCaso = async (req, res) => {
             { new: true }
         );
         
-        // Opcional: Remove o relatório do banco de dados
+        // Remove o relatório do banco de dados
         await Relatorio.findByIdAndDelete(idRelatorio);
         
         res.status(200).json(updatedCaso);
     } catch (error) {
+        console.error('Erro ao remover relatório:', error);
         res.status(500).json({ error: 'Erro ao remover relatório do caso' });
     }
 };
