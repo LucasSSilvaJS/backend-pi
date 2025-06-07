@@ -126,7 +126,13 @@ export const generateRelatorioWithGemini = async (req, res) => {
                     path: 'odontograma'
                 }
             })
-            .populate('evidencias');
+            .populate({
+                path: 'evidencias',
+                populate: [
+                    { path: 'imagens' },
+                    { path: 'textos' }
+                ]
+            });
 
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
@@ -161,10 +167,15 @@ Vítima ${vitima.nic}:
 
 EVIDÊNCIAS:
 ${caso.evidencias.map(evidencia => `
+Evidência ${evidencia._id}:
 - Tipo: ${evidencia.tipo}
 - Data de Coleta: ${evidencia.dataColeta}
 - Status: ${evidencia.status}
 - Localização: ${evidencia.geolocalizacao ? `Lat: ${evidencia.geolocalizacao.latitude}, Long: ${evidencia.geolocalizacao.longitude}` : 'Não informada'}
+- Imagens:
+${evidencia.imagens.map(imagem => `  * ${imagem.imagemUrl}`).join('\n') || '  * Nenhuma imagem registrada'}
+- Textos:
+${evidencia.textos.map(texto => `  * ${texto.conteudo}`).join('\n') || '  * Nenhum texto registrado'}
 `).join('\n')}
 
 Por favor, gere um relatório detalhado incluindo:
