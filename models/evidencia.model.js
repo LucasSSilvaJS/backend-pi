@@ -9,8 +9,9 @@ const EvidenciaSchema = mongoose.Schema({
         latitude: { type: String, required: true },
         longitude: { type: String, required: true }
     },
-    imagens: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ImagemEvidencia', required: true }],
-    textos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TextoEvidencia', required: true }],
+    //adicionar obrigatoriedade de imagens e textos pelo frontend
+    imagens: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ImagemEvidencia', required: false }],
+    textos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TextoEvidencia', required: false }],
     laudo: { type: mongoose.Schema.Types.ObjectId, ref: 'Laudo', required: false },
     //ADICIONAR LOCALIZAÇÃO EM EVIDENCIA
 }, { timestamps: true });
