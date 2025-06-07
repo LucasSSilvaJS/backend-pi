@@ -4,7 +4,7 @@ import Caso from '../models/caso.model.js';
 import Vitima from '../models/vitima.model.js';
 import Odontograma from '../models/odontograma.model.js';
 import Evidencia from '../models/evidencia.model.js';
-import { GeminiService } from '../services/gemini.service.js';
+import geminiService from '../services/gemini.service.js';
 
 export const createRelatorio = async (req, res) => {
     try {
@@ -116,7 +116,6 @@ export const deleteRelatorio = async (req, res) => {
 export const generateRelatorioWithGemini = async (req, res) => {
     try {
         const { casoId, userId } = req.body;
-        const geminiService = new GeminiService();
 
         // Busca o caso e popula todas as relações necessárias
         const caso = await Caso.findById(casoId)
