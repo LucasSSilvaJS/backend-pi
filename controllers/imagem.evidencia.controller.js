@@ -13,7 +13,8 @@ export const getAllImagemEvidencia = async (req, res) => {
 
 export const getImagemEvidenciaById = async (req, res) => {
     try {
-        const imagem = await ImagemEvidencia.findById(req.params.id);
+        const { imagemId } = req.params;
+        const imagem = await ImagemEvidencia.findById(imagemId);
         if (!imagem) {
             return res.status(404).json({ error: 'Imagem de evidência não encontrada' });
         }
@@ -25,6 +26,7 @@ export const getImagemEvidenciaById = async (req, res) => {
 
 export const createImagemEvidencia = async (req, res) => {
     try {
+        const { evidenciaId } = req.params;
         if (req.file) {
             const imagemUrl = await uploadToCloudinary(req.file);
             req.body.imagemUrl = imagemUrl;
@@ -32,7 +34,7 @@ export const createImagemEvidencia = async (req, res) => {
         const imagem = new ImagemEvidencia(req.body);
         await imagem.save();
 
-        const evidencia = await Evidencia.findByIdAndUpdate(req.body.evidenciaId, { $addToSet: { imagens: imagem._id } }, { new: true });
+        const evidencia = await Evidencia.findByIdAndUpdate(evidenciaId, { $addToSet: { imagens: imagem._id } }, { new: true });
 
         if (!evidencia) {
             return res.status(404).json({ error: 'Evidência não encontrada' });
@@ -46,11 +48,12 @@ export const createImagemEvidencia = async (req, res) => {
 
 export const updateImagemEvidencia = async (req, res) => {
     try {
+        const { imagemId } = req.params;
         if (req.file) {
             const imagemUrl = await uploadToCloudinary(req.file);
             req.body.imagemUrl = imagemUrl;
         }
-        const imagem = await ImagemEvidencia.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const imagem = await ImagemEvidencia.findByIdAndUpdate(imagemId, req.body, { new: true });
         if (!imagem) {
             return res.status(404).json({ error: 'Imagem de evidência não encontrada' });
         }
@@ -62,11 +65,12 @@ export const updateImagemEvidencia = async (req, res) => {
 
 export const deleteImagemEvidencia = async (req, res) => {
     try {
+        const { evidenciaId, imagemId } = req.params;
         await Evidencia.findByIdAndUpdate(
-            req.body.evidenciaId,
-            { $pull: { imagens: req.params.id } }
+            evidenciaId,
+            { $pull: { imagens: imagemId } }
         );
-        const imagem = await ImagemEvidencia.findByIdAndRemove(req.params.id);
+        const imagem = await ImagemEvidencia.findByIdAndRemove(imagemId);
         if (!imagem) {
             return res.status(404).json({ error: 'Imagem de evidência não encontrada' });
         }

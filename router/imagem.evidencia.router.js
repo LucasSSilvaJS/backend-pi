@@ -15,17 +15,24 @@ const router = express.Router();
 
 /**
  * @swagger
- * /evidencias-imagens:
+ * /evidencias/{evidenciaId}/imagens:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - ImagemEvidencia
- *     summary: Busca todas as imagens de evidência
- *     description: Retorna todas as imagens de evidência cadastradas
+ *     summary: Busca todas as imagens de uma evidência
+ *     description: Retorna todas as imagens associadas a uma evidência específica
+ *     parameters:
+ *       - in: path
+ *         name: evidenciaId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da evidência
  *     responses:
  *       200:
- *         description: Retorna todas as imagens de evidência
+ *         description: Retorna todas as imagens da evidência
  *         content:
  *           application/json:
  *             schema:
@@ -33,16 +40,23 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/ImagemEvidencia'
  *       404:
- *         description: Nenhuma imagem de evidência encontrada
+ *         description: Evidência não encontrada
  *       500:
- *         description: Erro ao buscar imagens de evidência
+ *         description: Erro ao buscar imagens da evidência
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - ImagemEvidencia
- *     summary: Cria uma nova imagem de evidência
- *     description: Cria uma nova imagem de evidência com base no corpo da requisição
+ *     summary: Cria uma nova imagem para uma evidência
+ *     description: Cria uma nova imagem associada a uma evidência específica
+ *     parameters:
+ *       - in: path
+ *         name: evidenciaId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da evidência
  *     consumes:
  *       - multipart/form-data
  *     requestBody:
@@ -63,59 +77,71 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ImagemEvidencia'
- *       400:
- *         description: Requisição inválida
+ *       404:
+ *         description: Evidência não encontrada
  *       500:
  *         description: Erro ao criar imagem de evidência
  */
-router.route('/')
+router.route('/evidencias/:evidenciaId/imagens')
     .get(authMiddleware("admin", "perito", "assistente"), getAllImagemEvidencia)
     .post(authMiddleware("admin", "perito", "assistente"), upload.single('file'), createImagemEvidencia);
 
 /**
  * @swagger
- * /evidencias-imagens/{id}:
+ * /evidencias/{evidenciaId}/imagens/{imagemId}:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - ImagemEvidencia
- *     summary: Busca uma imagem de evidência por ID
- *     description: Retorna a imagem de evidência com o ID fornecido
+ *     summary: Busca uma imagem específica de uma evidência
+ *     description: Retorna uma imagem específica de uma evidência
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evidenciaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da imagem de evidência
+ *         description: ID da evidência
+ *       - in: path
+ *         name: imagemId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da imagem
  *     responses:
  *       200:
- *         description: Imagem de evidência encontrada com sucesso
+ *         description: Imagem encontrada com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ImagemEvidencia'
  *       404:
- *         description: Imagem de evidência não encontrada
+ *         description: Imagem ou evidência não encontrada
  *       500:
- *         description: Erro ao buscar imagem de evidência por ID
+ *         description: Erro ao buscar imagem
  *   put:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - ImagemEvidencia
  *     summary: Atualiza uma imagem de evidência
- *     description: Atualiza a imagem de evidência com o ID fornecido
- *     consumes:
- *       - multipart/form-data
+ *     description: Atualiza uma imagem específica de uma evidência
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evidenciaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da imagem de evidência
+ *         description: ID da evidência
+ *       - in: path
+ *         name: imagemId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da imagem
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
@@ -126,45 +152,41 @@ router.route('/')
  *               file:
  *                 type: string
  *                 format: binary
- *                 description: Imagem a ser atualizada
+ *                 description: Nova imagem
  *     responses:
  *       200:
- *         description: Imagem de evidência atualizada com sucesso
+ *         description: Imagem atualizada com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ImagemEvidencia'
- *       400:
- *         description: Requisição inválida
+ *       404:
+ *         description: Imagem ou evidência não encontrada
  *       500:
- *         description: Erro ao atualizar imagem de evidência
+ *         description: Erro ao atualizar imagem
  *   delete:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - ImagemEvidencia
- *     summary: Exclui uma imagem de evidência
- *     description: Exclui a imagem de evidência com o ID fornecido
+ *     summary: Remove uma imagem de evidência
+ *     description: Remove uma imagem específica de uma evidência
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evidenciaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da imagem de evidência
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               evidencia:
- *                 type: string
- *                 description: ID da evidência
+ *         description: ID da evidência
+ *       - in: path
+ *         name: imagemId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da imagem
  *     responses:
  *       200:
- *         description: Imagem de evidência excluída com sucesso
+ *         description: Imagem removida com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -172,13 +194,13 @@ router.route('/')
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Imagem de evidência excluída com sucesso
+ *                   example: Imagem removida com sucesso
  *       404:
- *         description: Imagem de evidência não encontrada
+ *         description: Imagem ou evidência não encontrada
  *       500:
- *         description: Erro ao excluir imagem de evidência
+ *         description: Erro ao remover imagem
  */
-router.route('/:id')
+router.route('/evidencias/:evidenciaId/imagens/:imagemId')
     .get(authMiddleware("admin", "perito", "assistente"), getImagemEvidenciaById)
     .put(authMiddleware("admin", "perito", "assistente"), upload.single('file'), updateImagemEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteImagemEvidencia);
