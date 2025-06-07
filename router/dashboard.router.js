@@ -1,5 +1,5 @@
 import express from "express";
-import { getQuantidadeCasos, getQuantidadeEvidencias, getQuantidadeVitimas, getQuantidadeVitimasPorGeneroDeUmCaso, getQuantidadeVitimasPorEtniaDeUmCaso, getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso, getQuantidadeCasosPorStatus, getQuantidadeCasosUltimosMeses, getQuantidadeCasosAtivos, getQuantidadeTotalEvidencias, getQuantidadeTotalLaudos } from "../controllers/dashboard.controller.js";
+import { getQuantidadeCasos, getQuantidadeEvidencias, getQuantidadeVitimas, getQuantidadeVitimasPorGeneroDeUmCaso, getQuantidadeVitimasPorEtniaDeUmCaso, getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso, getQuantidadeCasosPorStatus, getQuantidadeCasosUltimosMeses, getQuantidadeCasosAtivos, getQuantidadeTotalEvidencias, getQuantidadeTotalLaudos, getAllDashboardStats } from "../controllers/dashboard.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -319,6 +319,201 @@ const router = express.Router();
  *                   description: Número total de laudos no sistema
  *       500:
  *         description: Erro ao obter quantidade total de laudos
+ * 
+ * /dashboard/todas-estatisticas:
+ *   get:
+ *     summary: Obtém todas as estatísticas do dashboard com filtros dinâmicos
+ *     description: Retorna um objeto contendo todas as estatísticas do sistema, podendo ser filtradas por diversos parâmetros
+ *     tags:
+ *       - Dashboard
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Em andamento, Finalizado, Arquivado]
+ *         description: Filtra por status do caso
+ *       - in: query
+ *         name: genero
+ *         schema:
+ *           type: string
+ *           enum: [Masculino, Feminino]
+ *         description: Filtra por gênero das vítimas
+ *       - in: query
+ *         name: etnia
+ *         schema:
+ *           type: string
+ *           enum: [preto, pardo, indigena, amarelo]
+ *         description: Filtra por etnia das vítimas
+ *       - in: query
+ *         name: mesInicial
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *         description: Mês inicial do período (1-12)
+ *       - in: query
+ *         name: mesFinal
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *         description: Mês final do período (1-12)
+ *       - in: query
+ *         name: anoInicial
+ *         schema:
+ *           type: integer
+ *         description: Ano inicial do período
+ *       - in: query
+ *         name: anoFinal
+ *         schema:
+ *           type: integer
+ *         description: Ano final do período
+ *       - in: query
+ *         name: idadeMin
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *         description: Idade mínima das vítimas
+ *       - in: query
+ *         name: idadeMax
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *         description: Idade máxima das vítimas
+ *     responses:
+ *       200:
+ *         description: Todas as estatísticas do dashboard com filtros aplicados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 filtrosAplicados:
+ *                   type: object
+ *                   description: Filtros que foram aplicados na consulta
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Status do caso filtrado
+ *                     genero:
+ *                       type: string
+ *                       description: Gênero das vítimas filtrado
+ *                     etnia:
+ *                       type: string
+ *                       description: Etnia das vítimas filtrada
+ *                     periodo:
+ *                       type: object
+ *                       description: Período filtrado
+ *                       properties:
+ *                         mesInicial:
+ *                           type: integer
+ *                           description: Mês inicial do período
+ *                         mesFinal:
+ *                           type: integer
+ *                           description: Mês final do período
+ *                         anoInicial:
+ *                           type: integer
+ *                           description: Ano inicial do período
+ *                         anoFinal:
+ *                           type: integer
+ *                           description: Ano final do período
+ *                     idade:
+ *                       type: object
+ *                       description: Faixa etária filtrada
+ *                       properties:
+ *                         minima:
+ *                           type: integer
+ *                           description: Idade mínima
+ *                         maxima:
+ *                           type: integer
+ *                           description: Idade máxima
+ *                 estatisticasGerais:
+ *                   type: object
+ *                   properties:
+ *                     totalCasos:
+ *                       type: integer
+ *                       description: Total de casos que atendem aos filtros
+ *                     casosAtivos:
+ *                       type: integer
+ *                       description: Total de casos ativos que atendem aos filtros
+ *                     casosPorStatus:
+ *                       type: object
+ *                       properties:
+ *                         emAndamento:
+ *                           type: integer
+ *                           description: Casos em andamento
+ *                         finalizados:
+ *                           type: integer
+ *                           description: Casos finalizados
+ *                         arquivados:
+ *                           type: integer
+ *                           description: Casos arquivados
+ *                 estatisticasEvidencias:
+ *                   type: object
+ *                   properties:
+ *                     totalEvidencias:
+ *                       type: integer
+ *                       description: Total de evidências dos casos filtrados
+ *                 estatisticasLaudos:
+ *                   type: object
+ *                   properties:
+ *                     totalLaudos:
+ *                       type: integer
+ *                       description: Total de laudos dos casos filtrados
+ *                 estatisticasVitimas:
+ *                   type: object
+ *                   properties:
+ *                     totalVitimas:
+ *                       type: integer
+ *                       description: Total de vítimas que atendem aos filtros
+ *                     porGenero:
+ *                       type: object
+ *                       properties:
+ *                         masculino:
+ *                           type: integer
+ *                           description: Total de vítimas do gênero masculino
+ *                         feminino:
+ *                           type: integer
+ *                           description: Total de vítimas do gênero feminino
+ *                     porEtnia:
+ *                       type: object
+ *                       properties:
+ *                         preto:
+ *                           type: integer
+ *                           description: Total de vítimas pretas
+ *                         pardo:
+ *                           type: integer
+ *                           description: Total de vítimas pardas
+ *                         indigena:
+ *                           type: integer
+ *                           description: Total de vítimas indígenas
+ *                         amarelo:
+ *                           type: integer
+ *                           description: Total de vítimas amarelas
+ *                     porIdade:
+ *                       type: object
+ *                       additionalProperties:
+ *                         type: integer
+ *                       description: Distribuição de vítimas por idade
+ *                 casosPorMes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       mes:
+ *                         type: string
+ *                         description: Nome do mês
+ *                       ano:
+ *                         type: integer
+ *                         description: Ano
+ *                       quantidade:
+ *                         type: integer
+ *                         description: Quantidade de casos no mês
+ *       500:
+ *         description: Erro ao obter estatísticas do dashboard
  */
 
 router.route('/casos')
@@ -354,6 +549,9 @@ router.route('/casos/ativos/quantidade')
 
 router.route('/laudos/total')
     .get(authMiddleware("admin", "perito", "assistente"), getQuantidadeTotalLaudos);
+
+router.route('/todas-estatisticas')
+    .get(authMiddleware("admin", "perito", "assistente"), getAllDashboardStats);
 
 export default router;
 

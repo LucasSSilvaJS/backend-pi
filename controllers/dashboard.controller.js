@@ -179,3 +179,173 @@ export const getQuantidadeTotalLaudos = async (req, res) => {
     }
 };
 
+//GET TODAS AS ESTATÍSTICAS DO DASHBOARD COM FILTROS DINÂMICOS
+export const getAllDashboardStats = async (req, res) => {
+    try {
+        const {
+            status,
+            genero,
+            etnia,
+            mesInicial,
+            mesFinal,
+            anoInicial,
+            anoFinal,
+            idadeMin,
+            idadeMax
+        } = req.query;
+
+        // Construir filtro base para casos
+        let filtroCasos = {};
+        
+        // Filtro por status
+        if (status) {
+            filtroCasos.status = status;
+        }
+
+        // Filtro por período
+        if (mesInicial && mesFinal && anoInicial && anoFinal) {
+            const dataInicial = new Date(anoInicial, mesInicial - 1, 1);
+            const dataFinal = new Date(anoFinal, mesFinal, 0);
+            filtroCasos.dataAbertura = {
+                $gte: dataInicial,
+                $lte: dataFinal
+            };
+        }
+
+        // Buscar casos com os filtros aplicados
+        const casos = await Caso.find(filtroCasos).populate({
+            path: 'vitimas',
+            match: {
+                ...(genero && { genero }),
+                ...(etnia && { corEtnia: etnia }),
+                ...(idadeMin && idadeMax && { idade: { $gte: parseInt(idadeMin), $lte: parseInt(idadeMax) } })
+            }
+        });
+
+        // Calcular estatísticas com os filtros aplicados
+        const quantidadeCasos = casos.length;
+        const quantidadeCasosAtivos = casos.filter(caso => caso.status === 'Em andamento').length;
+        const quantidadeCasosPorStatus = {
+            emAndamento: casos.filter(caso => caso.status === 'Em andamento').length,
+            finalizados: casos.filter(caso => caso.status === 'Finalizado').length,
+            arquivados: casos.filter(caso => caso.status === 'Arquivado').length
+        };
+
+        // Estatísticas de evidências (apenas dos casos filtrados)
+        const quantidadeTotalEvidencias = casos.reduce((total, caso) => total + (caso.evidencias?.length || 0), 0);
+
+        // Estatísticas de laudos (apenas dos casos filtrados)
+        const quantidadeTotalLaudos = await Laudo.countDocuments({
+            caso: { $in: casos.map(caso => caso._id) }
+        });
+
+        // Estatísticas de vítimas com filtros aplicados
+        let totalVitimas = 0;
+        let vitimasPorGenero = { masculino: 0, feminino: 0 };
+        let vitimasPorEtnia = { preto: 0, pardo: 0, indigena: 0, amarelo: 0 };
+        let vitimasPorIdade = {};
+
+        casos.forEach(caso => {
+            caso.vitimas.forEach(vitima => {
+                if (vitima) { // Verifica se a vítima passou nos filtros
+                    totalVitimas++;
+                    
+                    // Contagem por gênero
+                    if (vitima.genero === 'Masculino') vitimasPorGenero.masculino++;
+                    if (vitima.genero === 'Feminino') vitimasPorGenero.feminino++;
+
+                    // Contagem por etnia
+                    if (vitima.corEtnia === 'preto') vitimasPorEtnia.preto++;
+                    if (vitima.corEtnia === 'pardo') vitimasPorEtnia.pardo++;
+                    if (vitima.corEtnia === 'indigena') vitimasPorEtnia.indigena++;
+                    if (vitima.corEtnia === 'amarelo') vitimasPorEtnia.amarelo++;
+
+                    // Contagem por idade
+                    const idade = vitima.idade;
+                    if (!vitimasPorIdade[idade]) {
+                        vitimasPorIdade[idade] = 0;
+                    }
+                    vitimasPorIdade[idade]++;
+                }
+            });
+        });
+
+        // Estatísticas mensais com filtros aplicados
+        const meses = [];
+        const nomesMeses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+
+        // Se não houver filtro de período, usa os últimos 5 meses
+        const hoje = new Date();
+        const mesInicialFiltro = mesInicial ? parseInt(mesInicial) - 1 : hoje.getMonth() - 4;
+        const mesFinalFiltro = mesFinal ? parseInt(mesFinal) - 1 : hoje.getMonth();
+        const anoInicialFiltro = anoInicial ? parseInt(anoInicial) : hoje.getFullYear();
+        const anoFinalFiltro = anoFinal ? parseInt(anoFinal) : hoje.getFullYear();
+
+        for (let ano = anoInicialFiltro; ano <= anoFinalFiltro; ano++) {
+            const mesInicio = ano === anoInicialFiltro ? mesInicialFiltro : 0;
+            const mesFim = ano === anoFinalFiltro ? mesFinalFiltro : 11;
+
+            for (let mes = mesInicio; mes <= mesFim; mes++) {
+                const dataInicio = new Date(ano, mes, 1);
+                const dataFim = new Date(ano, mes + 1, 0);
+
+                const quantidade = casos.filter(caso => {
+                    const dataCaso = new Date(caso.dataAbertura);
+                    return dataCaso >= dataInicio && dataCaso <= dataFim;
+                }).length;
+
+                meses.push({
+                    mes: nomesMeses[mes],
+                    ano: ano,
+                    quantidade: quantidade
+                });
+            }
+        }
+
+        // Preparar resposta com os filtros aplicados
+        const resposta = {
+            filtrosAplicados: {
+                status,
+                genero,
+                etnia,
+                periodo: mesInicial && mesFinal ? {
+                    mesInicial: parseInt(mesInicial),
+                    mesFinal: parseInt(mesFinal),
+                    anoInicial: parseInt(anoInicial),
+                    anoFinal: parseInt(anoFinal)
+                } : null,
+                idade: idadeMin && idadeMax ? {
+                    minima: parseInt(idadeMin),
+                    maxima: parseInt(idadeMax)
+                } : null
+            },
+            estatisticasGerais: {
+                totalCasos: quantidadeCasos,
+                casosAtivos: quantidadeCasosAtivos,
+                casosPorStatus: quantidadeCasosPorStatus
+            },
+            estatisticasEvidencias: {
+                totalEvidencias: quantidadeTotalEvidencias
+            },
+            estatisticasLaudos: {
+                totalLaudos: quantidadeTotalLaudos
+            },
+            estatisticasVitimas: {
+                totalVitimas,
+                porGenero: vitimasPorGenero,
+                porEtnia: vitimasPorEtnia,
+                porIdade: vitimasPorIdade
+            },
+            casosPorMes: meses
+        };
+
+        res.status(200).json(resposta);
+    } catch (err) {
+        console.error('Erro ao obter estatísticas:', err);
+        res.status(500).json({ error: "Erro ao obter estatísticas do dashboard" });
+    }
+};
+
