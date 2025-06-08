@@ -46,9 +46,9 @@ app.use('/laudos', laudoRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/relatorios', relatorioRoutes);
 app.use('/odontogramas', odontogramaRoutes);
-app.use('/evidencias-imagens', imagemEvidenciaRoutes);
-app.use('/evidencias-textos', textoEvidenciaRoutes);
 app.use('/evidencias', evidenciaRoutes);
+app.use('/evidencias', imagemEvidenciaRoutes);
+app.use('/evidencias', textoEvidenciaRoutes);
 
 app.get('/', (req, res) => {
     res.json({

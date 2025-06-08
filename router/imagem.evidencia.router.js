@@ -82,7 +82,7 @@ const router = express.Router();
  *       500:
  *         description: Erro ao criar imagem de evidência
  */
-router.route('/evidencias/:evidenciaId/imagens')
+router.route('/:evidenciaId/imagens')
     .get(authMiddleware("admin", "perito", "assistente"), getAllImagemEvidencia)
     .post(authMiddleware("admin", "perito", "assistente"), upload.single('file'), createImagemEvidencia);
 
@@ -200,7 +200,7 @@ router.route('/evidencias/:evidenciaId/imagens')
  *       500:
  *         description: Erro ao remover imagem
  */
-router.route('/evidencias/:evidenciaId/imagens/:imagemId')
+router.route('/:evidenciaId/imagens/:imagemId')
     .get(authMiddleware("admin", "perito", "assistente"), getImagemEvidenciaById)
     .put(authMiddleware("admin", "perito", "assistente"), upload.single('file'), updateImagemEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteImagemEvidencia);

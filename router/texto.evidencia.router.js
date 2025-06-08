@@ -80,7 +80,7 @@ const router = express.Router();
  *       500:
  *         description: Erro ao criar texto
  */
-router.route('/evidencias/:evidenciaId/textos')
+router.route('/:evidenciaId/textos')
     .get(authMiddleware("admin", "perito", "assistente"), getAllTextosEvidencia)
     .post(authMiddleware("admin", "perito", "assistente"), createTextoEvidencia);
 
@@ -202,7 +202,7 @@ router.route('/evidencias/:evidenciaId/textos')
  *       500:
  *         description: Erro ao remover texto
  */
-router.route('/evidencias/:evidenciaId/textos/:textoId')
+router.route('/:evidenciaId/textos/:textoId')
     .get(authMiddleware("admin", "perito", "assistente"), getTextoEvidenciaById)
     .put(authMiddleware("admin", "perito", "assistente"), updateTextoEvidencia)
     .delete(authMiddleware("admin", "perito", "assistente"), deleteTextoEvidencia);
