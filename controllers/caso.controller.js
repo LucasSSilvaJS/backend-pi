@@ -46,7 +46,27 @@ export const createCaso = async (req, res) => {
 // Get all casos
 export const getAllCasos = async (req, res) => {
     try {
-        const casos = await Caso.find()
+        const { titulo, descricao, status } = req.query;
+        
+        // Construir filtro de busca
+        let filtro = {};
+        
+        // Busca por título (case insensitive)
+        if (titulo) {
+            filtro.titulo = { $regex: titulo, $options: 'i' };
+        }
+        
+        // Busca por descrição (case insensitive)
+        if (descricao) {
+            filtro.descricao = { $regex: descricao, $options: 'i' };
+        }
+        
+        // Busca por status (exata)
+        if (status) {
+            filtro.status = status;
+        }
+
+        const casos = await Caso.find(filtro)
             .populate('evidencias relatorio vitimas')
             .populate({
                 path: 'relatorio',
@@ -61,8 +81,10 @@ export const getAllCasos = async (req, res) => {
                 }
             })
             .sort({ createdAt: -1 });
+            
         res.status(200).json(casos);
     } catch (error) {
+        console.error('Erro ao obter casos:', error);
         res.status(500).json({ error: 'Erro ao obter casos' });
     }
 };

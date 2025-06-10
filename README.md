@@ -534,3 +534,66 @@ Este projeto está sob a licença ISC.
 ## 📞 Suporte
 Para suporte, envie um email para [nossa equipe](lucas.desenvolvedor.js@gmail.com) ou abra uma issue no repositório.
 
+## 🔍 Funcionalidade de Busca de Casos
+
+O endpoint `GET /casos` agora suporta busca avançada através de parâmetros de query:
+
+### Parâmetros de Busca Disponíveis:
+
+- **`titulo`**: Busca casos por título (busca parcial, case insensitive)
+- **`descricao`**: Busca casos por descrição (busca parcial, case insensitive)  
+- **`status`**: Filtra casos por status exato
+
+### Exemplos de Uso:
+
+#### Buscar por título:
+```http
+GET /casos?titulo=homicídio
+```
+
+#### Buscar por descrição:
+```http
+GET /casos?descricao=vítima encontrada
+```
+
+#### Filtrar por status:
+```http
+GET /casos?status=Em andamento
+```
+
+#### Combinação de filtros:
+```http
+GET /casos?titulo=homicídio&status=Finalizado
+```
+
+#### Busca por descrição e status:
+```http
+GET /casos?descricao=odontologia&status=Em andamento
+```
+
+### Características da Busca:
+
+- **Busca Parcial**: Para título e descrição, a busca é parcial (não precisa ser exata)
+- **Case Insensitive**: Não diferencia maiúsculas de minúsculas
+- **Combinação**: Pode usar múltiplos parâmetros simultaneamente
+- **Status Exato**: Para status, a busca é exata (deve corresponder aos valores: "Em andamento", "Finalizado", "Arquivado")
+
+### Resposta:
+
+A resposta mantém a mesma estrutura, mas retorna apenas os casos que atendem aos critérios de busca:
+
+```json
+[
+  {
+    "_id": "caso_id",
+    "titulo": "Homicídio em São Paulo",
+    "descricao": "Vítima encontrada com sinais de violência",
+    "status": "Em andamento",
+    "dataAbertura": "2024-01-01T00:00:00.000Z",
+    "evidencias": [...],
+    "vitimas": [...],
+    "relatorio": {...}
+  }
+]
+```
+

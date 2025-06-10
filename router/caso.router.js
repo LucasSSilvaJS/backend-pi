@@ -144,11 +144,31 @@ const router = express.Router();
  *         description: Erro interno do servidor
  *   get:
  *     summary: Listar todos os casos
- *     description: Retorna uma lista de todos os casos cadastrados
+ *     description: Retorna uma lista de todos os casos cadastrados com opções de busca por título, descrição e status
  *     tags:
  *       - Casos
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: titulo
+ *         schema:
+ *           type: string
+ *         description: Buscar casos por título (busca parcial, case insensitive)
+ *         example: "homicídio"
+ *       - in: query
+ *         name: descricao
+ *         schema:
+ *           type: string
+ *         description: Buscar casos por descrição (busca parcial, case insensitive)
+ *         example: "vítima encontrada"
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Em andamento, Finalizado, Arquivado]
+ *         description: Filtrar casos por status
+ *         example: "Em andamento"
  *     responses:
  *       200:
  *         description: Lista de casos retornada com sucesso
