@@ -83,7 +83,14 @@ export const login = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     try {
-        const users = await User.find({}).select("-password");
+        const users = await User.find({})
+            .select("-password")
+            .populate({
+                path: 'relatorios',
+                populate: {
+                    path: 'peritoResponsavel'
+                }
+            });
         res.status(200).json(users);
     } catch (err) {
         console.error(err);

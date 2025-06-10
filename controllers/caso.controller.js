@@ -48,6 +48,12 @@ export const getAllCasos = async (req, res) => {
     try {
         const casos = await Caso.find()
             .populate('evidencias relatorio vitimas')
+            .populate({
+                path: 'relatorio',
+                populate: {
+                    path: 'peritoResponsavel'
+                }
+            })
             .sort({ createdAt: -1 });
         res.status(200).json(casos);
     } catch (error) {
@@ -58,7 +64,14 @@ export const getAllCasos = async (req, res) => {
 // Get a caso by id
 export const getCasoById = async (req, res) => {
     try {
-        const caso = await Caso.findById(req.params.id).populate('evidencias relatorio vitimas');
+        const caso = await Caso.findById(req.params.id)
+            .populate('evidencias relatorio vitimas')
+            .populate({
+                path: 'relatorio',
+                populate: {
+                    path: 'peritoResponsavel'
+                }
+            });
         if (!caso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -205,7 +218,12 @@ export const addRelatorioToCaso = async (req, res) => {
             idCaso,
             { relatorio: idRelatorio },
             { new: true }
-        ).populate('relatorio');
+        ).populate({
+            path: 'relatorio',
+            populate: {
+                path: 'peritoResponsavel'
+            }
+        });
         
         res.status(200).json(updatedCaso);
     } catch (error) {
