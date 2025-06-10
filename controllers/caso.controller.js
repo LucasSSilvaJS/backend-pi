@@ -46,7 +46,9 @@ export const createCaso = async (req, res) => {
 // Get all casos
 export const getAllCasos = async (req, res) => {
     try {
-        const casos = await Caso.find().populate('evidencias relatorio vitimas');
+        const casos = await Caso.find()
+            .populate('evidencias relatorio vitimas')
+            .sort({ createdAt: -1 });
         res.status(200).json(casos);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao obter casos' });
