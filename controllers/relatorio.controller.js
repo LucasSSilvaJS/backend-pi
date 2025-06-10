@@ -186,7 +186,9 @@ Por favor, gere um relatório detalhado incluindo:
 5. Conclusões e recomendações
 6. Data e assinatura do perito
 
-O relatório deve seguir as normas técnicas de perícia odontolegal e ser adequado para uso em processos legais.`;
+O relatório deve seguir as normas técnicas de perícia odontolegal e ser adequado para uso em processos legais.
+
+IMPORTANTE: Retorne apenas texto puro, sem formatação HTML, markdown ou qualquer tipo de formatação especial. Use apenas quebras de linha para separar parágrafos.`;
 
         // Gera o relatório usando o Gemini
         const conteudoRelatorio = await geminiService.generateResponse(prompt);

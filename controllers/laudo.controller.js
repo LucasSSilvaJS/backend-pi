@@ -126,7 +126,9 @@ Por favor, gere um laudo pericial detalhado incluindo:
 5. Conclusões técnicas
 6. Data e assinatura do perito
 
-O laudo deve seguir as normas técnicas de perícia e ser adequado para uso em processos legais.`;
+O laudo deve seguir as normas técnicas de perícia e ser adequado para uso em processos legais.
+
+IMPORTANTE: Retorne apenas texto puro, sem formatação HTML, markdown ou qualquer tipo de formatação especial. Use apenas quebras de linha para separar parágrafos.`;
 
         // Prompt específico para a conclusão
         const promptConclusao = `Com base nas seguintes informações da evidência, gere uma conclusão técnica concisa e objetiva para um laudo pericial:
@@ -147,7 +149,9 @@ A conclusão deve:
 2. Resumir os principais achados técnicos
 3. Apresentar as conclusões técnicas de forma clara
 4. Ser adequada para uso em processos legais
-5. Ter no máximo 3 parágrafos`;
+5. Ter no máximo 3 parágrafos
+
+IMPORTANTE: Retorne apenas texto puro, sem formatação HTML, markdown ou qualquer tipo de formatação especial. Use apenas quebras de linha para separar parágrafos.`;
 
         // Gera o laudo e a conclusão usando o Gemini
         const [conteudoLaudo, conclusao] = await Promise.all([
