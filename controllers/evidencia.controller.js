@@ -127,7 +127,7 @@ export const deleteEvidencia = async (req, res) => {
 
         await User.findByIdAndUpdate(
             userId,
-            { $pull: { evidencias: deleteEvidencia._id } },
+            { $pull: { evidencias: deletedEvidencia._id } },
             { new: true }
         );
 
@@ -165,17 +165,35 @@ export const addImagemToEvidencia = async (req, res) => {
 export const removeImagemFromEvidencia = async (req, res) => {
     const { id } = req.params;
     const { idImagem } = req.body;
+    const { idImagem: idImagemQuery } = req.query;
+    
+    // Aceita idImagem tanto do body quanto da query
+    const imagemId = idImagem || idImagemQuery;
+
+    if (!imagemId) {
+        return res.status(400).json({ error: "ID da imagem é obrigatório" });
+    }
 
     try {
+        // Primeiro, remove o ID da imagem da lista de imagens da evidência
         const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
-            $pull: { imagens: idImagem }
+            $pull: { imagens: imagemId }
         }, { new: true });
 
         if (!updatedEvidencia) {
             return res.status(404).json({ error: "Evidência não encontrada" });
         }
 
-        res.status(200).json({ message: "Imagem removida da evidência com sucesso!", evidencia: updatedEvidencia });
+        // Depois, deleta a imagem do banco de dados
+        const imagem = await ImagemEvidencia.findByIdAndDelete(imagemId);
+        if (!imagem) {
+            return res.status(404).json({ error: "Imagem não encontrada" });
+        }
+
+        res.status(200).json({ 
+            message: "Imagem removida da evidência e deletada com sucesso!", 
+            evidencia: updatedEvidencia 
+        });
     } catch (error) {
         res.status(500).json({ error: "Erro ao remover imagem da evidência" });
     }
@@ -203,10 +221,18 @@ export const addTextoToEvidencia = async (req, res) => {
 export const removeTextoFromEvidencia = async (req, res) => {
     const { id } = req.params;
     const { idTexto } = req.body;
+    const { idTexto: idTextoQuery } = req.query;
+    
+    // Aceita idTexto tanto do body quanto da query
+    const textoId = idTexto || idTextoQuery;
+
+    if (!textoId) {
+        return res.status(400).json({ error: "ID do texto é obrigatório" });
+    }
 
     try {
         const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
-            $pull: { textos: idTexto }
+            $pull: { textos: textoId }
         }, { new: true });
 
         if (!updatedEvidencia) {
