@@ -66,16 +66,35 @@ export const updateImagemEvidencia = async (req, res) => {
 export const deleteImagemEvidencia = async (req, res) => {
     try {
         const { evidenciaId, imagemId } = req.params;
-        await Evidencia.findByIdAndUpdate(
-            evidenciaId,
-            { $pull: { imagens: imagemId } }
-        );
-        const imagem = await ImagemEvidencia.findByIdAndRemove(imagemId);
+
+        // Verifica se a evidência existe
+        const evidencia = await Evidencia.findById(evidenciaId);
+        if (!evidencia) {
+            return res.status(404).json({ error: 'Evidência não encontrada' });
+        }
+
+        // Verifica se a imagem existe
+        const imagem = await ImagemEvidencia.findById(imagemId);
         if (!imagem) {
             return res.status(404).json({ error: 'Imagem de evidência não encontrada' });
         }
-        res.status(200).json({ message: 'Imagem de evidência excluída com sucesso' });
+
+        // Remove o ID da imagem da lista de imagens da evidência
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(
+            evidenciaId,
+            { $pull: { imagens: imagemId } },
+            { new: true }
+        );
+
+        // Deleta a imagem do banco de dados
+        await ImagemEvidencia.findByIdAndDelete(imagemId);
+
+        res.status(200).json({ 
+            message: 'Imagem de evidência excluída com sucesso',
+            evidencia: updatedEvidencia
+        });
     } catch (error) {
+        console.error('Erro ao excluir imagem de evidência:', error);
         res.status(500).json({ error: 'Erro ao excluir imagem de evidência' });
     }
 };

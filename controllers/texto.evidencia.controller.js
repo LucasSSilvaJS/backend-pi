@@ -54,15 +54,33 @@ export const updateTextoEvidencia = async (req, res) => {
 export const deleteTextoEvidencia = async (req, res) => {
     try {
         const { evidenciaId, textoId } = req.params;
-        await Evidencia.findByIdAndUpdate(evidenciaId, {
-            $pull: { textos: textoId }
-        });
-        const textoEvidencia = await TextoEvidencia.findByIdAndRemove(textoId);
+
+        // Verifica se a evidência existe
+        const evidencia = await Evidencia.findById(evidenciaId);
+        if (!evidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        // Verifica se o texto existe
+        const textoEvidencia = await TextoEvidencia.findById(textoId);
         if (!textoEvidencia) {
             return res.status(404).json({ error: "Texto de evidência não encontrado" });
         }
-        res.status(200).json({ message: "Texto de evidência deletado com sucesso!" });
+
+        // Remove o ID do texto da lista de textos da evidência
+        const updatedEvidencia = await Evidencia.findByIdAndUpdate(evidenciaId, {
+            $pull: { textos: textoId }
+        }, { new: true });
+
+        // Deleta o texto do banco de dados
+        await TextoEvidencia.findByIdAndDelete(textoId);
+
+        res.status(200).json({ 
+            message: "Texto de evidência deletado com sucesso!",
+            evidencia: updatedEvidencia
+        });
     } catch (error) {
+        console.error('Erro ao deletar texto de evidência:', error);
         res.status(500).json({ error: "Erro ao deletar texto de evidência" });
     }
 };
