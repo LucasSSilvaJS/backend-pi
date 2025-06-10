@@ -54,6 +54,12 @@ export const getAllCasos = async (req, res) => {
                     path: 'peritoResponsavel'
                 }
             })
+            .populate({
+                path: 'evidencias',
+                populate: {
+                    path: 'coletadaPor'
+                }
+            })
             .sort({ createdAt: -1 });
         res.status(200).json(casos);
     } catch (error) {
@@ -70,6 +76,12 @@ export const getCasoById = async (req, res) => {
                 path: 'relatorio',
                 populate: {
                     path: 'peritoResponsavel'
+                }
+            })
+            .populate({
+                path: 'evidencias',
+                populate: {
+                    path: 'coletadaPor'
                 }
             });
         if (!caso) {
@@ -161,7 +173,19 @@ export const addEvidenciaToCaso = async (req, res) => {
             idCaso,
             { $addToSet: { evidencias: idEvidencia } }, // Add to evidencias array if not already present
             { new: true }
-        );
+        ).populate('evidencias relatorio vitimas')
+        .populate({
+            path: 'relatorio',
+            populate: {
+                path: 'peritoResponsavel'
+            }
+        })
+        .populate({
+            path: 'evidencias',
+            populate: {
+                path: 'coletadaPor'
+            }
+        });
         if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -179,7 +203,19 @@ export const removeEvidenciaFromCaso = async (req, res) => {
             idCaso,
             { $pull: { evidencias: idEvidencia } }, // Remove from evidencias array
             { new: true }
-        );
+        ).populate('evidencias relatorio vitimas')
+        .populate({
+            path: 'relatorio',
+            populate: {
+                path: 'peritoResponsavel'
+            }
+        })
+        .populate({
+            path: 'evidencias',
+            populate: {
+                path: 'coletadaPor'
+            }
+        });
         if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -273,7 +309,19 @@ export const addVitimaToCaso = async (req, res) => {
             idCaso,
             { $addToSet: { vitimas: idVitima } }, // Add to vitimas array if not already present
             { new: true }
-        );
+        ).populate('evidencias relatorio vitimas')
+        .populate({
+            path: 'relatorio',
+            populate: {
+                path: 'peritoResponsavel'
+            }
+        })
+        .populate({
+            path: 'evidencias',
+            populate: {
+                path: 'coletadaPor'
+            }
+        });
         if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }
@@ -291,7 +339,19 @@ export const removeVitimaFromCaso = async (req, res) => {
             idCaso,
             { $pull: { vitimas: idVitima } }, // Remove from vitimas array
             { new: true }
-        );
+        ).populate('evidencias relatorio vitimas')
+        .populate({
+            path: 'relatorio',
+            populate: {
+                path: 'peritoResponsavel'
+            }
+        })
+        .populate({
+            path: 'evidencias',
+            populate: {
+                path: 'coletadaPor'
+            }
+        });
         if (!updatedCaso) {
             return res.status(404).json({ error: 'Caso não encontrado' });
         }

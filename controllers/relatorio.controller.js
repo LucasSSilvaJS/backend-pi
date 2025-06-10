@@ -129,7 +129,8 @@ export const generateRelatorioWithGemini = async (req, res) => {
                 path: 'evidencias',
                 populate: [
                     { path: 'imagens' },
-                    { path: 'textos' }
+                    { path: 'textos' },
+                    { path: 'coletadaPor' }
                 ]
             });
 
