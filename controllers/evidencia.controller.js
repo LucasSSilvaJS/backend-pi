@@ -268,16 +268,31 @@ export const removeLaudoFromEvidencia = async (req, res) => {
     const { id } = req.params;
 
     try {
+        // Primeiro, busca a evidência para verificar se tem laudo
+        const evidencia = await Evidencia.findById(id);
+        if (!evidencia) {
+            return res.status(404).json({ error: "Evidência não encontrada" });
+        }
+
+        // Se não tem laudo, retorna erro
+        if (!evidencia.laudo) {
+            return res.status(400).json({ error: "Esta evidência não possui laudo associado" });
+        }
+
+        // Remove o laudo da evidência
         const updatedEvidencia = await Evidencia.findByIdAndUpdate(id, {
             $set: { laudo: null }
         }, { new: true });
 
-        if (!updatedEvidencia) {
-            return res.status(404).json({ error: "Evidência não encontrada" });
-        }
+        // Deleta o laudo do banco de dados
+        await Laudo.findByIdAndDelete(evidencia.laudo);
 
-        res.status(200).json({ message: "Laudo removido da evidência com sucesso!", evidencia: updatedEvidencia });
+        res.status(200).json({ 
+            message: "Laudo removido da evidência e deletado com sucesso!", 
+            evidencia: updatedEvidencia 
+        });
     } catch (error) {
+        console.error('Erro ao remover laudo da evidência:', error);
         res.status(500).json({ error: "Erro ao remover laudo da evidência" });
     }
 };

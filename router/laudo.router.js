@@ -213,9 +213,23 @@ router.post('/generate-with-ia', authMiddleware("admin", "perito"), generateLaud
  *         schema:
  *           type: string
  *         description: ID do laudo
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - evidenciaId
+ *             properties:
+ *               evidenciaId:
+ *                 type: string
+ *                 description: ID da evidência associada ao laudo
  *     responses:
  *       200:
  *         description: Laudo deletado com sucesso
+ *       400:
+ *         description: evidenciaId é obrigatório
  *       404:
  *         description: Laudo não encontrado
  *       500:

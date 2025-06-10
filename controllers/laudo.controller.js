@@ -60,15 +60,27 @@ export const deleteLaudo = async (req, res) => {
     try {
         const { evidenciaId } = req.body;
         const { id } = req.params;
-        const laudo = await Laudo.findByIdAndRemove(id);
+
+        // Validação básica
+        if (!evidenciaId) {
+            return res.status(400).json({ error: 'evidenciaId é obrigatório no body da requisição' });
+        }
+
+        // Verifica se o laudo existe
+        const laudo = await Laudo.findById(id);
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
 
+        // Remove o laudo da evidência primeiro
         await Evidencia.findByIdAndUpdate(evidenciaId, { $set: { laudo: null } });
+
+        // Deleta o laudo
+        await Laudo.findByIdAndDelete(id);
 
         res.status(200).json({ message: 'Laudo deletado com sucesso!' });
     } catch (error) {
+        console.error('Erro ao deletar laudo:', error);
         res.status(500).json({ error: 'Erro ao deletar laudo' });
     }
 };
