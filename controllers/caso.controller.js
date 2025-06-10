@@ -46,7 +46,7 @@ export const createCaso = async (req, res) => {
 // Get all casos
 export const getAllCasos = async (req, res) => {
     try {
-        const { titulo, descricao, status } = req.query;
+        const { titulo, descricao, status, page = 1, limit = 10 } = req.query;
         
         // Construir filtro de busca
         let filtro = {};
@@ -66,6 +66,15 @@ export const getAllCasos = async (req, res) => {
             filtro.status = status;
         }
 
+        // Converter para números e validar
+        const pageNumber = Math.max(1, parseInt(page));
+        const limitNumber = Math.min(100, Math.max(1, parseInt(limit))); // Máximo 100 por página
+        const skip = (pageNumber - 1) * limitNumber;
+
+        // Buscar total de registros que atendem aos filtros
+        const total = await Caso.countDocuments(filtro);
+
+        // Buscar casos com paginação
         const casos = await Caso.find(filtro)
             .populate('evidencias relatorio vitimas')
             .populate({
@@ -80,9 +89,31 @@ export const getAllCasos = async (req, res) => {
                     path: 'coletadaPor'
                 }
             })
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limitNumber);
+
+        // Calcular informações de paginação
+        const totalPages = Math.ceil(total / limitNumber);
+        const hasNextPage = pageNumber < totalPages;
+        const hasPrevPage = pageNumber > 1;
+
+        // Resposta com dados de paginação
+        const response = {
+            casos,
+            pagination: {
+                currentPage: pageNumber,
+                totalPages,
+                totalItems: total,
+                itemsPerPage: limitNumber,
+                hasNextPage,
+                hasPrevPage,
+                nextPage: hasNextPage ? pageNumber + 1 : null,
+                prevPage: hasPrevPage ? pageNumber - 1 : null
+            }
+        };
             
-        res.status(200).json(casos);
+        res.status(200).json(response);
     } catch (error) {
         console.error('Erro ao obter casos:', error);
         res.status(500).json({ error: 'Erro ao obter casos' });

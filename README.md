@@ -534,9 +534,9 @@ Este projeto está sob a licença ISC.
 ## 📞 Suporte
 Para suporte, envie um email para [nossa equipe](lucas.desenvolvedor.js@gmail.com) ou abra uma issue no repositório.
 
-## 🔍 Funcionalidade de Busca de Casos
+## 🔍 Funcionalidade de Busca e Paginação de Casos
 
-O endpoint `GET /casos` agora suporta busca avançada através de parâmetros de query:
+O endpoint `GET /casos` agora suporta busca avançada e paginação através de parâmetros de query:
 
 ### Parâmetros de Busca Disponíveis:
 
@@ -544,31 +544,31 @@ O endpoint `GET /casos` agora suporta busca avançada através de parâmetros de
 - **`descricao`**: Busca casos por descrição (busca parcial, case insensitive)  
 - **`status`**: Filtra casos por status exato
 
+### Parâmetros de Paginação:
+
+- **`page`**: Número da página (padrão: 1, mínimo: 1)
+- **`limit`**: Número de itens por página (padrão: 10, mínimo: 1, máximo: 100)
+
 ### Exemplos de Uso:
 
-#### Buscar por título:
+#### Busca simples com paginação:
 ```http
-GET /casos?titulo=homicídio
+GET /casos?page=1&limit=10
 ```
 
-#### Buscar por descrição:
+#### Buscar por título com paginação:
 ```http
-GET /casos?descricao=vítima encontrada
+GET /casos?titulo=homicídio&page=1&limit=20
 ```
 
-#### Filtrar por status:
+#### Buscar por descrição e status com paginação:
 ```http
-GET /casos?status=Em andamento
+GET /casos?descricao=vítima&status=Em andamento&page=2&limit=15
 ```
 
-#### Combinação de filtros:
+#### Combinação completa:
 ```http
-GET /casos?titulo=homicídio&status=Finalizado
-```
-
-#### Busca por descrição e status:
-```http
-GET /casos?descricao=odontologia&status=Em andamento
+GET /casos?titulo=homicídio&status=Finalizado&page=3&limit=25
 ```
 
 ### Características da Busca:
@@ -578,22 +578,52 @@ GET /casos?descricao=odontologia&status=Em andamento
 - **Combinação**: Pode usar múltiplos parâmetros simultaneamente
 - **Status Exato**: Para status, a busca é exata (deve corresponder aos valores: "Em andamento", "Finalizado", "Arquivado")
 
-### Resposta:
+### Características da Paginação:
 
-A resposta mantém a mesma estrutura, mas retorna apenas os casos que atendem aos critérios de busca:
+- **Página Inicial**: A paginação começa em 1 (não em 0)
+- **Limite Máximo**: Máximo de 100 itens por página para evitar sobrecarga
+- **Validação**: Valores inválidos são automaticamente corrigidos
+- **Performance**: Otimizada para grandes volumes de dados
+
+### Estrutura da Resposta:
+
+A resposta agora inclui os dados de paginação:
 
 ```json
-[
-  {
-    "_id": "caso_id",
-    "titulo": "Homicídio em São Paulo",
-    "descricao": "Vítima encontrada com sinais de violência",
-    "status": "Em andamento",
-    "dataAbertura": "2024-01-01T00:00:00.000Z",
-    "evidencias": [...],
-    "vitimas": [...],
-    "relatorio": {...}
+{
+  "casos": [
+    {
+      "_id": "caso_id",
+      "titulo": "Homicídio em São Paulo",
+      "descricao": "Vítima encontrada com sinais de violência",
+      "status": "Em andamento",
+      "dataAbertura": "2024-01-01T00:00:00.000Z",
+      "evidencias": [...],
+      "vitimas": [...],
+      "relatorio": {...}
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "totalItems": 47,
+    "itemsPerPage": 10,
+    "hasNextPage": true,
+    "hasPrevPage": false,
+    "nextPage": 2,
+    "prevPage": null
   }
-]
+}
 ```
+
+### Informações de Paginação:
+
+- **`currentPage`**: Página atual sendo exibida
+- **`totalPages`**: Total de páginas disponíveis
+- **`totalItems`**: Total de itens que atendem aos filtros
+- **`itemsPerPage`**: Número de itens por página
+- **`hasNextPage`**: Se existe próxima página
+- **`hasPrevPage`**: Se existe página anterior
+- **`nextPage`**: Número da próxima página (null se não existir)
+- **`prevPage`**: Número da página anterior (null se não existir)
 

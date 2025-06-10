@@ -144,7 +144,7 @@ const router = express.Router();
  *         description: Erro interno do servidor
  *   get:
  *     summary: Listar todos os casos
- *     description: Retorna uma lista de todos os casos cadastrados com opções de busca por título, descrição e status
+ *     description: Retorna uma lista paginada de todos os casos cadastrados com opções de busca por título, descrição e status
  *     tags:
  *       - Casos
  *     security:
@@ -169,15 +169,72 @@ const router = express.Router();
  *           enum: [Em andamento, Finalizado, Arquivado]
  *         description: Filtrar casos por status
  *         example: "Em andamento"
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Número da página (inicia em 1)
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Número de itens por página (máximo 100)
+ *         example: 10
  *     responses:
  *       200:
- *         description: Lista de casos retornada com sucesso
+ *         description: Lista paginada de casos retornada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Caso'
+ *               type: object
+ *               properties:
+ *                 casos:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Caso'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                       description: Página atual
+ *                       example: 1
+ *                     totalPages:
+ *                       type: integer
+ *                       description: Total de páginas
+ *                       example: 5
+ *                     totalItems:
+ *                       type: integer
+ *                       description: Total de itens que atendem aos filtros
+ *                       example: 47
+ *                     itemsPerPage:
+ *                       type: integer
+ *                       description: Itens por página
+ *                       example: 10
+ *                     hasNextPage:
+ *                       type: boolean
+ *                       description: Se existe próxima página
+ *                       example: true
+ *                     hasPrevPage:
+ *                       type: boolean
+ *                       description: Se existe página anterior
+ *                       example: false
+ *                     nextPage:
+ *                       type: integer
+ *                       nullable: true
+ *                       description: Número da próxima página
+ *                       example: 2
+ *                     prevPage:
+ *                       type: integer
+ *                       nullable: true
+ *                       description: Número da página anterior
+ *                       example: null
  *       401:
  *         description: Não autorizado
  *       500:
