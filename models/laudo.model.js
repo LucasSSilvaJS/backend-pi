@@ -19,7 +19,7 @@ const LaudoSchema = new mongoose.Schema({
         required: true,
         default: Date.now,
     },
-});
+}, { timestamps: true });
 
 const Laudo = mongoose.model('Laudo', LaudoSchema);
 

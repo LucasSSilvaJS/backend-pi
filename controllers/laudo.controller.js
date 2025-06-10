@@ -11,10 +11,13 @@ export const createLaudo = async (req, res) => {
         const evidencia = await Evidencia.findByIdAndUpdate(evidenciaId, { $set: { laudo: laudo._id } }, { new: true });
         
         if (!evidencia) {
-            return res.status(404).json({ error: 'Evidência n o encontrada' });
+            return res.status(404).json({ error: 'Evidência não encontrada' });
         }
 
-        res.status(201).json({ message: 'Laudo criado com sucesso!', laudo });
+        // Busca o laudo criado com o perito responsável populado
+        const laudoComPerito = await Laudo.findById(laudo._id).populate('peritoResponsavel');
+
+        res.status(201).json({ message: 'Laudo criado com sucesso!', laudo: laudoComPerito });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar laudo' });
     }
@@ -50,7 +53,11 @@ export const updateLaudo = async (req, res) => {
         if (!laudo) {
             return res.status(404).json({ error: 'Laudo não encontrado' });
         }
-        res.status(200).json({ message: 'Laudo atualizado com sucesso!', laudo });
+
+        // Busca o laudo atualizado com o perito responsável populado
+        const laudoComPerito = await Laudo.findById(id).populate('peritoResponsavel');
+
+        res.status(200).json({ message: 'Laudo atualizado com sucesso!', laudo: laudoComPerito });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar laudo' });
     }
@@ -175,9 +182,12 @@ IMPORTANTE: Retorne apenas texto puro, sem formatação HTML, markdown ou qualqu
             { new: true }
         );
 
+        // Busca o laudo criado com o perito responsável populado
+        const laudoComPerito = await Laudo.findById(createdLaudo._id).populate('peritoResponsavel');
+
         res.status(201).json({
             message: 'Laudo gerado com sucesso usando IA',
-            laudo: createdLaudo
+            laudo: laudoComPerito
         });
     } catch (error) {
         console.error('Erro ao gerar laudo com IA:', error);

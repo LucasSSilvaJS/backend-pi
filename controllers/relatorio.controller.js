@@ -41,7 +41,10 @@ export const createRelatorio = async (req, res) => {
             { new: true }
         );
 
-        res.status(201).json(createdRelatorio);
+        // Busca o relatório criado com o perito responsável populado
+        const relatorioComPerito = await Relatorio.findById(createdRelatorio._id).populate('peritoResponsavel');
+
+        res.status(201).json(relatorioComPerito);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar relatório' });
     }
@@ -79,7 +82,11 @@ export const updateRelatorio = async (req, res) => {
         if (!relatorio) {
             return res.status(404).json({ error: 'Relatório não encontrado' });
         }
-        res.status(200).json(relatorio);
+
+        // Busca o relatório atualizado com o perito responsável populado
+        const relatorioComPerito = await Relatorio.findById(req.params.id).populate('peritoResponsavel');
+
+        res.status(200).json(relatorioComPerito);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar relatório' });
     }
@@ -216,7 +223,10 @@ IMPORTANTE: Retorne apenas texto puro, sem formatação HTML, markdown ou qualqu
             { new: true }
         );
 
-        res.status(201).json(createdRelatorio);
+        // Busca o relatório criado com o perito responsável populado
+        const relatorioComPerito = await Relatorio.findById(createdRelatorio._id).populate('peritoResponsavel');
+
+        res.status(201).json(relatorioComPerito);
     } catch (error) {
         console.error('Erro ao gerar relatório:', error);
         res.status(500).json({ error: 'Erro ao gerar relatório com Gemini' });
