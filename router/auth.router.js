@@ -172,6 +172,16 @@ router.route("/register").post(authMiddleware("admin"), register);
  *                 error:
  *                   type: string
  *                   example: Senha inválida
+ *       403:
+ *         description: Usuário inativo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Usuário inativo. Entre em contato com o administrador.
  *       404:
  *         description: Usuário não encontrado
  *         content:

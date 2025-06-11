@@ -55,6 +55,10 @@ export const login = async (req, res) => {
             return res.status(404).json({ error: "Usuário não encontrado" });
         }
 
+        if (user.status === 'inativo') {
+            return res.status(403).json({ error: "Usuário inativo. Entre em contato com o administrador." });
+        }
+
         const isValid = await user.comparePassword(password);
 
         if (!isValid) {

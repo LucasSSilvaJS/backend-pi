@@ -39,6 +39,7 @@ O Backend OdontoLegal é uma API RESTful desenvolvida para gerenciar processos o
 - [x] Diferentes perfis de usuário (mesmos requisitos web/mobile)
 - [x] Proteção de rotas baseada em perfis
 - [x] Gerenciamento de sessão e tokens JWT
+- [x] Validação de status do usuário (usuários inativos não podem fazer login)
 
 #### 2. Gestão de Casos
 - [x] Cadastro completo de casos
@@ -520,6 +521,60 @@ A documentação completa da API está disponível através do Swagger UI quando
 ```
 https://backend-pi-26cz.onrender.com/api-docs
 ```
+
+## 🔐 Validação de Usuário Inativo
+
+O sistema implementa uma validação de segurança que impede usuários com status "inativo" de realizarem login na aplicação.
+
+### Como Funciona:
+
+1. **Verificação no Login**: Quando um usuário tenta fazer login, o sistema verifica automaticamente o status do usuário
+2. **Bloqueio de Acesso**: Se o status for "inativo", o login é bloqueado com erro 403 (Forbidden)
+3. **Mensagem Clara**: O usuário recebe uma mensagem explicativa: "Usuário inativo. Entre em contato com o administrador."
+
+### Fluxo de Validação:
+
+```javascript
+// 1. Usuário tenta fazer login
+POST /auth/login
+{
+  "email": "usuario@exemplo.com",
+  "password": "senha123"
+}
+
+// 2. Sistema verifica se usuário existe
+// 3. Sistema verifica se senha está correta
+// 4. Sistema verifica status do usuário
+if (user.status === 'inativo') {
+  return res.status(403).json({ 
+    error: "Usuário inativo. Entre em contato com o administrador." 
+  });
+}
+
+// 5. Se ativo, login é permitido e token é gerado
+```
+
+### Status de Resposta:
+
+- **200**: Login realizado com sucesso (usuário ativo)
+- **401**: Senha incorreta
+- **403**: Usuário inativo (novo status)
+- **404**: Usuário não encontrado
+- **500**: Erro interno do servidor
+
+### Gerenciamento de Status:
+
+Os administradores podem gerenciar o status dos usuários através dos endpoints:
+
+- **Desativar usuário**: `PUT /auth/users/:id/desativar`
+- **Reativar usuário**: `PUT /auth/users/:id/reativar`
+
+### Benefícios de Segurança:
+
+- **Controle de Acesso**: Impede acesso de usuários desautorizados
+- **Auditoria**: Mantém registro de usuários ativos/inativos
+- **Flexibilidade**: Permite reativação sem perder dados do usuário
+- **Transparência**: Mensagem clara sobre o motivo da rejeição
 
 ## 🤝 Contribuição
 1. Faça um Fork do projeto
