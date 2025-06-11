@@ -76,9 +76,9 @@ export const getQuantidadeVitimasPorEtniaDeUmCaso = async (req, res) => {
             
             if (!corEtnia || corEtnia === '') {
                 quantidadeVitimasNaoInformadas++;
-            } else if (corEtnia === 'preto' || corEtnia === 'negro') {
+            } else if (corEtnia === 'preto' || corEtnia === 'negro' || corEtnia === 'negra') {
                 quantidadeVitimasPretas++;
-            } else if (corEtnia === 'pardo') {
+            } else if (corEtnia === 'pardo' || corEtnia === 'parda') {
                 quantidadeVitimasPardas++;
             } else if (corEtnia === 'indigena' || corEtnia === 'indígena') {
                 quantidadeVitimasIndigenas++;
@@ -300,9 +300,9 @@ export const getAllDashboardStats = async (req, res) => {
                     
                     if (!corEtnia || corEtnia === '') {
                         vitimasPorEtnia.naoInformado++;
-                    } else if (corEtnia === 'preto' || corEtnia === 'negro') {
+                    } else if (corEtnia === 'preto' || corEtnia === 'negro' || corEtnia === 'negra') {
                         vitimasPorEtnia.preto++;
-                    } else if (corEtnia === 'pardo') {
+                    } else if (corEtnia === 'pardo' || corEtnia === 'parda') {
                         vitimasPorEtnia.pardo++;
                     } else if (corEtnia === 'indigena' || corEtnia === 'indígena') {
                         vitimasPorEtnia.indigena++;

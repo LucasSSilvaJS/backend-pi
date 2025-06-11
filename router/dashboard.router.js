@@ -345,7 +345,11 @@ const router = express.Router();
  *         name: etnia
  *         schema:
  *           type: string
- *         description: Filtra por etnia das vítimas. Aceita diferentes formatos de texto (minúsculo, maiúsculo, capitalize). Exemplos: "preto", "Preto", "PRETO", "pardo", "Pardo", "PARDO", "indigena", "Indigena", "INDIGENA", "amarelo", "Amarelo", "AMARELO", "branco", "Branco", "BRANCO"
+ *         description: |
+ *           Filtra por etnia das vítimas. Aceita diferentes formatos de texto 
+ *           (minúsculo, maiúsculo, capitalize). Exemplos: "preto", "Preto", "PRETO", 
+ *           "pardo", "Pardo", "PARDO", "indigena", "Indigena", "INDIGENA", 
+ *           "amarelo", "Amarelo", "AMARELO", "branco", "Branco", "BRANCO"
  *       - in: query
  *         name: mesInicial
  *         schema:
