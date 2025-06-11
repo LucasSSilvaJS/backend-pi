@@ -63,15 +63,42 @@ export const getQuantidadeVitimasPorEtniaDeUmCaso = async (req, res) => {
             path: "vitimas",
             select: "corEtnia"
         });
-        const quantidadeVitimasPretas = quantidadeVitimasPorEtnia.vitimas.filter(vitima => vitima.corEtnia === "preto").length;
-        const quantidadeVitimasPardas = quantidadeVitimasPorEtnia.vitimas.filter(vitima => vitima.corEtnia === "pardo").length;
-        const quantidadeVitimasIndigenas = quantidadeVitimasPorEtnia.vitimas.filter(vitima => vitima.corEtnia === "indigena").length;
-        const quantidadeVitimasAmarelas = quantidadeVitimasPorEtnia.vitimas.filter(vitima => vitima.corEtnia === "amarelo").length;
+
+        let quantidadeVitimasPretas = 0;
+        let quantidadeVitimasPardas = 0;
+        let quantidadeVitimasIndigenas = 0;
+        let quantidadeVitimasAmarelas = 0;
+        let quantidadeVitimasBrancas = 0;
+        let quantidadeVitimasNaoInformadas = 0;
+
+        quantidadeVitimasPorEtnia.vitimas.forEach(vitima => {
+            const corEtnia = vitima.corEtnia ? vitima.corEtnia.toLowerCase().trim() : null;
+            
+            if (!corEtnia || corEtnia === '') {
+                quantidadeVitimasNaoInformadas++;
+            } else if (corEtnia === 'preto' || corEtnia === 'negro') {
+                quantidadeVitimasPretas++;
+            } else if (corEtnia === 'pardo') {
+                quantidadeVitimasPardas++;
+            } else if (corEtnia === 'indigena' || corEtnia === 'indígena') {
+                quantidadeVitimasIndigenas++;
+            } else if (corEtnia === 'amarelo' || corEtnia === 'amarela') {
+                quantidadeVitimasAmarelas++;
+            } else if (corEtnia === 'branco' || corEtnia === 'branca') {
+                quantidadeVitimasBrancas++;
+            } else {
+                console.log(`Etnia não reconhecida: "${corEtnia}" para vítima ${vitima._id}`);
+                quantidadeVitimasNaoInformadas++;
+            }
+        });
+
         res.status(200).json({
             quantidadeVitimasPretas,
             quantidadeVitimasPardas,
             quantidadeVitimasIndigenas,
-            quantidadeVitimasAmarelas
+            quantidadeVitimasAmarelas,
+            quantidadeVitimasBrancas,
+            quantidadeVitimasNaoInformadas
         });
     } catch (err) {
         res.status(500).json({ error: "Erro ao obter estatísticas das vítimas por etnia de um caso" });
@@ -256,7 +283,7 @@ export const getAllDashboardStats = async (req, res) => {
         // Estatísticas de vítimas com filtros aplicados
         let totalVitimas = 0;
         let vitimasPorGenero = { masculino: 0, feminino: 0 };
-        let vitimasPorEtnia = { preto: 0, pardo: 0, indigena: 0, amarelo: 0 };
+        let vitimasPorEtnia = { preto: 0, pardo: 0, indigena: 0, amarelo: 0, branco: 0, naoInformado: 0 };
         let vitimasPorIdade = {};
 
         casos.forEach(caso => {
@@ -268,11 +295,26 @@ export const getAllDashboardStats = async (req, res) => {
                     if (vitima.genero === 'Masculino') vitimasPorGenero.masculino++;
                     if (vitima.genero === 'Feminino') vitimasPorGenero.feminino++;
 
-                    // Contagem por etnia
-                    if (vitima.corEtnia === 'preto') vitimasPorEtnia.preto++;
-                    if (vitima.corEtnia === 'pardo') vitimasPorEtnia.pardo++;
-                    if (vitima.corEtnia === 'indigena') vitimasPorEtnia.indigena++;
-                    if (vitima.corEtnia === 'amarelo') vitimasPorEtnia.amarelo++;
+                    // Contagem por etnia (mais robusta)
+                    const corEtnia = vitima.corEtnia ? vitima.corEtnia.toLowerCase().trim() : null;
+                    
+                    if (!corEtnia || corEtnia === '') {
+                        vitimasPorEtnia.naoInformado++;
+                    } else if (corEtnia === 'preto' || corEtnia === 'negro') {
+                        vitimasPorEtnia.preto++;
+                    } else if (corEtnia === 'pardo') {
+                        vitimasPorEtnia.pardo++;
+                    } else if (corEtnia === 'indigena' || corEtnia === 'indígena') {
+                        vitimasPorEtnia.indigena++;
+                    } else if (corEtnia === 'amarelo' || corEtnia === 'amarela') {
+                        vitimasPorEtnia.amarelo++;
+                    } else if (corEtnia === 'branco' || corEtnia === 'branca') {
+                        vitimasPorEtnia.branco++;
+                    } else {
+                        // Para debug - log de valores não reconhecidos
+                        console.log(`Etnia não reconhecida: "${corEtnia}" para vítima ${vitima._id}`);
+                        vitimasPorEtnia.naoInformado++;
+                    }
 
                     // Contagem por idade
                     const idade = vitima.idade;

@@ -493,6 +493,12 @@ const router = express.Router();
  *                         amarelo:
  *                           type: integer
  *                           description: Total de vítimas amarelas
+ *                         branco:
+ *                           type: integer
+ *                           description: Total de vítimas brancas
+ *                         naoInformado:
+ *                           type: integer
+ *                           description: Total de vítimas sem etnia informada
  *                     porIdade:
  *                       type: object
  *                       additionalProperties:
