@@ -345,8 +345,7 @@ const router = express.Router();
  *         name: etnia
  *         schema:
  *           type: string
- *           enum: [preto, pardo, indigena, amarelo]
- *         description: Filtra por etnia das vítimas
+ *         description: Filtra por etnia das vítimas. Aceita diferentes formatos de texto (minúsculo, maiúsculo, capitalize). Exemplos: "preto", "Preto", "PRETO", "pardo", "Pardo", "PARDO", "indigena", "Indigena", "INDIGENA", "amarelo", "Amarelo", "AMARELO", "branco", "Branco", "BRANCO"
  *       - in: query
  *         name: mesInicial
  *         schema:

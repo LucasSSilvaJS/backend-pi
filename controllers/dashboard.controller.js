@@ -248,7 +248,7 @@ export const getAllDashboardStats = async (req, res) => {
             path: 'vitimas',
             match: {
                 ...(genero && { genero }),
-                ...(etnia && { corEtnia: etnia }),
+                ...(etnia && { corEtnia: { $regex: new RegExp(etnia, 'i') } }),
                 ...(idadeMin && idadeMax && { idade: { $gte: parseInt(idadeMin), $lte: parseInt(idadeMax) } })
             }
         });
