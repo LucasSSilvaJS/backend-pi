@@ -1,5 +1,6 @@
 import Caso from "../models/caso.model.js";
 import Laudo from "../models/laudo.model.js";
+import Evidencia from "../models/evidencia.model.js";
 
 //GET QUANTIDADE DE CASOS
 export const getQuantidadeCasos = async (req, res) => {
@@ -172,7 +173,10 @@ export const getQuantidadeTotalEvidencias = async (req, res) => {
 //GET QUANTIDADE TOTAL DE LAUDOS
 export const getQuantidadeTotalLaudos = async (req, res) => {
     try {
-        const quantidadeTotalLaudos = await Laudo.countDocuments();
+        // Contar evidências que têm laudos associados
+        const quantidadeTotalLaudos = await Evidencia.countDocuments({
+            laudo: { $exists: true, $ne: null }
+        });
         res.status(200).json({ quantidadeTotalLaudos });
     } catch (err) {
         res.status(500).json({ error: "Erro ao obter quantidade total de laudos" });
@@ -235,8 +239,18 @@ export const getAllDashboardStats = async (req, res) => {
         const quantidadeTotalEvidencias = casos.reduce((total, caso) => total + (caso.evidencias?.length || 0), 0);
 
         // Estatísticas de laudos (apenas dos casos filtrados)
-        const quantidadeTotalLaudos = await Laudo.countDocuments({
-            caso: { $in: casos.map(caso => caso._id) }
+        // Primeiro, buscar todas as evidências dos casos filtrados
+        const evidenciaIds = casos.reduce((ids, caso) => {
+            if (caso.evidencias && caso.evidencias.length > 0) {
+                ids.push(...caso.evidencias);
+            }
+            return ids;
+        }, []);
+
+        // Depois, contar quantas evidências têm laudos associados
+        const quantidadeTotalLaudos = await Evidencia.countDocuments({
+            _id: { $in: evidenciaIds },
+            laudo: { $exists: true, $ne: null }
         });
 
         // Estatísticas de vítimas com filtros aplicados
