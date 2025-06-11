@@ -93,7 +93,7 @@ const router = express.Router();
  */
 router.route('/')
     .get(authMiddleware("admin", "perito", "assistente"), getAllEvidencias)
-    .post(authMiddleware("admin", "perito"), createEvidencia);
+    .post(authMiddleware("admin", "perito", "assistente"), createEvidencia);
 
 /**
  * @swagger
