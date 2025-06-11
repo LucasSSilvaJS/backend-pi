@@ -1,5 +1,5 @@
 import express from "express";
-import { getQuantidadeCasos, getQuantidadeEvidencias, getQuantidadeVitimas, getQuantidadeVitimasPorGeneroDeUmCaso, getQuantidadeVitimasPorEtniaDeUmCaso, getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso, getQuantidadeCasosPorStatus, getQuantidadeCasosUltimosMeses, getQuantidadeCasosAtivos, getQuantidadeTotalEvidencias, getQuantidadeTotalLaudos } from "../controllers/dashboard.controller.js";
+import { getQuantidadeCasos, getQuantidadeEvidencias, getQuantidadeVitimas, getQuantidadeVitimasPorGeneroDeUmCaso, getQuantidadeVitimasPorEtniaDeUmCaso, getQuantidadeVitimasPorIntervaloDeIdadeDeUmCaso, getQuantidadeCasosPorStatus, getQuantidadeCasosUltimosMeses, getQuantidadeCasosAtivos, getQuantidadeTotalEvidencias, getQuantidadeTotalLaudos, getAllDashboardStats } from "../controllers/dashboard.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -320,6 +320,60 @@ const router = express.Router();
  *       500:
  *         description: Erro ao obter quantidade total de laudos
  * 
+ * /dashboard/estatisticas-gerais:
+ *   get:
+ *     summary: Obtém todas as estatísticas gerais do dashboard
+ *     description: Retorna um resumo completo com total de casos, evidências, vítimas, casos por status e casos por mês (últimos 5 meses)
+ *     tags:
+ *       - Dashboard
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Estatísticas gerais do dashboard
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalCasos:
+ *                   type: integer
+ *                   description: Total de casos no sistema
+ *                 totalEvidencias:
+ *                   type: integer
+ *                   description: Total de evidências no sistema
+ *                 totalVitimas:
+ *                   type: integer
+ *                   description: Total de vítimas no sistema
+ *                 casosPorStatus:
+ *                   type: object
+ *                   properties:
+ *                     "Em andamento":
+ *                       type: integer
+ *                       description: Quantidade de casos em andamento
+ *                     "Finalizado":
+ *                       type: integer
+ *                       description: Quantidade de casos finalizados
+ *                     "Arquivado":
+ *                       type: integer
+ *                       description: Quantidade de casos arquivados
+ *                 casosPorMes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       mes:
+ *                         type: string
+ *                         description: Nome do mês
+ *                       ano:
+ *                         type: integer
+ *                         description: Ano do mês
+ *                       quantidade:
+ *                         type: integer
+ *                         description: Quantidade de casos no mês
+ *       500:
+ *         description: Erro ao obter estatísticas do dashboard
+ * 
  * /dashboard/todas-estatisticas:
  *   get:
  *     summary: Endpoint removido
@@ -364,6 +418,9 @@ router.route('/casos/ativos/quantidade')
 
 router.route('/laudos/total')
     .get(authMiddleware("admin", "perito", "assistente"), getQuantidadeTotalLaudos);
+
+router.route('/estatisticas-gerais')
+    .get(authMiddleware("admin", "perito", "assistente"), getAllDashboardStats);
 
 export default router;
 

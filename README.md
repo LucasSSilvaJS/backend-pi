@@ -682,3 +682,116 @@ A resposta agora inclui os dados de paginação:
 - **`nextPage`**: Número da próxima página (null se não existir)
 - **`prevPage`**: Número da página anterior (null se não existir)
 
+## 📊 Dashboard - Estatísticas Gerais
+
+O sistema oferece um endpoint consolidado para obter todas as estatísticas principais do dashboard em uma única requisição:
+
+### Endpoint Principal:
+
+```http
+GET /dashboard/estatisticas-gerais
+```
+
+### Estatísticas Retornadas:
+
+#### 1. **Total de Casos**
+- Conta todos os casos cadastrados no sistema
+- Inclui casos em andamento, finalizados e arquivados
+
+#### 2. **Total de Evidências**
+- Conta todas as evidências cadastradas no sistema
+- Inclui evidências de todos os tipos (imagens, textos, etc.)
+
+#### 3. **Total de Vítimas**
+- Conta todas as vítimas cadastradas no sistema
+- Inclui vítimas de todos os casos
+
+#### 4. **Casos por Status**
+- Distribuição de casos por status:
+  - **Em andamento**: Casos ativos sendo trabalhados
+  - **Finalizado**: Casos concluídos
+  - **Arquivado**: Casos arquivados
+
+#### 5. **Casos por Mês (Últimos 5 Meses)**
+- Estatísticas mensais dos últimos 5 meses, incluindo o mês atual
+- Cada entrada inclui:
+  - **Mês**: Nome do mês em português
+  - **Ano**: Ano do mês
+  - **Quantidade**: Número de casos abertos naquele mês
+
+### Exemplo de Resposta:
+
+```json
+{
+  "totalCasos": 150,
+  "totalEvidencias": 450,
+  "totalVitimas": 200,
+  "casosPorStatus": {
+    "Em andamento": 85,
+    "Finalizado": 45,
+    "Arquivado": 20
+  },
+  "casosPorMes": [
+    {
+      "mes": "Janeiro",
+      "ano": 2024,
+      "quantidade": 25
+    },
+    {
+      "mes": "Fevereiro", 
+      "ano": 2024,
+      "quantidade": 30
+    },
+    {
+      "mes": "Março",
+      "ano": 2024, 
+      "quantidade": 28
+    },
+    {
+      "mes": "Abril",
+      "ano": 2024,
+      "quantidade": 35
+    },
+    {
+      "mes": "Maio",
+      "ano": 2024,
+      "quantidade": 32
+    }
+  ]
+}
+```
+
+### Características da Funcionalidade:
+
+- **Performance Otimizada**: Todas as estatísticas são calculadas em uma única requisição
+- **Dados em Tempo Real**: Estatísticas sempre refletem o estado atual do banco de dados
+- **Formato Consistente**: Resposta padronizada e fácil de consumir
+- **Autenticação Obrigatória**: Requer token JWT válido
+- **Permissões**: Acessível para admin, perito e assistente
+
+### Casos de Uso:
+
+1. **Dashboard Principal**: Carregamento inicial do dashboard com todas as métricas
+2. **Relatórios Gerenciais**: Geração de relatórios com visão geral do sistema
+3. **Monitoramento**: Acompanhamento de tendências e crescimento do sistema
+4. **Análise de Performance**: Identificação de períodos de maior atividade
+
+### Endpoints Complementares:
+
+Além do endpoint principal, o sistema também oferece endpoints específicos para cada tipo de estatística:
+
+- `GET /dashboard/casos` - Total de casos
+- `GET /dashboard/casos/status` - Casos por status
+- `GET /dashboard/evidencias/total` - Total de evidências
+- `GET /dashboard/laudos/total` - Total de laudos
+- `GET /dashboard/casos/ultimos-meses` - Casos por mês
+- `GET /dashboard/casos/ativos/quantidade` - Casos ativos
+
+### Vantagens do Endpoint Consolidado:
+
+- **Redução de Requisições**: Uma única chamada para todas as estatísticas
+- **Melhor Performance**: Menos overhead de rede
+- **Dados Consistentes**: Todas as estatísticas são calculadas no mesmo momento
+- **Facilidade de Implementação**: Frontend pode carregar tudo de uma vez
+- **Menor Latência**: Resposta mais rápida para o usuário
+

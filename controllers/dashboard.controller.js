@@ -1,6 +1,7 @@
 import Caso from "../models/caso.model.js";
 import Laudo from "../models/laudo.model.js";
 import Evidencia from "../models/evidencia.model.js";
+import Vitima from "../models/vitima.model.js";
 
 //GET QUANTIDADE DE CASOS
 export const getQuantidadeCasos = async (req, res) => {
@@ -210,6 +211,72 @@ export const getQuantidadeTotalLaudos = async (req, res) => {
     }
 };
 
-//GET TODAS AS ESTATÍSTICAS DO DASHBOARD COM FILTROS DINÂMICOS
-// Função removida conforme solicitado
+//GET TODAS AS ESTATÍSTICAS DO DASHBOARD
+export const getAllDashboardStats = async (req, res) => {
+    try {
+        // Total de Casos
+        const totalCasos = await Caso.countDocuments();
+
+        // Total de Evidências
+        const totalEvidencias = await Evidencia.countDocuments();
+
+        // Total de Vítimas
+        const totalVitimas = await Vitima.countDocuments();
+
+        // Casos por Status
+        const casosPorStatus = await Caso.aggregate([
+            {
+                $group: {
+                    _id: "$status",
+                    quantidade: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Converter array de objetos para objeto com status como chave
+        const statusStats = {};
+        casosPorStatus.forEach(item => {
+            statusStats[item._id] = item.quantidade;
+        });
+
+        // Casos por Mês (últimos 5 meses incluindo o atual)
+        const hoje = new Date();
+        const casosPorMes = [];
+        const nomesMeses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+
+        for (let i = 4; i >= 0; i--) {
+            const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+            const mesInicio = new Date(data.getFullYear(), data.getMonth(), 1);
+            const mesFim = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+
+            const quantidade = await Caso.countDocuments({
+                dataAbertura: {
+                    $gte: mesInicio,
+                    $lte: mesFim
+                }
+            });
+
+            casosPorMes.push({
+                mes: nomesMeses[data.getMonth()],
+                ano: data.getFullYear(),
+                quantidade: quantidade
+            });
+        }
+
+        res.status(200).json({
+            totalCasos,
+            totalEvidencias,
+            totalVitimas,
+            casosPorStatus: statusStats,
+            casosPorMes
+        });
+
+    } catch (err) {
+        console.error("Erro ao obter estatísticas do dashboard:", err);
+        res.status(500).json({ error: "Erro ao obter estatísticas do dashboard" });
+    }
+};
 
